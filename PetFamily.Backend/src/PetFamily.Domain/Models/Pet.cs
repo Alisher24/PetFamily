@@ -1,10 +1,11 @@
 ﻿using Domain.Enums;
+using Domain.Interfaces;
 
 namespace Domain.Models;
 
-public class Animal
+public class Pet : IEntityId<Guid>
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public required string Nickname { get; set; }
     public required string Description { get; set; }
     public required string Breed { get; set; }
@@ -19,4 +20,7 @@ public class Animal
     public bool Vaccinated { get; set; }
     public HelpStatuses HelpStatus { get; set; }
     public DateTime CreatedAt { get; set; }
+    public List<AssistanceDetail> AssistanceDetails { get; set; } = [];
+    public required Volunteer Volunteer { get; set; }
+    public long VolunteerId { get; set; }
 }
