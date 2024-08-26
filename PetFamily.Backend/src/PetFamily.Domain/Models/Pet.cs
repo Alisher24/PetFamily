@@ -22,5 +22,5 @@ public class Pet : IEntityId<Guid>
     public DateTime CreatedAt { get; set; }
     public List<AssistanceDetail> AssistanceDetails { get; set; } = [];
     public required Volunteer Volunteer { get; set; }
-    public long VolunteerId { get; set; }
+    public Guid VolunteerId { get; set; }
 }
