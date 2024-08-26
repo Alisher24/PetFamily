@@ -1,26 +1,62 @@
 ﻿using Domain.Enums;
-using Domain.Interfaces;
+using Domain.Models.Base;
+using Domain.Models.Shared;
 
 namespace Domain.Models;
 
-public class Pet : IEntityId<Guid>
+public class Pet : Entity<Guid>
 {
-    public Guid Id { get; set; }
-    public required string Nickname { get; set; }
-    public required string Description { get; set; }
-    public required string Breed { get; set; }
-    public required string Color { get; set; }
-    public string? InformationHealth { get; set; }
-    public required string Address { get; set; }
-    public double Weight { get; set; }
-    public double Height { get; set; }
-    public required string ContactPhoneNumber { get; set; }
-    public bool Neutered { get; set; }
-    public DateOnly DateOfBirth { get; set; }
-    public bool Vaccinated { get; set; }
-    public HelpStatuses HelpStatus { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public List<AssistanceDetail> AssistanceDetails { get; set; } = [];
-    public required Volunteer Volunteer { get; set; }
-    public Guid VolunteerId { get; set; }
+    private readonly List<AssistanceDetail> _assistanceDetails = [];
+    public string Nickname { get; private set; } = default!;
+    public string Description { get; private set; } = default!;
+    public string Breed { get; private set; } = default!;
+    public string Color { get; private set; } = default!;
+    public string InformationHealth { get; private set; } = default!;
+    public string Address { get; private set; } = default!;
+    public double Weight { get; private set; }
+    public double Height { get; private set; }
+    public string ContactPhoneNumber { get; private set; } = default!;
+    public bool IsNeutered { get; private set; }
+    public DateOnly DateOfBirth { get; private set; }
+    public bool IsVaccinated { get; private set; }
+    public HelpStatuses HelpStatus { get; private set; }
+    public DateTime CreatedAt { get; private set; }
+    public IReadOnlyList<AssistanceDetail> AssistanceDetails => _assistanceDetails;
+
+    public void AddAssistanceDetail(AssistanceDetail assistanceDetail)
+        => _assistanceDetails.Add(assistanceDetail);
+    
+    // ef core
+    public Pet(Guid id) : base(id) { }
+
+    public Pet(Guid id,
+        string nickname,
+        string description,
+        string breed,
+        string color,
+        string informationHealth,
+        string address,
+        double weight,
+        double height,
+        string contactPhoneNumber,
+        bool isNeutered,
+        DateOnly dateOfBirth,
+        bool isVaccinated,
+        HelpStatuses helpStatus) : base(id)
+    {
+        Nickname = nickname;
+        Description = description;
+        Breed = breed;
+        Color = color;
+        InformationHealth = informationHealth;
+        Address = address;
+        Weight = weight;
+        Height = height;
+        ContactPhoneNumber = contactPhoneNumber;
+        IsNeutered = isNeutered;
+        DateOfBirth = dateOfBirth;
+        IsVaccinated = isVaccinated;
+        HelpStatus = helpStatus;
+        CreatedAt = DateTime.Now;
+    }
 }
