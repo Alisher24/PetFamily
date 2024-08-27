@@ -1,3 +1,23 @@
-﻿namespace Domain.Models.Shared;
+﻿using CSharpFunctionalExtensions;
 
-public record PetPhoto(string Path, bool IsMain);
+namespace Domain.Models.Shared;
+
+public record PetPhoto
+{
+    private PetPhoto(string path, bool isMain)
+    {
+        Path = path;
+        IsMain = isMain;
+    }
+
+    public string Path { get; } = default!;
+    public bool IsMain { get; }
+
+    public static Result<PetPhoto> Create(string path, bool isMain)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return Result.Failure<PetPhoto>("Path cannot be empty");
+
+        return new PetPhoto(path, isMain);
+    }
+}

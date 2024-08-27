@@ -1,10 +1,10 @@
-﻿using Domain.Enums;
-using Domain.Models.Base;
+﻿using CSharpFunctionalExtensions;
+using Domain.Enums;
 using Domain.Models.Shared;
 
 namespace Domain.Models;
 
-public class Pet : Entity<Guid>
+public class Pet : Base.Entity<Guid>
 {
     private readonly List<AssistanceDetail> _assistanceDetails = [];
     private readonly List<PetPhoto> _petPhotos = [];
@@ -36,7 +36,7 @@ public class Pet : Entity<Guid>
     // ef core
     private Pet(Guid id) : base(id) { }
 
-    public Pet(Guid id,
+    private Pet(Guid id,
         string nickname,
         string description,
         string breed,
@@ -65,5 +65,52 @@ public class Pet : Entity<Guid>
         IsVaccinated = isVaccinated;
         HelpStatus = helpStatus;
         CreatedAt = DateTime.Now;
+    }
+
+    public static Result<Pet> Create(Guid id,
+        string nickname,
+        string description,
+        string breed,
+        string color,
+        string informationHealth,
+        string address,
+        double weight,
+        double height,
+        string contactPhoneNumber,
+        bool isNeutered,
+        DateOnly dateOfBirth,
+        bool isVaccinated,
+        HelpStatuses helpStatus)
+    {
+        if (string.IsNullOrWhiteSpace(nickname))
+            return Result.Failure<Pet>("Nickname cannot be empty");
+        if (string.IsNullOrWhiteSpace(description))
+            return Result.Failure<Pet>("Description cannot be empty");
+        if (string.IsNullOrWhiteSpace(breed))
+            return Result.Failure<Pet>("Breed cannot be empty");
+        if (string.IsNullOrWhiteSpace(color))
+            return Result.Failure<Pet>("Color cannot be empty");
+        if (string.IsNullOrWhiteSpace(informationHealth))
+            return Result.Failure<Pet>("Information health cannot be empty");
+        if (string.IsNullOrWhiteSpace(address))
+            return Result.Failure<Pet>("Information health cannot be empty");
+        if (string.IsNullOrWhiteSpace(contactPhoneNumber))
+            return Result.Failure<Pet>("Phone number cannot be empty");
+
+        return new Pet(
+            id,
+            nickname,
+            description,
+            breed,
+            color,
+            informationHealth,
+            address,
+            weight,
+            height,
+            contactPhoneNumber,
+            isNeutered,
+            dateOfBirth,
+            isVaccinated,
+            helpStatus);
     }
 }
