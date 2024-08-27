@@ -59,8 +59,10 @@ public class Volunteer: Base.Entity<Guid>
     {
         if (string.IsNullOrWhiteSpace(email))
             return Result.Failure<Volunteer>("Email cannot be empty");
+        
         if (string.IsNullOrWhiteSpace(description))
             return Result.Failure<Volunteer>("Description cannot be empty");
+        
         if (string.IsNullOrWhiteSpace(phoneNumber))
             return Result.Failure<Volunteer>("Phone number cannot be empty");
 

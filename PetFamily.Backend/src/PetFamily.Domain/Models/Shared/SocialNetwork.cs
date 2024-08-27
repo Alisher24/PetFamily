@@ -17,6 +17,7 @@ public record SocialNetwork
     {
         if (string.IsNullOrWhiteSpace(name))
             return Result.Failure<SocialNetwork>("Name cannot be empty");
+        
         if (string.IsNullOrWhiteSpace(link))
             return Result.Failure<SocialNetwork>("Link cannot be empty");
 

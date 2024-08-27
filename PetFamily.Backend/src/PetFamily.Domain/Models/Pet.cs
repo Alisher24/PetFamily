@@ -84,16 +84,22 @@ public class Pet : Base.Entity<Guid>
     {
         if (string.IsNullOrWhiteSpace(nickname))
             return Result.Failure<Pet>("Nickname cannot be empty");
+        
         if (string.IsNullOrWhiteSpace(description))
             return Result.Failure<Pet>("Description cannot be empty");
+        
         if (string.IsNullOrWhiteSpace(breed))
             return Result.Failure<Pet>("Breed cannot be empty");
+        
         if (string.IsNullOrWhiteSpace(color))
             return Result.Failure<Pet>("Color cannot be empty");
+        
         if (string.IsNullOrWhiteSpace(informationHealth))
             return Result.Failure<Pet>("Information health cannot be empty");
+        
         if (string.IsNullOrWhiteSpace(address))
             return Result.Failure<Pet>("Information health cannot be empty");
+        
         if (string.IsNullOrWhiteSpace(contactPhoneNumber))
             return Result.Failure<Pet>("Phone number cannot be empty");
 

@@ -17,6 +17,7 @@ public record AssistanceDetail
     {
         if (string.IsNullOrWhiteSpace(name))
             return Result.Failure<AssistanceDetail>("Name cannot be empty");
+        
         if (string.IsNullOrWhiteSpace(description))
             return Result.Failure<AssistanceDetail>("Description cannot be empty");
 

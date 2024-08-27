@@ -19,6 +19,7 @@ public record FullName
     {
         if (string.IsNullOrWhiteSpace(firstName))
             return Result.Failure<FullName>("First name cannot be empty");
+        
         if (string.IsNullOrWhiteSpace(lastName))
             return Result.Failure<FullName>("Last name cannot be empty");
 
