@@ -27,7 +27,7 @@ public class Pet : Entity<Guid>
         => _assistanceDetails.Add(assistanceDetail);
     
     // ef core
-    public Pet(Guid id) : base(id) { }
+    private Pet(Guid id) : base(id) { }
 
     public Pet(Guid id,
         string nickname,

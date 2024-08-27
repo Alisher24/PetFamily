@@ -36,7 +36,7 @@ public class Volunteer: Entity<Guid>
     // ef core
     private Volunteer(Guid id) : base(id) { }
 
-    private Volunteer(Guid id,
+    public Volunteer(Guid id,
         FullName fullName,
         string email,
         string description,
