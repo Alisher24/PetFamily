@@ -7,6 +7,7 @@ namespace Domain.Models;
 public class Pet : Entity<Guid>
 {
     private readonly List<AssistanceDetail> _assistanceDetails = [];
+    private readonly List<PetPhoto> _petPhotos = [];
     public string Nickname { get; private set; } = default!;
     public string Description { get; private set; } = default!;
     public string Breed { get; private set; } = default!;
@@ -21,10 +22,16 @@ public class Pet : Entity<Guid>
     public bool IsVaccinated { get; private set; }
     public HelpStatuses HelpStatus { get; private set; }
     public DateTime CreatedAt { get; private set; }
+    
     public IReadOnlyList<AssistanceDetail> AssistanceDetails => _assistanceDetails;
+    
+    public IReadOnlyList<PetPhoto> PetPhotos => _petPhotos;
 
     public void AddAssistanceDetail(AssistanceDetail assistanceDetail)
         => _assistanceDetails.Add(assistanceDetail);
+
+    public void AddPetPhoto(PetPhoto petPhoto) 
+        => _petPhotos.Add(petPhoto);
     
     // ef core
     private Pet(Guid id) : base(id) { }
