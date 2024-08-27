@@ -1,10 +1,10 @@
-﻿using Domain.Enums;
-using Domain.Models.Base;
+﻿using CSharpFunctionalExtensions;
+using Domain.Enums;
 using Domain.Models.Shared;
 
 namespace Domain.Models;
 
-public class Volunteer: Entity<Guid>
+public class Volunteer: Base.Entity<Guid>
 {
     private readonly List<SocialNetwork> _socialNetworks = [];
     private readonly List<AssistanceDetail> _assistanceDetails = [];
@@ -36,7 +36,7 @@ public class Volunteer: Entity<Guid>
     // ef core
     private Volunteer(Guid id) : base(id) { }
 
-    public Volunteer(Guid id,
+    private Volunteer(Guid id,
         FullName fullName,
         string email,
         string description,
@@ -48,5 +48,29 @@ public class Volunteer: Entity<Guid>
         Description = description;
         YearsExperience = yearsExperience;
         PhoneNumber = phoneNumber;
+    }
+
+    public static Result<Volunteer> Create(Guid id,
+        FullName fullName,
+        string email,
+        string description,
+        int yearsExperience,
+        string phoneNumber)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            return Result.Failure<Volunteer>("Email cannot be empty");
+        
+        if (string.IsNullOrWhiteSpace(description))
+            return Result.Failure<Volunteer>("Description cannot be empty");
+        
+        if (string.IsNullOrWhiteSpace(phoneNumber))
+            return Result.Failure<Volunteer>("Phone number cannot be empty");
+
+        return new Volunteer(id,
+            fullName,
+            email,
+            description,
+            yearsExperience,
+            phoneNumber);
     }
 }
