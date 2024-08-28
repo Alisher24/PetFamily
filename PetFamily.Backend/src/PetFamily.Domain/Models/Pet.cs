@@ -1,42 +1,14 @@
 ﻿using CSharpFunctionalExtensions;
 using Domain.Enums;
-using Domain.Models.Shared;
+using Domain.Models.ValueObjects;
 
 namespace Domain.Models;
 
-public class Pet : Base.Entity<Guid>
+public class Pet : Shared.Entity<PetId>
 {
-    private readonly List<AssistanceDetail> _assistanceDetails = [];
-    private readonly List<PetPhoto> _petPhotos = [];
-    public string Nickname { get; private set; } = default!;
-    public string Description { get; private set; } = default!;
-    public string Breed { get; private set; } = default!;
-    public string Color { get; private set; } = default!;
-    public string InformationHealth { get; private set; } = default!;
-    public string Address { get; private set; } = default!;
-    public double Weight { get; private set; }
-    public double Height { get; private set; }
-    public string ContactPhoneNumber { get; private set; } = default!;
-    public bool IsNeutered { get; private set; }
-    public DateOnly DateOfBirth { get; private set; }
-    public bool IsVaccinated { get; private set; }
-    public HelpStatuses HelpStatus { get; private set; }
-    public DateTime CreatedAt { get; private set; }
-    
-    public IReadOnlyList<AssistanceDetail> AssistanceDetails => _assistanceDetails;
-    
-    public IReadOnlyList<PetPhoto> PetPhotos => _petPhotos;
-
-    public void AddAssistanceDetail(AssistanceDetail assistanceDetail)
-        => _assistanceDetails.Add(assistanceDetail);
-
-    public void AddPetPhoto(PetPhoto petPhoto) 
-        => _petPhotos.Add(petPhoto);
-    
     // ef core
-    private Pet(Guid id) : base(id) { }
-
-    private Pet(Guid id,
+    private Pet(PetId id) : base(id) { }
+    private Pet(PetId id,
         string nickname,
         string description,
         string breed,
@@ -66,8 +38,39 @@ public class Pet : Base.Entity<Guid>
         HelpStatus = helpStatus;
         CreatedAt = DateTime.Now;
     }
+    public string Nickname { get; private set; } = default!;
+    
+    public string Description { get; private set; } = default!;
+    
+    public string Breed { get; private set; } = default!;
+    
+    public string Color { get; private set; } = default!;
+    
+    public string InformationHealth { get; private set; } = default!;
+    
+    public string Address { get; private set; } = default!;
+    
+    public double Weight { get; private set; }
+    
+    public double Height { get; private set; }
+    
+    public string ContactPhoneNumber { get; private set; } = default!;
+    
+    public bool IsNeutered { get; private set; }
+    
+    public DateOnly DateOfBirth { get; private set; }
+    
+    public bool IsVaccinated { get; private set; }
+    
+    public HelpStatuses HelpStatus { get; private set; }
+    
+    public DateTime CreatedAt { get; private set; }
 
-    public static Result<Pet> Create(Guid id,
+    public AssistanceDetailList AssistanceDetails { get; private set; }
+
+    public PetPhotoList PetPhotos { get; private set; }
+
+    public static Result<Pet> Create(PetId id,
         string nickname,
         string description,
         string breed,
