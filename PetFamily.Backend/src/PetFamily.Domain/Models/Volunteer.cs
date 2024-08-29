@@ -1,42 +1,17 @@
 ﻿using CSharpFunctionalExtensions;
 using Domain.Enums;
-using Domain.Models.Shared;
+using Domain.Models.ValueObjects;
 
 namespace Domain.Models;
 
-public class Volunteer: Base.Entity<Guid>
+public class Volunteer: Shared.Entity<VolunteerId>
 {
-    private readonly List<SocialNetwork> _socialNetworks = [];
-    private readonly List<AssistanceDetail> _assistanceDetails = [];
     private readonly List<Pet> _pets = [];
-    public FullName FullName { get; private set; } = default!;
-    public string Email { get; private set; } = default!;
-    public string Description { get; private set; } = default!;
-    public int YearsExperience { get; private set; }
-    public string PhoneNumber { get; private set; } = default!;
-    public IReadOnlyList<SocialNetwork> SocialNetworks => _socialNetworks;
-    public IReadOnlyList<AssistanceDetail> AssistanceDetails => _assistanceDetails;
-    public IReadOnlyList<Pet> Pets => _pets;
-
-    public int PetsAdopted => _pets
-        .Count(x => x.HelpStatus == HelpStatuses.FoundHouse);
-
-    public int CurrentPetsSeekingHome => _pets
-        .Count(x => x.HelpStatus == HelpStatuses.LookingForHome);
-
-    public int PetsUnderTreatment => _pets
-        .Count(x => x.HelpStatus == HelpStatuses.NeedsHelp);
-
-    public void AddSocialNetwork(SocialNetwork socialNetwork) 
-        => _socialNetworks.Add(socialNetwork);
-    public void AddAssistanceDetail(AssistanceDetail assistanceDetail) 
-        => _assistanceDetails.Add(assistanceDetail);
-    public void AddPet(Pet pet) => _pets.Add(pet);
     
     // ef core
-    private Volunteer(Guid id) : base(id) { }
+    private Volunteer(VolunteerId id) : base(id) { }
 
-    private Volunteer(Guid id,
+    private Volunteer(VolunteerId id,
         FullName fullName,
         string email,
         string description,
@@ -49,8 +24,34 @@ public class Volunteer: Base.Entity<Guid>
         YearsExperience = yearsExperience;
         PhoneNumber = phoneNumber;
     }
+    public FullName FullName { get; private set; } = default!;
+    
+    public string Email { get; private set; } = default!;
+    
+    public string Description { get; private set; } = default!;
+    
+    public int YearsExperience { get; private set; }
+    
+    public string PhoneNumber { get; private set; } = default!;
 
-    public static Result<Volunteer> Create(Guid id,
+    public SocialNetworkList SocialNetworks { get; private set; }
+
+    public AssistanceDetailList AssistanceDetails { get; private set; }
+    
+    public IReadOnlyList<Pet> Pets => _pets;
+
+    public int PetsAdopted => _pets
+        .Count(x => x.HelpStatus == HelpStatuses.FoundHouse);
+
+    public int CurrentPetsSeekingHome => _pets
+        .Count(x => x.HelpStatus == HelpStatuses.LookingForHome);
+
+    public int PetsUnderTreatment => _pets
+        .Count(x => x.HelpStatus == HelpStatuses.NeedsHelp);
+    
+    public void AddPet(Pet pet) => _pets.Add(pet);
+
+    public static Result<Volunteer> Create(VolunteerId id,
         FullName fullName,
         string email,
         string description,

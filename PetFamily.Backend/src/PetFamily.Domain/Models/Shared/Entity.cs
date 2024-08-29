@@ -1,4 +1,4 @@
-﻿namespace Domain.Models.Base;
+﻿namespace Domain.Models.Shared;
 
 public abstract class Entity<TId>(TId id)
     where TId : notnull

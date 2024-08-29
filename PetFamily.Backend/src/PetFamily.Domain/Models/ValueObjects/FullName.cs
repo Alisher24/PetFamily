@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 
-namespace Domain.Models.Shared;
+namespace Domain.Models.ValueObjects;
 
 public record FullName
 {
