@@ -1,26 +1,23 @@
 ﻿using CSharpFunctionalExtensions;
+using Domain.Models.Fields;
 
 namespace Domain.Models.ValueObjects;
 
 public record AssistanceDetail
 {
-    private AssistanceDetail(string name, string description)
+    private AssistanceDetail() { }
+    
+    private AssistanceDetail(Name name, Description description)
     {
         Name = name;
         Description = description;
     }
 
-    public string Name { get; } = default!;
-    public string Description { get; } = default!;
+    public Name Name { get; } = default!;
+    public Description Description { get; } = default!;
 
-    public static Result<AssistanceDetail> Create(string name, string description)
+    public static Result<AssistanceDetail> Create(Name name, Description description)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            return Result.Failure<AssistanceDetail>("Name cannot be empty");
-        
-        if (string.IsNullOrWhiteSpace(description))
-            return Result.Failure<AssistanceDetail>("Description cannot be empty");
-
         return new AssistanceDetail(name, description);
     }
 }

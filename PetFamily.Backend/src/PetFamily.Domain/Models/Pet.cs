@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Domain.Enums;
+using Domain.Models.Fields;
 using Domain.Models.ValueObjects;
 
 namespace Domain.Models;
@@ -9,9 +10,10 @@ public class Pet : Shared.Entity<PetId>
     // ef core
     private Pet(PetId id) : base(id) { }
     private Pet(PetId id,
-        string nickname,
-        string description,
-        string breed,
+        Name name,
+        Description description,
+        Breed breed,
+        Species species,
         string color,
         string informationHealth,
         Address address,
@@ -23,9 +25,10 @@ public class Pet : Shared.Entity<PetId>
         bool isVaccinated,
         HelpStatuses helpStatus) : base(id)
     {
-        Nickname = nickname;
+        Name = name;
         Description = description;
         Breed = breed;
+        Species = species;
         Color = color;
         InformationHealth = informationHealth;
         Address = address;
@@ -38,11 +41,13 @@ public class Pet : Shared.Entity<PetId>
         HelpStatus = helpStatus;
         CreatedAt = DateTime.Now;
     }
-    public string Nickname { get; private set; } = default!;
+    public Name Name { get; private set; } = default!;
     
-    public string Description { get; private set; } = default!;
+    public Description Description { get; private set; } = default!;
     
-    public string Breed { get; private set; } = default!;
+    public Breed Breed { get; private set; } = default!;
+
+    public Species Species { get; private set; } = default!;
     
     public string Color { get; private set; } = default!;
     
@@ -71,9 +76,10 @@ public class Pet : Shared.Entity<PetId>
     public PetPhotoList PetPhotos { get; private set; }
 
     public static Result<Pet> Create(PetId id,
-        string nickname,
-        string description,
-        string breed,
+        Name name,
+        Description description,
+        Breed breedId,
+        Species speciesId,
         string color,
         string informationHealth,
         Address address,
@@ -85,15 +91,6 @@ public class Pet : Shared.Entity<PetId>
         bool isVaccinated,
         HelpStatuses helpStatus)
     {
-        if (string.IsNullOrWhiteSpace(nickname))
-            return Result.Failure<Pet>("Nickname cannot be empty");
-        
-        if (string.IsNullOrWhiteSpace(description))
-            return Result.Failure<Pet>("Description cannot be empty");
-        
-        if (string.IsNullOrWhiteSpace(breed))
-            return Result.Failure<Pet>("Breed cannot be empty");
-        
         if (string.IsNullOrWhiteSpace(color))
             return Result.Failure<Pet>("Color cannot be empty");
         
@@ -105,9 +102,10 @@ public class Pet : Shared.Entity<PetId>
 
         return new Pet(
             id,
-            nickname,
+            name,
             description,
-            breed,
+            breedId,
+            speciesId,
             color,
             informationHealth,
             address,

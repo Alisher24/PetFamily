@@ -19,20 +19,23 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 id => id.Value,
                 value => PetId.Create(value));
 
-        //Nickname
-        builder.Property(p => p.Nickname)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+        //Name
+        builder.ComplexProperty(p => p.Name, pb =>
+        {
+            pb.Property(n => n.Value)
+                .IsRequired()
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH)
+                .HasColumnName("name");
+        });
         
         //Description
-        builder.Property(p => p.Description)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH);
-
-        //Breed
-        builder.Property(p => p.Breed)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+        builder.ComplexProperty(p => p.Description, pb =>
+        {
+            pb.Property(d => d.Value)
+                .IsRequired()
+                .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH)
+                .HasColumnName("description");
+        });
         
         //Color
         builder.Property(p => p.Color)
@@ -103,16 +106,22 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         builder.OwnsOne(p => p.AssistanceDetails, pb =>
         {
             pb.ToJson("assistance_details");
-
+            
             pb.OwnsMany(l => l.AssistanceDetails, lb =>
             {
-                lb.Property(a => a.Name)
-                    .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                lb.OwnsOne(a => a.Name, ab =>
+                {
+                    ab.Property(n => n.Value)
+                        .IsRequired()
+                        .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                });
 
-                lb.Property(a => a.Description)
-                    .IsRequired()
-                    .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH);
+                lb.OwnsOne(a => a.Description, ab =>
+                {
+                    ab.Property(d => d.Value)
+                        .IsRequired()
+                        .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH);
+                });
             });
         });
 
@@ -131,5 +140,15 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                     .IsRequired();
             });
         });
+        
+        //Species
+        builder.HasOne(p => p.Species)
+            .WithMany()
+            .HasForeignKey("species_id");
+
+        //Breed
+        builder.HasOne(p => p.Breed)
+            .WithMany()
+            .HasForeignKey("breed_id");
     }
 }

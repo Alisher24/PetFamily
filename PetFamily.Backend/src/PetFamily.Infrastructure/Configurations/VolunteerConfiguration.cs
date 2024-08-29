@@ -42,9 +42,13 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
             .HasMaxLength(Constants.MAX_EMAIL_LENTH);
         
         //Description
-        builder.Property(v => v.Description)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH);
+        builder.ComplexProperty(v => v.Description, vb =>
+        {
+            vb.Property(d => d.Value)
+                .IsRequired()
+                .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH)
+                .HasColumnName("description");
+        });
         
         //YearsExperience
         builder.Property(v => v.YearsExperience)
@@ -62,9 +66,12 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
 
             vb.OwnsMany(l => l.SocialNetworks, lb =>
             {
-                lb.Property(s => s.Name)
-                    .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                lb.OwnsOne(a => a.Name, ab =>
+                {
+                    ab.Property(n => n.Value)
+                        .IsRequired()
+                        .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                });
 
                 lb.Property(s => s.Link)
                     .IsRequired()
@@ -79,13 +86,19 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
 
             vb.OwnsMany(l => l.AssistanceDetails, lb =>
             {
-                lb.Property(a => a.Name)
-                    .IsRequired()
-                    .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                lb.OwnsOne(a => a.Name, ab =>
+                {
+                    ab.Property(n => n.Value)
+                        .IsRequired()
+                        .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                });
 
-                lb.Property(a => a.Description)
-                    .IsRequired()
-                    .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH);
+                lb.OwnsOne(a => a.Description, ab =>
+                {
+                    ab.Property(d => d.Value)
+                        .IsRequired()
+                        .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH);
+                });
             });
         });
 
