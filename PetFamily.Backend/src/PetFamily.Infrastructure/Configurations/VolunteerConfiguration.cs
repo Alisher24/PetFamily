@@ -22,7 +22,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         //FullName
         builder.OwnsOne(v => v.FullName, vb =>
         {
-            vb.ToJson();
+            vb.ToJson("full_name");
 
             vb.Property(f => f.FirstName)
                 .IsRequired()
@@ -58,7 +58,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         //SocialNetworks
         builder.OwnsOne(v => v.SocialNetworks, vb =>
         {
-            vb.ToJson();
+            vb.ToJson("social_networks");
 
             vb.OwnsMany(l => l.SocialNetworks, lb =>
             {
@@ -75,7 +75,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         //AssistanceDetails
         builder.OwnsOne(v => v.AssistanceDetails, vb =>
         {
-            vb.ToJson();
+            vb.ToJson("assistance_details");
 
             vb.OwnsMany(l => l.AssistanceDetails, lb =>
             {

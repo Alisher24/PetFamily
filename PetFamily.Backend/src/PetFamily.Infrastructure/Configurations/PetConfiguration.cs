@@ -81,7 +81,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         //AssistanceDetails
         builder.OwnsOne(p => p.AssistanceDetails, pb =>
         {
-            pb.ToJson();
+            pb.ToJson("assistance_details");
 
             pb.OwnsMany(l => l.AssistanceDetails, lb =>
             {
@@ -98,7 +98,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         //PetPhotos
         builder.OwnsOne(p => p.PetPhotos, pb =>
         {
-            pb.ToJson();
+            pb.ToJson("pet_photos");
 
             pb.OwnsMany(ph => ph.PetPhotos, phb =>
             {
