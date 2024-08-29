@@ -14,7 +14,7 @@ public class Pet : Shared.Entity<PetId>
         string breed,
         string color,
         string informationHealth,
-        string address,
+        Address address,
         double weight,
         double height,
         string contactPhoneNumber,
@@ -48,7 +48,7 @@ public class Pet : Shared.Entity<PetId>
     
     public string InformationHealth { get; private set; } = default!;
     
-    public string Address { get; private set; } = default!;
+    public Address Address { get; private set; } = default!;
     
     public double Weight { get; private set; }
     
@@ -76,7 +76,7 @@ public class Pet : Shared.Entity<PetId>
         string breed,
         string color,
         string informationHealth,
-        string address,
+        Address address,
         double weight,
         double height,
         string contactPhoneNumber,
@@ -98,9 +98,6 @@ public class Pet : Shared.Entity<PetId>
             return Result.Failure<Pet>("Color cannot be empty");
         
         if (string.IsNullOrWhiteSpace(informationHealth))
-            return Result.Failure<Pet>("Information health cannot be empty");
-        
-        if (string.IsNullOrWhiteSpace(address))
             return Result.Failure<Pet>("Information health cannot be empty");
         
         if (string.IsNullOrWhiteSpace(contactPhoneNumber))

@@ -45,9 +45,30 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH);
         
         //Address
-        builder.Property(p => p.Address)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH);
+        builder.OwnsOne(p => p.Address, pb =>
+        {
+            pb.ToJson("address");
+
+            pb.Property(a => a.County)
+                .IsRequired()
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+            
+            pb.Property(a => a.City)
+                .IsRequired()
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+            
+            pb.Property(a => a.District)
+                .IsRequired()
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+            
+            pb.Property(a => a.Street)
+                .IsRequired()
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+            
+            pb.Property(a => a.House)
+                .IsRequired()
+                .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+        });
 
         //Weight
         builder.Property(p => p.Weight)
