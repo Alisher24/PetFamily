@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Domain.Enums;
+using Domain.Models.CommonFields;
 using Domain.Models.ValueObjects;
 
 namespace Domain.Models;
@@ -14,7 +15,7 @@ public class Volunteer: Shared.Entity<VolunteerId>
     private Volunteer(VolunteerId id,
         FullName fullName,
         string email,
-        string description,
+        Description description,
         int yearsExperience,
         string phoneNumber) : base(id)
     {
@@ -28,7 +29,7 @@ public class Volunteer: Shared.Entity<VolunteerId>
     
     public string Email { get; private set; } = default!;
     
-    public string Description { get; private set; } = default!;
+    public Description Description { get; private set; } = default!;
     
     public int YearsExperience { get; private set; }
     
@@ -36,7 +37,7 @@ public class Volunteer: Shared.Entity<VolunteerId>
 
     public SocialNetworkList SocialNetworks { get; private set; }
 
-    public AssistanceDetailList AssistanceDetails { get; private set; }
+    public RequisiteList Requisites { get; private set; }
     
     public IReadOnlyList<Pet> Pets => _pets;
 
@@ -54,15 +55,12 @@ public class Volunteer: Shared.Entity<VolunteerId>
     public static Result<Volunteer> Create(VolunteerId id,
         FullName fullName,
         string email,
-        string description,
+        Description description,
         int yearsExperience,
         string phoneNumber)
     {
         if (string.IsNullOrWhiteSpace(email))
             return Result.Failure<Volunteer>("Email cannot be empty");
-        
-        if (string.IsNullOrWhiteSpace(description))
-            return Result.Failure<Volunteer>("Description cannot be empty");
         
         if (string.IsNullOrWhiteSpace(phoneNumber))
             return Result.Failure<Volunteer>("Phone number cannot be empty");
