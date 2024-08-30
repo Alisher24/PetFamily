@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Domain.Enums;
-using Domain.Models.Fields;
+using Domain.Models.CommonFields;
 using Domain.Models.ValueObjects;
 
 namespace Domain.Models;
@@ -12,8 +12,7 @@ public class Pet : Shared.Entity<PetId>
     private Pet(PetId id,
         Name name,
         Description description,
-        Breed breed,
-        Species species,
+        PetDetails petDetails,
         string color,
         string informationHealth,
         Address address,
@@ -27,8 +26,7 @@ public class Pet : Shared.Entity<PetId>
     {
         Name = name;
         Description = description;
-        Breed = breed;
-        Species = species;
+        PetDetails = petDetails;
         Color = color;
         InformationHealth = informationHealth;
         Address = address;
@@ -44,10 +42,8 @@ public class Pet : Shared.Entity<PetId>
     public Name Name { get; private set; } = default!;
     
     public Description Description { get; private set; } = default!;
-    
-    public Breed Breed { get; private set; } = default!;
 
-    public Species Species { get; private set; } = default!;
+    public PetDetails PetDetails { get; private set; } = default!;
     
     public string Color { get; private set; } = default!;
     
@@ -78,8 +74,7 @@ public class Pet : Shared.Entity<PetId>
     public static Result<Pet> Create(PetId id,
         Name name,
         Description description,
-        Breed breedId,
-        Species speciesId,
+        PetDetails petDetails,
         string color,
         string informationHealth,
         Address address,
@@ -104,8 +99,7 @@ public class Pet : Shared.Entity<PetId>
             id,
             name,
             description,
-            breedId,
-            speciesId,
+            petDetails,
             color,
             informationHealth,
             address,

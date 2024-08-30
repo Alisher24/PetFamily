@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using Domain.Models.Fields;
+using Domain.Models.CommonFields;
 
 namespace Domain.Models;
 

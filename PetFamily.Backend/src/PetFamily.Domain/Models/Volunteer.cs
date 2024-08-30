@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Domain.Enums;
-using Domain.Models.Fields;
+using Domain.Models.CommonFields;
 using Domain.Models.ValueObjects;
 
 namespace Domain.Models;

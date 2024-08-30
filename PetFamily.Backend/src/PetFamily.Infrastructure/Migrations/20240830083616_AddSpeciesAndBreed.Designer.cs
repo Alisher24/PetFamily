@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240829154256_AddSpeciesAndBreed")]
+    [Migration("20240830083616_AddSpeciesAndBreed")]
     partial class AddSpeciesAndBreed
     {
         /// <inheritdoc />
@@ -119,14 +119,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("double precision")
                         .HasColumnName("weight");
 
-                    b.Property<Guid?>("breed_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("breed_id");
-
-                    b.Property<Guid>("species_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("species_id");
-
                     b.Property<Guid?>("volunteer_id")
                         .HasColumnType("uuid")
                         .HasColumnName("volunteer_id");
@@ -153,14 +145,21 @@ namespace Infrastructure.Migrations
                                 .HasColumnName("name");
                         });
 
+                    b.ComplexProperty<Dictionary<string, object>>("PetDetails", "Domain.Models.Pet.PetDetails#PetDetails", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<Guid>("BreedId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("pet_details_breed_id");
+
+                            b1.Property<Guid>("SpeciesId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("pet_details_species_id");
+                        });
+
                     b.HasKey("Id")
                         .HasName("pk_pets");
-
-                    b.HasIndex("breed_id")
-                        .HasDatabaseName("ix_pets_breed_id");
-
-                    b.HasIndex("species_id")
-                        .HasDatabaseName("ix_pets_species_id");
 
                     b.HasIndex("volunteer_id")
                         .HasDatabaseName("ix_pets_volunteer_id");
@@ -251,18 +250,6 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Models.Pet", b =>
                 {
-                    b.HasOne("Domain.Models.Breed", "Breed")
-                        .WithMany()
-                        .HasForeignKey("breed_id")
-                        .HasConstraintName("fk_pets_breeds_breed_id");
-
-                    b.HasOne("Domain.Models.Species", "Species")
-                        .WithMany()
-                        .HasForeignKey("species_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_pets_species_species_id");
-
                     b.HasOne("Domain.Models.Volunteer", null)
                         .WithMany("Pets")
                         .HasForeignKey("volunteer_id")
@@ -302,7 +289,7 @@ namespace Infrastructure.Migrations
                                         .HasForeignKey("AssistanceDetailListPetId")
                                         .HasConstraintName("fk_pets_pets_assistance_detail_list_pet_id");
 
-                                    b2.OwnsOne("Domain.Models.Fields.Description", "Description", b3 =>
+                                    b2.OwnsOne("Domain.Models.CommonFields.Description", "Description", b3 =>
                                         {
                                             b3.Property<Guid>("AssistanceDetailListPetId")
                                                 .HasColumnType("uuid");
@@ -325,7 +312,7 @@ namespace Infrastructure.Migrations
                                                 .HasConstraintName("fk_pets_pets_assistance_detail_list_pet_id_assistance_detail_id");
                                         });
 
-                                    b2.OwnsOne("Domain.Models.Fields.Name", "Name", b3 =>
+                                    b2.OwnsOne("Domain.Models.CommonFields.Name", "Name", b3 =>
                                         {
                                             b3.Property<Guid>("AssistanceDetailListPetId")
                                                 .HasColumnType("uuid");
@@ -452,12 +439,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("AssistanceDetails")
                         .IsRequired();
 
-                    b.Navigation("Breed");
-
                     b.Navigation("PetPhotos")
                         .IsRequired();
-
-                    b.Navigation("Species");
                 });
 
             modelBuilder.Entity("Domain.Models.Volunteer", b =>
@@ -532,7 +515,7 @@ namespace Infrastructure.Migrations
                                         .HasForeignKey("SocialNetworkListVolunteerId")
                                         .HasConstraintName("fk_volunteers_volunteers_social_network_list_volunteer_id");
 
-                                    b2.OwnsOne("Domain.Models.Fields.Name", "Name", b3 =>
+                                    b2.OwnsOne("Domain.Models.CommonFields.Name", "Name", b3 =>
                                         {
                                             b3.Property<Guid>("SocialNetworkListVolunteerId")
                                                 .HasColumnType("uuid");
@@ -596,7 +579,7 @@ namespace Infrastructure.Migrations
                                         .HasForeignKey("AssistanceDetailListVolunteerId")
                                         .HasConstraintName("fk_volunteers_volunteers_assistance_detail_list_volunteer_id");
 
-                                    b2.OwnsOne("Domain.Models.Fields.Description", "Description", b3 =>
+                                    b2.OwnsOne("Domain.Models.CommonFields.Description", "Description", b3 =>
                                         {
                                             b3.Property<Guid>("AssistanceDetailListVolunteerId")
                                                 .HasColumnType("uuid");
@@ -619,7 +602,7 @@ namespace Infrastructure.Migrations
                                                 .HasConstraintName("fk_volunteers_volunteers_assistance_detail_list_volunteer_id_assis");
                                         });
 
-                                    b2.OwnsOne("Domain.Models.Fields.Name", "Name", b3 =>
+                                    b2.OwnsOne("Domain.Models.CommonFields.Name", "Name", b3 =>
                                         {
                                             b3.Property<Guid>("AssistanceDetailListVolunteerId")
                                                 .HasColumnType("uuid");

@@ -21,13 +21,14 @@ namespace Infrastructure.Migrations
                 newName: "name");
 
             migrationBuilder.AddColumn<Guid>(
-                name: "breed_id",
+                name: "pet_details_breed_id",
                 table: "pets",
                 type: "uuid",
-                nullable: true);
+                nullable: false,
+                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
 
             migrationBuilder.AddColumn<Guid>(
-                name: "species_id",
+                name: "pet_details_species_id",
                 table: "pets",
                 type: "uuid",
                 nullable: false,
@@ -66,67 +67,26 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_pets_breed_id",
-                table: "pets",
-                column: "breed_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_pets_species_id",
-                table: "pets",
-                column: "species_id");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_breeds_species_id",
                 table: "breeds",
                 column: "species_id");
-
-            migrationBuilder.AddForeignKey(
-                name: "fk_pets_breeds_breed_id",
-                table: "pets",
-                column: "breed_id",
-                principalTable: "breeds",
-                principalColumn: "id");
-
-            migrationBuilder.AddForeignKey(
-                name: "fk_pets_species_species_id",
-                table: "pets",
-                column: "species_id",
-                principalTable: "species",
-                principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "fk_pets_breeds_breed_id",
-                table: "pets");
-
-            migrationBuilder.DropForeignKey(
-                name: "fk_pets_species_species_id",
-                table: "pets");
-
             migrationBuilder.DropTable(
                 name: "breeds");
 
             migrationBuilder.DropTable(
                 name: "species");
 
-            migrationBuilder.DropIndex(
-                name: "ix_pets_breed_id",
-                table: "pets");
-
-            migrationBuilder.DropIndex(
-                name: "ix_pets_species_id",
+            migrationBuilder.DropColumn(
+                name: "pet_details_breed_id",
                 table: "pets");
 
             migrationBuilder.DropColumn(
-                name: "breed_id",
-                table: "pets");
-
-            migrationBuilder.DropColumn(
-                name: "species_id",
+                name: "pet_details_species_id",
                 table: "pets");
 
             migrationBuilder.RenameColumn(

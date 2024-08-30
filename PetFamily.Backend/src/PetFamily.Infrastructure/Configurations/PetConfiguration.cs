@@ -141,14 +141,16 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             });
         });
         
-        //Species
-        builder.HasOne(p => p.Species)
-            .WithMany()
-            .HasForeignKey("species_id");
+        //PetSpecies
+        builder.ComplexProperty(p => p.PetDetails, pb =>
+        {
+            pb.Property(s => s.SpeciesId)
+                .HasConversion(id => id.Value,
+                    value => SpeciesId.Create(value))
+                .IsRequired();
 
-        //Breed
-        builder.HasOne(p => p.Breed)
-            .WithMany()
-            .HasForeignKey("breed_id");
+            pb.Property(b => b.BreedId)
+                .IsRequired();
+        });
     }
 }

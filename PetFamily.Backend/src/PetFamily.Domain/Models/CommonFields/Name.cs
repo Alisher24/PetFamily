@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Domain.Models.Shared;
 
-namespace Domain.Models.Fields;
+namespace Domain.Models.CommonFields;
 
 public record Name
 {
