@@ -2,11 +2,11 @@
 
 namespace Domain.Models.ValueObjects;
 
-public record PetDetails
+public record Type
 {
-    private PetDetails() { }
+    private Type() { }
 
-    private PetDetails(SpeciesId speciesId, Guid breedId)
+    private Type(SpeciesId speciesId, Guid breedId)
     {
         SpeciesId = speciesId;
         BreedId = breedId;
@@ -16,8 +16,8 @@ public record PetDetails
 
     public Guid BreedId { get; }
 
-    public static Result<PetDetails> Create(SpeciesId speciesId, Guid breedId)
+    public static Result<Type> Create(SpeciesId speciesId, Guid breedId)
     {
-        return new PetDetails(speciesId, breedId);
+        return new Type(speciesId, breedId);
     }
 }

@@ -79,10 +79,10 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
             });
         });
         
-        //AssistanceDetails
-        builder.OwnsOne(v => v.AssistanceDetails, vb =>
+        //Requisites
+        builder.OwnsOne(v => v.Requisites, vb =>
         {
-            vb.ToJson("assistance_details");
+            vb.ToJson("requisites");
 
             vb.OwnsMany(l => l.AssistanceDetails, lb =>
             {

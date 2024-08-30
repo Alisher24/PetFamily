@@ -2,6 +2,7 @@
 using Domain.Enums;
 using Domain.Models.CommonFields;
 using Domain.Models.ValueObjects;
+using Type = Domain.Models.ValueObjects.Type;
 
 namespace Domain.Models;
 
@@ -12,7 +13,7 @@ public class Pet : Shared.Entity<PetId>
     private Pet(PetId id,
         Name name,
         Description description,
-        PetDetails petDetails,
+        Type type,
         string color,
         string informationHealth,
         Address address,
@@ -26,7 +27,7 @@ public class Pet : Shared.Entity<PetId>
     {
         Name = name;
         Description = description;
-        PetDetails = petDetails;
+        Type = type;
         Color = color;
         InformationHealth = informationHealth;
         Address = address;
@@ -43,7 +44,7 @@ public class Pet : Shared.Entity<PetId>
     
     public Description Description { get; private set; } = default!;
 
-    public PetDetails PetDetails { get; private set; } = default!;
+    public Type Type { get; private set; } = default!;
     
     public string Color { get; private set; } = default!;
     
@@ -67,14 +68,14 @@ public class Pet : Shared.Entity<PetId>
     
     public DateTime CreatedAt { get; private set; }
 
-    public AssistanceDetailList AssistanceDetails { get; private set; }
+    public RequisiteList Requisites { get; private set; }
 
     public PetPhotoList PetPhotos { get; private set; }
 
     public static Result<Pet> Create(PetId id,
         Name name,
         Description description,
-        PetDetails petDetails,
+        Type type,
         string color,
         string informationHealth,
         Address address,
@@ -99,7 +100,7 @@ public class Pet : Shared.Entity<PetId>
             id,
             name,
             description,
-            petDetails,
+            type,
             color,
             informationHealth,
             address,

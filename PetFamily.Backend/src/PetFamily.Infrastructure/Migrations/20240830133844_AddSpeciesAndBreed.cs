@@ -16,19 +16,29 @@ namespace Infrastructure.Migrations
                 table: "pets");
 
             migrationBuilder.RenameColumn(
+                name: "assistance_details",
+                table: "volunteers",
+                newName: "requisites");
+
+            migrationBuilder.RenameColumn(
                 name: "nickname",
                 table: "pets",
                 newName: "name");
 
+            migrationBuilder.RenameColumn(
+                name: "assistance_details",
+                table: "pets",
+                newName: "requisites");
+
             migrationBuilder.AddColumn<Guid>(
-                name: "pet_details_breed_id",
+                name: "type_breed_id",
                 table: "pets",
                 type: "uuid",
                 nullable: false,
                 defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
 
             migrationBuilder.AddColumn<Guid>(
-                name: "pet_details_species_id",
+                name: "type_species_id",
                 table: "pets",
                 type: "uuid",
                 nullable: false,
@@ -82,12 +92,22 @@ namespace Infrastructure.Migrations
                 name: "species");
 
             migrationBuilder.DropColumn(
-                name: "pet_details_breed_id",
+                name: "type_breed_id",
                 table: "pets");
 
             migrationBuilder.DropColumn(
-                name: "pet_details_species_id",
+                name: "type_species_id",
                 table: "pets");
+
+            migrationBuilder.RenameColumn(
+                name: "requisites",
+                table: "volunteers",
+                newName: "assistance_details");
+
+            migrationBuilder.RenameColumn(
+                name: "requisites",
+                table: "pets",
+                newName: "assistance_details");
 
             migrationBuilder.RenameColumn(
                 name: "name",

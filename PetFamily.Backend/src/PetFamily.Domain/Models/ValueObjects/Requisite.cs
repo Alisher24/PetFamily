@@ -3,11 +3,11 @@ using Domain.Models.CommonFields;
 
 namespace Domain.Models.ValueObjects;
 
-public record AssistanceDetail
+public record Requisite
 {
-    private AssistanceDetail() { }
+    private Requisite() { }
     
-    private AssistanceDetail(Name name, Description description)
+    private Requisite(Name name, Description description)
     {
         Name = name;
         Description = description;
@@ -16,8 +16,8 @@ public record AssistanceDetail
     public Name Name { get; } = default!;
     public Description Description { get; } = default!;
 
-    public static Result<AssistanceDetail> Create(Name name, Description description)
+    public static Result<Requisite> Create(Name name, Description description)
     {
-        return new AssistanceDetail(name, description);
+        return new Requisite(name, description);
     }
 }

@@ -102,10 +102,10 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         builder.Property(p => p.CreatedAt)
             .IsRequired();
         
-        //AssistanceDetails
-        builder.OwnsOne(p => p.AssistanceDetails, pb =>
+        //Requisites
+        builder.OwnsOne(p => p.Requisites, pb =>
         {
-            pb.ToJson("assistance_details");
+            pb.ToJson("requisites");
             
             pb.OwnsMany(l => l.AssistanceDetails, lb =>
             {
@@ -141,8 +141,8 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             });
         });
         
-        //PetSpecies
-        builder.ComplexProperty(p => p.PetDetails, pb =>
+        //Type
+        builder.ComplexProperty(p => p.Type, pb =>
         {
             pb.Property(s => s.SpeciesId)
                 .HasConversion(id => id.Value,

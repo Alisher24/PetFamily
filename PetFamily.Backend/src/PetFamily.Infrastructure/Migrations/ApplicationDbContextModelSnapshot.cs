@@ -142,17 +142,17 @@ namespace Infrastructure.Migrations
                                 .HasColumnName("name");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("PetDetails", "Domain.Models.Pet.PetDetails#PetDetails", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("Type", "Domain.Models.Pet.Type#Type", b1 =>
                         {
                             b1.IsRequired();
 
                             b1.Property<Guid>("BreedId")
                                 .HasColumnType("uuid")
-                                .HasColumnName("pet_details_breed_id");
+                                .HasColumnName("type_breed_id");
 
                             b1.Property<Guid>("SpeciesId")
                                 .HasColumnType("uuid")
-                                .HasColumnName("pet_details_species_id");
+                                .HasColumnName("type_species_id");
                         });
 
                     b.HasKey("Id")
@@ -252,7 +252,7 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("volunteer_id")
                         .HasConstraintName("fk_pets_volunteers_volunteer_id");
 
-                    b.OwnsOne("Domain.Models.ValueObjects.AssistanceDetailList", "AssistanceDetails", b1 =>
+                    b.OwnsOne("Domain.Models.ValueObjects.RequisiteList", "Requisites", b1 =>
                         {
                             b1.Property<Guid>("PetId")
                                 .HasColumnType("uuid");
@@ -262,36 +262,36 @@ namespace Infrastructure.Migrations
 
                             b1.ToTable("pets");
 
-                            b1.ToJson("assistance_details");
+                            b1.ToJson("requisites");
 
                             b1.WithOwner()
                                 .HasForeignKey("PetId")
                                 .HasConstraintName("fk_pets_pets_pet_id");
 
-                            b1.OwnsMany("Domain.Models.ValueObjects.AssistanceDetail", "AssistanceDetails", b2 =>
+                            b1.OwnsMany("Domain.Models.ValueObjects.Requisite", "AssistanceDetails", b2 =>
                                 {
-                                    b2.Property<Guid>("AssistanceDetailListPetId")
+                                    b2.Property<Guid>("RequisiteListPetId")
                                         .HasColumnType("uuid");
 
                                     b2.Property<int>("Id")
                                         .ValueGeneratedOnAdd()
                                         .HasColumnType("integer");
 
-                                    b2.HasKey("AssistanceDetailListPetId", "Id")
+                                    b2.HasKey("RequisiteListPetId", "Id")
                                         .HasName("pk_pets");
 
                                     b2.ToTable("pets");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("AssistanceDetailListPetId")
-                                        .HasConstraintName("fk_pets_pets_assistance_detail_list_pet_id");
+                                        .HasForeignKey("RequisiteListPetId")
+                                        .HasConstraintName("fk_pets_pets_requisite_list_pet_id");
 
                                     b2.OwnsOne("Domain.Models.CommonFields.Description", "Description", b3 =>
                                         {
-                                            b3.Property<Guid>("AssistanceDetailListPetId")
+                                            b3.Property<Guid>("RequisiteListPetId")
                                                 .HasColumnType("uuid");
 
-                                            b3.Property<int>("AssistanceDetailId")
+                                            b3.Property<int>("RequisiteId")
                                                 .HasColumnType("integer");
 
                                             b3.Property<string>("Value")
@@ -299,22 +299,22 @@ namespace Infrastructure.Migrations
                                                 .HasMaxLength(2000)
                                                 .HasColumnType("character varying(2000)");
 
-                                            b3.HasKey("AssistanceDetailListPetId", "AssistanceDetailId")
+                                            b3.HasKey("RequisiteListPetId", "RequisiteId")
                                                 .HasName("pk_pets");
 
                                             b3.ToTable("pets");
 
                                             b3.WithOwner()
-                                                .HasForeignKey("AssistanceDetailListPetId", "AssistanceDetailId")
-                                                .HasConstraintName("fk_pets_pets_assistance_detail_list_pet_id_assistance_detail_id");
+                                                .HasForeignKey("RequisiteListPetId", "RequisiteId")
+                                                .HasConstraintName("fk_pets_pets_requisite_list_pet_id_requisite_id");
                                         });
 
                                     b2.OwnsOne("Domain.Models.CommonFields.Name", "Name", b3 =>
                                         {
-                                            b3.Property<Guid>("AssistanceDetailListPetId")
+                                            b3.Property<Guid>("RequisiteListPetId")
                                                 .HasColumnType("uuid");
 
-                                            b3.Property<int>("AssistanceDetailId")
+                                            b3.Property<int>("RequisiteId")
                                                 .HasColumnType("integer");
 
                                             b3.Property<string>("Value")
@@ -322,14 +322,14 @@ namespace Infrastructure.Migrations
                                                 .HasMaxLength(100)
                                                 .HasColumnType("character varying(100)");
 
-                                            b3.HasKey("AssistanceDetailListPetId", "AssistanceDetailId")
+                                            b3.HasKey("RequisiteListPetId", "RequisiteId")
                                                 .HasName("pk_pets");
 
                                             b3.ToTable("pets");
 
                                             b3.WithOwner()
-                                                .HasForeignKey("AssistanceDetailListPetId", "AssistanceDetailId")
-                                                .HasConstraintName("fk_pets_pets_assistance_detail_list_pet_id_assistance_detail_id");
+                                                .HasForeignKey("RequisiteListPetId", "RequisiteId")
+                                                .HasConstraintName("fk_pets_pets_requisite_list_pet_id_requisite_id");
                                         });
 
                                     b2.Navigation("Description")
@@ -433,10 +433,10 @@ namespace Infrastructure.Migrations
                     b.Navigation("Address")
                         .IsRequired();
 
-                    b.Navigation("AssistanceDetails")
+                    b.Navigation("PetPhotos")
                         .IsRequired();
 
-                    b.Navigation("PetPhotos")
+                    b.Navigation("Requisites")
                         .IsRequired();
                 });
 
@@ -542,7 +542,7 @@ namespace Infrastructure.Migrations
                             b1.Navigation("SocialNetworks");
                         });
 
-                    b.OwnsOne("Domain.Models.ValueObjects.AssistanceDetailList", "AssistanceDetails", b1 =>
+                    b.OwnsOne("Domain.Models.ValueObjects.RequisiteList", "Requisites", b1 =>
                         {
                             b1.Property<Guid>("VolunteerId")
                                 .HasColumnType("uuid")
@@ -552,36 +552,36 @@ namespace Infrastructure.Migrations
 
                             b1.ToTable("volunteers");
 
-                            b1.ToJson("assistance_details");
+                            b1.ToJson("requisites");
 
                             b1.WithOwner()
                                 .HasForeignKey("VolunteerId")
                                 .HasConstraintName("fk_volunteers_volunteers_id");
 
-                            b1.OwnsMany("Domain.Models.ValueObjects.AssistanceDetail", "AssistanceDetails", b2 =>
+                            b1.OwnsMany("Domain.Models.ValueObjects.Requisite", "AssistanceDetails", b2 =>
                                 {
-                                    b2.Property<Guid>("AssistanceDetailListVolunteerId")
+                                    b2.Property<Guid>("RequisiteListVolunteerId")
                                         .HasColumnType("uuid");
 
                                     b2.Property<int>("Id")
                                         .ValueGeneratedOnAdd()
                                         .HasColumnType("integer");
 
-                                    b2.HasKey("AssistanceDetailListVolunteerId", "Id")
+                                    b2.HasKey("RequisiteListVolunteerId", "Id")
                                         .HasName("pk_volunteers");
 
                                     b2.ToTable("volunteers");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("AssistanceDetailListVolunteerId")
-                                        .HasConstraintName("fk_volunteers_volunteers_assistance_detail_list_volunteer_id");
+                                        .HasForeignKey("RequisiteListVolunteerId")
+                                        .HasConstraintName("fk_volunteers_volunteers_requisite_list_volunteer_id");
 
                                     b2.OwnsOne("Domain.Models.CommonFields.Description", "Description", b3 =>
                                         {
-                                            b3.Property<Guid>("AssistanceDetailListVolunteerId")
+                                            b3.Property<Guid>("RequisiteListVolunteerId")
                                                 .HasColumnType("uuid");
 
-                                            b3.Property<int>("AssistanceDetailId")
+                                            b3.Property<int>("RequisiteId")
                                                 .HasColumnType("integer");
 
                                             b3.Property<string>("Value")
@@ -589,22 +589,22 @@ namespace Infrastructure.Migrations
                                                 .HasMaxLength(2000)
                                                 .HasColumnType("character varying(2000)");
 
-                                            b3.HasKey("AssistanceDetailListVolunteerId", "AssistanceDetailId")
+                                            b3.HasKey("RequisiteListVolunteerId", "RequisiteId")
                                                 .HasName("pk_volunteers");
 
                                             b3.ToTable("volunteers");
 
                                             b3.WithOwner()
-                                                .HasForeignKey("AssistanceDetailListVolunteerId", "AssistanceDetailId")
-                                                .HasConstraintName("fk_volunteers_volunteers_assistance_detail_list_volunteer_id_assis");
+                                                .HasForeignKey("RequisiteListVolunteerId", "RequisiteId")
+                                                .HasConstraintName("fk_volunteers_volunteers_requisite_list_volunteer_id_requisite_id");
                                         });
 
                                     b2.OwnsOne("Domain.Models.CommonFields.Name", "Name", b3 =>
                                         {
-                                            b3.Property<Guid>("AssistanceDetailListVolunteerId")
+                                            b3.Property<Guid>("RequisiteListVolunteerId")
                                                 .HasColumnType("uuid");
 
-                                            b3.Property<int>("AssistanceDetailId")
+                                            b3.Property<int>("RequisiteId")
                                                 .HasColumnType("integer");
 
                                             b3.Property<string>("Value")
@@ -612,14 +612,14 @@ namespace Infrastructure.Migrations
                                                 .HasMaxLength(100)
                                                 .HasColumnType("character varying(100)");
 
-                                            b3.HasKey("AssistanceDetailListVolunteerId", "AssistanceDetailId")
+                                            b3.HasKey("RequisiteListVolunteerId", "RequisiteId")
                                                 .HasName("pk_volunteers");
 
                                             b3.ToTable("volunteers");
 
                                             b3.WithOwner()
-                                                .HasForeignKey("AssistanceDetailListVolunteerId", "AssistanceDetailId")
-                                                .HasConstraintName("fk_volunteers_volunteers_assistance_detail_list_volunteer_id_assis");
+                                                .HasForeignKey("RequisiteListVolunteerId", "RequisiteId")
+                                                .HasConstraintName("fk_volunteers_volunteers_requisite_list_volunteer_id_requisite_id");
                                         });
 
                                     b2.Navigation("Description")
@@ -632,10 +632,10 @@ namespace Infrastructure.Migrations
                             b1.Navigation("AssistanceDetails");
                         });
 
-                    b.Navigation("AssistanceDetails")
+                    b.Navigation("FullName")
                         .IsRequired();
 
-                    b.Navigation("FullName")
+                    b.Navigation("Requisites")
                         .IsRequired();
 
                     b.Navigation("SocialNetworks")

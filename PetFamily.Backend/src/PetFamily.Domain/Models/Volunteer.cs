@@ -37,7 +37,7 @@ public class Volunteer: Shared.Entity<VolunteerId>
 
     public SocialNetworkList SocialNetworks { get; private set; }
 
-    public AssistanceDetailList AssistanceDetails { get; private set; }
+    public RequisiteList Requisites { get; private set; }
     
     public IReadOnlyList<Pet> Pets => _pets;
 
