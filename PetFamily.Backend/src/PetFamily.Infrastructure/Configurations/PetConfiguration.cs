@@ -1,5 +1,8 @@
 ﻿using Domain.Models;
 using Domain.Models.Shared;
+using Domain.Models.Species.Ids;
+using Domain.Models.Volunteer;
+using Domain.Models.Volunteer.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -107,7 +110,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             pb.ToJson("requisites");
             
-            pb.OwnsMany(l => l.AssistanceDetails, lb =>
+            pb.OwnsMany(l => l.Requisites, lb =>
             {
                 lb.OwnsOne(a => a.Name, ab =>
                 {
