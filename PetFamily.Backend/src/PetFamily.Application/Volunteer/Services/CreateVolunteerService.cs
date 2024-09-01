@@ -9,8 +9,6 @@ namespace Application.Volunteer.Services;
 
 public class CreateVolunteerService(IVolunteerRepository volunteerRepository)
 {
-     private readonly IVolunteerRepository _volunteerRepository = volunteerRepository;
-
      public async Task<Result<Guid, Error>> ExecuteAsync(
           CreateVolunteerRequest request,
           CancellationToken cancellationToken = default)
@@ -25,13 +23,13 @@ public class CreateVolunteerService(IVolunteerRepository volunteerRepository)
           if (phoneNumber.IsFailure)
                return phoneNumber.Error;
           
-          var volunteerEmail = await _volunteerRepository
+          var volunteerEmail = await volunteerRepository
                .GetByEmail(email.Value, cancellationToken);
 
           if (volunteerEmail.IsSuccess)
                return Errors.Volunteer.ValueIsAlreadyExists("email");
 
-          var volunteerPhoneNumber = await _volunteerRepository
+          var volunteerPhoneNumber = await volunteerRepository
                .GetByPhoneNumber(phoneNumber.Value, cancellationToken);
 
           if (volunteerPhoneNumber.IsSuccess)
@@ -51,15 +49,11 @@ public class CreateVolunteerService(IVolunteerRepository volunteerRepository)
           if (description.IsFailure)
                return description.Error;
 
-          var socialNetworks = request.SocialNetworks is null
-               ? null
-               : new SocialNetworkList(request.SocialNetworks
+          var socialNetworks = new SocialNetworkList(request.SocialNetworks
                     .Select(s => SocialNetwork
                          .Create(Name.Create(s.Name).Value, s.Link).Value));
 
-          var requisites = request.Requisites is null
-               ? null
-               : new RequisiteList(request.Requisites
+          var requisites = new RequisiteList(request.Requisites
                     .Select(r => Requisite
                          .Create(Name.Create(r.Name).Value,
                               Description.Create(r.Description).Value).Value));
@@ -74,7 +68,7 @@ public class CreateVolunteerService(IVolunteerRepository volunteerRepository)
                socialNetworks,
                requisites);
 
-          await _volunteerRepository.Add(volunteer, cancellationToken);
+          await volunteerRepository.Add(volunteer, cancellationToken);
 
           return volunteer.Id.Value;
      }

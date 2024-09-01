@@ -9,14 +9,12 @@ namespace Infrastructure.Repositories;
 
 public class VolunteerRepository(ApplicationDbContext dbContext) : IVolunteerRepository
 {
-    private readonly ApplicationDbContext _dbContext = dbContext;
-
     public async Task<Guid> Add(Volunteer volunteer, 
         CancellationToken cancellationToken = default)
     {
-        await _dbContext.Volunteers.AddAsync(volunteer, cancellationToken);
+        await dbContext.Volunteers.AddAsync(volunteer, cancellationToken);
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return volunteer.Id.Value;
     }
@@ -24,7 +22,7 @@ public class VolunteerRepository(ApplicationDbContext dbContext) : IVolunteerRep
     public async Task<Result<Volunteer, Error>> GetByEmail(Email email, 
         CancellationToken cancellationToken = default)
     {
-        var volunteer = await _dbContext.Volunteers
+        var volunteer = await dbContext.Volunteers
             .Include(v => v.Pets)
             .FirstOrDefaultAsync(v => v.Email == email,
                 cancellationToken);
@@ -38,7 +36,7 @@ public class VolunteerRepository(ApplicationDbContext dbContext) : IVolunteerRep
     public async Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber phoneNumber,
         CancellationToken cancellationToken = default)
     {
-        var volunteer = await _dbContext.Volunteers
+        var volunteer = await dbContext.Volunteers
             .Include(v => v.Pets)
             .FirstOrDefaultAsync(v => v.PhoneNumber == phoneNumber,
                 cancellationToken);

@@ -7,5 +7,5 @@ public record CreateVolunteerRequest(FullNameDto FullName,
     string Description,
     int YearsExperience,
     string PhoneNumber,
-    IEnumerable<SocialNetworkDto>? SocialNetworks,
-    IEnumerable<RequisiteDto>? Requisites);
+    IEnumerable<SocialNetworkDto> SocialNetworks,
+    IEnumerable<RequisiteDto> Requisites);
