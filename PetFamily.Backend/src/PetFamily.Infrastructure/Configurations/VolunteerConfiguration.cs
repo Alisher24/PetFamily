@@ -1,5 +1,7 @@
 ﻿using Domain.Models;
 using Domain.Models.Shared;
+using Domain.Models.Volunteer;
+using Domain.Models.Volunteer.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -37,9 +39,13 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         });
 
         //Email
-        builder.Property(v => v.Email)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_EMAIL_LENTH);
+        builder.ComplexProperty(v => v.Email, vb =>
+        {
+            vb.Property(e => e.Value)
+                .IsRequired()
+                .HasMaxLength(Constants.MAX_EMAIL_LENTH)
+                .HasColumnName("email");
+        });
         
         //Description
         builder.ComplexProperty(v => v.Description, vb =>
@@ -55,9 +61,13 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
             .IsRequired();
         
         //PhoneNumber
-        builder.Property(v => v.PhoneNumber)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_PHONE_LENTH);
+        builder.ComplexProperty(v => v.PhoneNumber, vb =>
+        {
+            vb.Property(p => p.Value)
+                .IsRequired()
+                .HasMaxLength(Constants.MAX_PHONE_LENTH)
+                .HasColumnName("phone_number");
+        });
 
         //SocialNetworks
         builder.OwnsOne(v => v.SocialNetworks, vb =>
@@ -84,7 +94,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         {
             vb.ToJson("requisites");
 
-            vb.OwnsMany(l => l.AssistanceDetails, lb =>
+            vb.OwnsMany(l => l.Requisites, lb =>
             {
                 lb.OwnsOne(a => a.Name, ab =>
                 {
