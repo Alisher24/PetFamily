@@ -20,7 +20,7 @@ public record SocialNetwork
 
     public static Result<SocialNetwork> Create(Name name, string link)
     {
-        if (string.IsNullOrWhiteSpace(link))
+        if (string.IsNullOrWhiteSpace(link) || link.Length > Constants.MAX_HIGH_TEXT_LENTH)
             return Errors.General.ValueIsInvalid("Link");
 
         return new SocialNetwork(name, link);

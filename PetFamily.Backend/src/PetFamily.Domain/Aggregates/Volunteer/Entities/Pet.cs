@@ -23,7 +23,7 @@ public class Pet : Shared.Entity<PetId>
         Address address,
         double weight,
         double height,
-        string contactPhoneNumber,
+        PhoneNumber phoneNumber,
         bool isNeutered,
         DateOnly dateOfBirth,
         bool isVaccinated,
@@ -37,7 +37,7 @@ public class Pet : Shared.Entity<PetId>
         Address = address;
         Weight = weight;
         Height = height;
-        ContactPhoneNumber = contactPhoneNumber;
+        PhoneNumber = phoneNumber;
         IsNeutered = isNeutered;
         DateOfBirth = dateOfBirth;
         IsVaccinated = isVaccinated;
@@ -61,7 +61,7 @@ public class Pet : Shared.Entity<PetId>
 
     public double Height { get; private set; }
 
-    public string ContactPhoneNumber { get; private set; } = default!;
+    public PhoneNumber PhoneNumber { get; private set; } = default!;
 
     public bool IsNeutered { get; private set; }
 
@@ -86,7 +86,7 @@ public class Pet : Shared.Entity<PetId>
         Address address,
         double weight,
         double height,
-        string contactPhoneNumber,
+        PhoneNumber phoneNumber,
         bool isNeutered,
         DateOnly dateOfBirth,
         bool isVaccinated,
@@ -98,9 +98,6 @@ public class Pet : Shared.Entity<PetId>
         if (string.IsNullOrWhiteSpace(informationHealth))
             return Errors.General.ValueIsInvalid("Information health");
 
-        if (string.IsNullOrWhiteSpace(contactPhoneNumber))
-            return Errors.General.ValueIsInvalid("Phone number");
-
         return new Pet(
             id,
             name,
@@ -111,7 +108,7 @@ public class Pet : Shared.Entity<PetId>
             address,
             weight,
             height,
-            contactPhoneNumber,
+            phoneNumber,
             isNeutered,
             dateOfBirth,
             isVaccinated,
