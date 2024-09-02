@@ -1,3 +1,3 @@
-﻿namespace Domain.Models.Volunteer.Dto;
+﻿namespace Application.Volunteer.Dto;
 
 public record RequisiteDto(string Name, string Description);

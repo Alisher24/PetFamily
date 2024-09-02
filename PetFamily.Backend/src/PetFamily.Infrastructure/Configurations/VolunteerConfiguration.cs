@@ -1,7 +1,6 @@
-﻿using Domain.Models;
-using Domain.Models.Shared;
-using Domain.Models.Volunteer;
-using Domain.Models.Volunteer.ValueObjects.Ids;
+﻿using Domain.Aggregates.Volunteer;
+using Domain.Aggregates.Volunteer.ValueObjects.Ids;
+using Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

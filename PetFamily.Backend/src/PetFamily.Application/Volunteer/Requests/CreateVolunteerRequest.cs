@@ -1,4 +1,4 @@
-﻿using Domain.Models.Volunteer.Dto;
+﻿using Application.Volunteer.Dto;
 
 namespace Application.Volunteer.Requests;
 

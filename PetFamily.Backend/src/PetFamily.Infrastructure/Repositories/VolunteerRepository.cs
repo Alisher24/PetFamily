@@ -1,15 +1,14 @@
 ﻿using Application.Volunteer;
-using CSharpFunctionalExtensions;
-using Domain.Models.Shared;
-using Domain.Models.Volunteer;
-using Domain.Models.Volunteer.ValueObjects;
+using Domain.Aggregates.Volunteer;
+using Domain.Aggregates.Volunteer.ValueObjects;
+using Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
 public class VolunteerRepository(ApplicationDbContext dbContext) : IVolunteerRepository
 {
-    public async Task<Guid> Add(Volunteer volunteer, 
+    public async Task<Guid> Add(Volunteer volunteer,
         CancellationToken cancellationToken = default)
     {
         await dbContext.Volunteers.AddAsync(volunteer, cancellationToken);
@@ -19,7 +18,7 @@ public class VolunteerRepository(ApplicationDbContext dbContext) : IVolunteerRep
         return volunteer.Id.Value;
     }
 
-    public async Task<Result<Volunteer, Error>> GetByEmail(Email email, 
+    public async Task<Result<Volunteer>> GetByEmail(Email email,
         CancellationToken cancellationToken = default)
     {
         var volunteer = await dbContext.Volunteers
@@ -33,7 +32,7 @@ public class VolunteerRepository(ApplicationDbContext dbContext) : IVolunteerRep
         return volunteer;
     }
 
-    public async Task<Result<Volunteer, Error>> GetByPhoneNumber(PhoneNumber phoneNumber,
+    public async Task<Result<Volunteer>> GetByPhoneNumber(PhoneNumber phoneNumber,
         CancellationToken cancellationToken = default)
     {
         var volunteer = await dbContext.Volunteers

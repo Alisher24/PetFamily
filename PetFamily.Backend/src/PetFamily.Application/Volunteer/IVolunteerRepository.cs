@@ -1,19 +1,18 @@
-﻿using CSharpFunctionalExtensions;
-using Domain.Models.Shared;
-using Domain.Models.Volunteer.ValueObjects;
+﻿using Domain.Aggregates.Volunteer.ValueObjects;
+using Domain.Shared;
 
 namespace Application.Volunteer;
 
 public interface IVolunteerRepository
 {
-    Task<Guid> Add(Domain.Models.Volunteer.Volunteer volunteer, 
+    Task<Guid> Add(Domain.Aggregates.Volunteer.Volunteer volunteer, 
         CancellationToken cancellationToken = default);
 
-    Task<Result<Domain.Models.Volunteer.Volunteer, Error>> GetByEmail(
+    Task<Result<Domain.Aggregates.Volunteer.Volunteer>> GetByEmail(
         Email email,
         CancellationToken cancellationToken = default);
     
-    Task<Result<Domain.Models.Volunteer.Volunteer, Error>> GetByPhoneNumber(
+    Task<Result<Domain.Aggregates.Volunteer.Volunteer>> GetByPhoneNumber(
         PhoneNumber phoneNumber,
         CancellationToken cancellationToken = default);
 }
