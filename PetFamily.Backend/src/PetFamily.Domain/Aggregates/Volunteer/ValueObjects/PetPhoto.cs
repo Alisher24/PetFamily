@@ -15,7 +15,7 @@ public record PetPhoto
 
     public static Result<PetPhoto> Create(string path, bool isMain)
     {
-        if (string.IsNullOrWhiteSpace(path) || path.Length > Constants.MAX_HIGH_TEXT_LENTH)
+        if (string.IsNullOrWhiteSpace(path) || path.Length > Constants.MaxHighTextLenth)
             return Errors.General.ValueIsInvalid("Path");
 
         return new PetPhoto(path, isMain);

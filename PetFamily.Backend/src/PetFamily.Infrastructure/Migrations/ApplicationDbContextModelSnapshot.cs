@@ -513,11 +513,6 @@ namespace Infrastructure.Migrations
                                         .ValueGeneratedOnAdd()
                                         .HasColumnType("integer");
 
-                                    b2.Property<string>("Link")
-                                        .IsRequired()
-                                        .HasMaxLength(2000)
-                                        .HasColumnType("character varying(2000)");
-
                                     b2.HasKey("SocialNetworkListVolunteerId", "Id")
                                         .HasName("pk_volunteers");
 
@@ -526,6 +521,29 @@ namespace Infrastructure.Migrations
                                     b2.WithOwner()
                                         .HasForeignKey("SocialNetworkListVolunteerId")
                                         .HasConstraintName("fk_volunteers_volunteers_social_network_list_volunteer_id");
+
+                                    b2.OwnsOne("Domain.Aggregates.Volunteer.ValueObjects.Link", "Link", b3 =>
+                                        {
+                                            b3.Property<Guid>("SocialNetworkListVolunteerId")
+                                                .HasColumnType("uuid");
+
+                                            b3.Property<int>("SocialNetworkId")
+                                                .HasColumnType("integer");
+
+                                            b3.Property<string>("Value")
+                                                .IsRequired()
+                                                .HasMaxLength(2000)
+                                                .HasColumnType("character varying(2000)");
+
+                                            b3.HasKey("SocialNetworkListVolunteerId", "SocialNetworkId")
+                                                .HasName("pk_volunteers");
+
+                                            b3.ToTable("volunteers");
+
+                                            b3.WithOwner()
+                                                .HasForeignKey("SocialNetworkListVolunteerId", "SocialNetworkId")
+                                                .HasConstraintName("fk_volunteers_volunteers_social_network_list_volunteer_id_social_ne");
+                                        });
 
                                     b2.OwnsOne("Domain.CommonFields.Name", "Name", b3 =>
                                         {
@@ -549,6 +567,9 @@ namespace Infrastructure.Migrations
                                                 .HasForeignKey("SocialNetworkListVolunteerId", "SocialNetworkId")
                                                 .HasConstraintName("fk_volunteers_volunteers_social_network_list_volunteer_id_social_ne");
                                         });
+
+                                    b2.Navigation("Link")
+                                        .IsRequired();
 
                                     b2.Navigation("Name")
                                         .IsRequired();

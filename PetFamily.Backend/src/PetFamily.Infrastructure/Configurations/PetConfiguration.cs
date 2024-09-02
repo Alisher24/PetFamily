@@ -26,7 +26,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             pb.Property(n => n.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH)
+                .HasMaxLength(Constants.MaxLowTextLenth)
                 .HasColumnName("name");
         });
         
@@ -35,19 +35,19 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             pb.Property(d => d.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH)
+                .HasMaxLength(Constants.MaxHighTextLenth)
                 .HasColumnName("description");
         });
         
         //Color
         builder.Property(p => p.Color)
             .IsRequired()
-            .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+            .HasMaxLength(Constants.MaxLowTextLenth);
         
         //InformationHealth
         builder.Property(p => p.InformationHealth)
             .IsRequired()
-            .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH);
+            .HasMaxLength(Constants.MaxHighTextLenth);
         
         //Address
         builder.OwnsOne(p => p.Address, pb =>
@@ -56,23 +56,23 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
 
             pb.Property(a => a.County)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                .HasMaxLength(Constants.MaxLowTextLenth);
             
             pb.Property(a => a.City)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                .HasMaxLength(Constants.MaxLowTextLenth);
             
             pb.Property(a => a.District)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                .HasMaxLength(Constants.MaxLowTextLenth);
             
             pb.Property(a => a.Street)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                .HasMaxLength(Constants.MaxLowTextLenth);
             
             pb.Property(a => a.House)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                .HasMaxLength(Constants.MaxLowTextLenth);
         });
 
         //Weight
@@ -88,7 +88,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             pb.Property(pn => pn.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_PHONE_LENTH)
+                .HasMaxLength(Constants.MaxPhoneLenth)
                 .HasColumnName("phone_number");
         });
 
@@ -119,14 +119,14 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 {
                     ab.Property(n => n.Value)
                         .IsRequired()
-                        .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                        .HasMaxLength(Constants.MaxLowTextLenth);
                 });
 
                 lb.OwnsOne(a => a.Description, ab =>
                 {
                     ab.Property(d => d.Value)
                         .IsRequired()
-                        .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH);
+                        .HasMaxLength(Constants.MaxHighTextLenth);
                 });
             });
         });
@@ -140,7 +140,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             {
                 phb.Property(h => h.Path)
                     .IsRequired()
-                    .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH);
+                    .HasMaxLength(Constants.MaxHighTextLenth);
 
                 phb.Property(h => h.IsMain)
                     .IsRequired();

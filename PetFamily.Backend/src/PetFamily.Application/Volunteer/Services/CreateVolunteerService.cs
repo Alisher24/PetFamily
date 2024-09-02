@@ -8,67 +8,54 @@ namespace Application.Volunteer.Services;
 
 public class CreateVolunteerService(IVolunteerRepository volunteerRepository)
 {
-     public async Task<Result<Guid>> ExecuteAsync(
-          CreateVolunteerRequest request,
-          CancellationToken cancellationToken = default)
-     {
-          var email = Email.Create(request.Email);
+    public async Task<Result<Guid>> ExecuteAsync(
+        CreateVolunteerRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var email = Email.Create(request.Email);
 
-          if (email.IsFailure)
-               return email.Error;
-          
-          var phoneNumber = PhoneNumber.Create(request.PhoneNumber);
+        var phoneNumber = PhoneNumber.Create(request.PhoneNumber);
 
-          if (phoneNumber.IsFailure)
-               return phoneNumber.Error;
-          
-          var volunteerEmail = await volunteerRepository
-               .GetByEmail(email.Value, cancellationToken);
+        var volunteerEmail = await volunteerRepository
+            .GetByEmail(email.Value, cancellationToken);
 
-          if (volunteerEmail.IsSuccess)
-               return Errors.Volunteer.ValueIsAlreadyExists("email");
+        if (volunteerEmail.IsSuccess)
+            return Errors.Volunteer.ValueIsAlreadyExists("email");
 
-          var volunteerPhoneNumber = await volunteerRepository
-               .GetByPhoneNumber(phoneNumber.Value, cancellationToken);
+        var volunteerPhoneNumber = await volunteerRepository
+            .GetByPhoneNumber(phoneNumber.Value, cancellationToken);
 
-          if (volunteerPhoneNumber.IsSuccess)
-               return Errors.Volunteer.ValueIsAlreadyExists("phone number");
-          
-          var volunteerId = VolunteerId.NewVolunteerId();
+        if (volunteerPhoneNumber.IsSuccess)
+            return Errors.Volunteer.ValueIsAlreadyExists("phone number");
 
-          var fullName = FullName.Create(request.FullName.FirstName,
-               request.FullName.LastName,
-               request.FullName.Patronymic);
+        var volunteerId = VolunteerId.NewVolunteerId();
 
-          if (fullName.IsFailure)
-               return fullName.Error;
+        var fullName = FullName.Create(request.FullName.FirstName,
+            request.FullName.LastName,
+            request.FullName.Patronymic);
 
-          var description = Description.Create(request.Description);
+        var description = Description.Create(request.Description);
 
-          if (description.IsFailure)
-               return description.Error;
+        var socialNetworks = new SocialNetworkList(request.SocialNetworks
+            .Select(s => new SocialNetwork(Name.Create(s.Name).Value,
+                Link.Create(s.Link).Value)));
 
-          var socialNetworks = new SocialNetworkList(request.SocialNetworks
-                    .Select(s => SocialNetwork
-                         .Create(Name.Create(s.Name).Value, s.Link).Value));
+        var requisites = new RequisiteList(request.Requisites
+            .Select(r => new Requisite(Name.Create(r.Name).Value,
+                Description.Create(r.Description).Value)));
 
-          var requisites = new RequisiteList(request.Requisites
-                    .Select(r => Requisite
-                         .Create(Name.Create(r.Name).Value,
-                              Description.Create(r.Description).Value).Value));
+        var volunteer = new Domain.Aggregates.Volunteer.Volunteer(
+            volunteerId,
+            fullName.Value,
+            email.Value,
+            description.Value,
+            request.YearsExperience,
+            phoneNumber.Value,
+            socialNetworks,
+            requisites);
 
-          var volunteer = new Domain.Aggregates.Volunteer.Volunteer(
-               volunteerId, 
-               fullName.Value, 
-               email.Value, 
-               description.Value,
-               request.YearsExperience,
-               phoneNumber.Value,
-               socialNetworks,
-               requisites);
+        await volunteerRepository.Add(volunteer, cancellationToken);
 
-          await volunteerRepository.Add(volunteer, cancellationToken);
-
-          return volunteer.Id.Value;
-     }
+        return volunteer.Id.Value;
+    }
 }

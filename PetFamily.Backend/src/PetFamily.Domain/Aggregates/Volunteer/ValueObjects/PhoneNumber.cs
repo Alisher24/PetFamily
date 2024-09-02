@@ -15,7 +15,7 @@ public record PhoneNumber : ValueObject<string>
         string phoneNumber)
     {
         if (string.IsNullOrWhiteSpace(phoneNumber)
-            || phoneNumber.Length > Constants.MAX_PHONE_LENTH
+            || phoneNumber.Length > Constants.MaxPhoneLenth
             || !Regex.IsMatch(phoneNumber, PhoneNumberRegex))
         {
             return Errors.General.ValueIsInvalid("Phone number");
