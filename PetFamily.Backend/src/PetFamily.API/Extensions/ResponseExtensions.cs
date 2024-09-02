@@ -1,5 +1,5 @@
 ﻿using Domain.Enums;
-using Domain.Models.Shared;
+using Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Response;
 

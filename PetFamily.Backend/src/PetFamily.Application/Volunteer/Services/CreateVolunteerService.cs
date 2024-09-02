@@ -1,15 +1,14 @@
 ﻿using Application.Volunteer.Requests;
-using CSharpFunctionalExtensions;
-using Domain.Models.CommonFields;
-using Domain.Models.Shared;
-using Domain.Models.Volunteer.ValueObjects;
-using Domain.Models.Volunteer.ValueObjects.Ids;
+using Domain.Aggregates.Volunteer.ValueObjects;
+using Domain.Aggregates.Volunteer.ValueObjects.Ids;
+using Domain.CommonFields;
+using Domain.Shared;
 
 namespace Application.Volunteer.Services;
 
 public class CreateVolunteerService(IVolunteerRepository volunteerRepository)
 {
-     public async Task<Result<Guid, Error>> ExecuteAsync(
+     public async Task<Result<Guid>> ExecuteAsync(
           CreateVolunteerRequest request,
           CancellationToken cancellationToken = default)
      {
@@ -58,7 +57,7 @@ public class CreateVolunteerService(IVolunteerRepository volunteerRepository)
                          .Create(Name.Create(r.Name).Value,
                               Description.Create(r.Description).Value).Value));
 
-          var volunteer = new Domain.Models.Volunteer.Volunteer(
+          var volunteer = new Domain.Aggregates.Volunteer.Volunteer(
                volunteerId, 
                fullName.Value, 
                email.Value, 

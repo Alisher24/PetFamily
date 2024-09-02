@@ -1,5 +1,5 @@
-﻿using Domain.Models.Species;
-using Domain.Models.Volunteer;
+﻿using Domain.Aggregates.Species;
+using Domain.Aggregates.Volunteer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

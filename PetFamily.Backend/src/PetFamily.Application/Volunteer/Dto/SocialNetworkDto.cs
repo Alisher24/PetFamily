@@ -1,3 +1,3 @@
-﻿namespace Domain.Models.Volunteer.Dto;
+﻿namespace Application.Volunteer.Dto;
 
 public record SocialNetworkDto(string Name, string Link);

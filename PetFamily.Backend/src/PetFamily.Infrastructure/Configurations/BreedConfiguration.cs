@@ -1,7 +1,6 @@
-﻿using Domain.Models;
-using Domain.Models.Shared;
-using Domain.Models.Species;
-using Domain.Models.Species.Ids;
+﻿using Domain.Aggregates.Species.Entities;
+using Domain.Aggregates.Species.ValueObjects.Ids;
+using Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
