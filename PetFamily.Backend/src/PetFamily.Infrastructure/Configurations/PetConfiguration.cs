@@ -83,10 +83,14 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         builder.Property(p => p.Height)
             .IsRequired();
         
-        //ContactPhoneNumber
-        builder.Property(p => p.ContactPhoneNumber)
-            .IsRequired()
-            .HasMaxLength(Constants.MAX_PHONE_LENTH);
+        //PhoneNumber
+        builder.ComplexProperty(p => p.PhoneNumber, pb =>
+        {
+            pb.Property(pn => pn.Value)
+                .IsRequired()
+                .HasMaxLength(Constants.MAX_PHONE_LENTH)
+                .HasColumnName("phone_number");
+        });
 
         //IsNeutered
         builder.Property(p => p.IsNeutered)
