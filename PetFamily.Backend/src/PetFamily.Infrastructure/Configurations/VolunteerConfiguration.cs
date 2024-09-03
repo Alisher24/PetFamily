@@ -56,8 +56,12 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         });
         
         //YearsExperience
-        builder.Property(v => v.YearsExperience)
-            .IsRequired();
+        builder.ComplexProperty(v => v.YearsExperience, vb =>
+        {
+            vb.Property(y => y.Value)
+                .IsRequired()
+                .HasColumnName("years_experience");
+        });
         
         //PhoneNumber
         builder.ComplexProperty(v => v.PhoneNumber, vb =>

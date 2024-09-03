@@ -10,13 +10,14 @@ public record Link : ValueObject<string>
 
     public static Result<Link> Create(string link)
     {
-        link = link.Trim();
-        if (string.IsNullOrWhiteSpace(link)
-            || link.Contains(' ')
-            || link.Length > Constants.MaxHighTextLenth)
-        {
+        if (string.IsNullOrWhiteSpace(link))
             return Errors.General.ValueIsInvalid("Link");
-        }
+
+        if (link.Contains(' '))
+            return Errors.General.ValueIsInvalid("Link");
+
+        if (link.Length > Constants.MaxHighTextLenth)
+            return Errors.General.ValueIsInvalid("Link");
 
         return new Link(link);
     }

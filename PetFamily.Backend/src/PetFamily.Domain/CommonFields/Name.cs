@@ -14,7 +14,9 @@ public record Name
 
     public static Result<Name> Create(string value)
     {
-        if (string.IsNullOrWhiteSpace(value) || value.Length > Constants.MaxLowTextLenth)
+        if (string.IsNullOrWhiteSpace(value))
+            return Errors.General.ValueIsInvalid("Name");
+        if (value.Length > Constants.MaxLowTextLenth)
             return Errors.General.ValueIsInvalid("Name");
 
         return new Name(value);

@@ -19,7 +19,7 @@ public class Volunteer : Shared.Entity<VolunteerId>
         FullName fullName,
         Email email,
         Description description,
-        int yearsExperience,
+        YearsExperience yearsExperience,
         PhoneNumber phoneNumber,
         SocialNetworkList? socialNetworkList,
         RequisiteList? requisiteList) : base(id)
@@ -39,7 +39,7 @@ public class Volunteer : Shared.Entity<VolunteerId>
 
     public Description Description { get; private set; } = default!;
 
-    public int YearsExperience { get; private set; }
+    public YearsExperience YearsExperience { get; private set; }
 
     public PhoneNumber PhoneNumber { get; private set; } = default!;
 

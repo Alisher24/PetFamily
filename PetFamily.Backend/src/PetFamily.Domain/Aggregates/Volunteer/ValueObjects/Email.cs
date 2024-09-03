@@ -13,12 +13,14 @@ public record Email : ValueObject<string>
 
     public static Result<Email> Create(string email)
     {
-        if (string.IsNullOrWhiteSpace(email)
-            || email.Length > Constants.MaxEmailLenth
-            || !Regex.IsMatch(email, EmailRegex, RegexOptions.IgnoreCase))
-        {
+        if (string.IsNullOrWhiteSpace(email))
             return Errors.General.ValueIsInvalid("Email");
-        }
+
+        if (email.Length > Constants.MaxEmailLenth)
+            return Errors.General.ValueIsInvalid("Email");
+
+        if (!Regex.IsMatch(email, EmailRegex, RegexOptions.IgnoreCase))
+            return Errors.General.ValueIsInvalid("Email");
 
         return new Email(email);
     }

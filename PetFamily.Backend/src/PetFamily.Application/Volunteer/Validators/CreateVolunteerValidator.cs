@@ -16,7 +16,7 @@ public class CreateVolunteerValidator : AbstractValidator<CreateVolunteerRequest
 
         RuleFor(c => c.Description).MustBeValueObject(Description.Create);
 
-        RuleFor(c => c.YearsExperience).NotNull().Must(y => y >= 0);
+        RuleFor(c => c.YearsExperience).MustBeValueObject(YearsExperience.Create);
 
         RuleFor(c => c.PhoneNumber).MustBeValueObject(PhoneNumber.Create);
 

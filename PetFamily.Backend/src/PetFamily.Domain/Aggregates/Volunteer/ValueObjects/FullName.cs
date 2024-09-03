@@ -17,10 +17,14 @@ public record FullName
 
     public static Result<FullName> Create(string firstName, string lastName, string? patronymic)
     {
-        if (string.IsNullOrWhiteSpace(firstName) || firstName.Length > Constants.MaxLowTextLenth)
+        if (string.IsNullOrWhiteSpace(firstName))
+            return Errors.General.ValueIsInvalid("First name");
+        if (firstName.Length > Constants.MaxLowTextLenth)
             return Errors.General.ValueIsInvalid("First name");
 
-        if (string.IsNullOrWhiteSpace(lastName) || lastName.Length > Constants.MaxLowTextLenth)
+        if (string.IsNullOrWhiteSpace(lastName))
+            return Errors.General.ValueIsInvalid("Last name");
+        if (lastName.Length > Constants.MaxLowTextLenth)
             return Errors.General.ValueIsInvalid("Last name");
 
         if (!string.IsNullOrWhiteSpace(patronymic) && patronymic.Length > Constants.MaxLowTextLenth)

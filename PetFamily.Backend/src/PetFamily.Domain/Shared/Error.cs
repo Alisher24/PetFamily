@@ -4,7 +4,7 @@ namespace Domain.Shared;
 
 public record Error
 {
-    private const string Separator = ";";
+    private const string Separator = "||";
     
     private Error(string code, string message, ErrorType type)
     {
@@ -38,7 +38,7 @@ public record Error
         var parts = serialize.Split(Separator);
 
         if (parts.Length < 3)
-            return new Error(string.Empty, serialize, ErrorType.Validation);
+            throw new ArgumentException("Invalid serialized format");
 
         if (Enum.TryParse<ErrorType>(parts[2], out var type) == false)
             throw new ArgumentException("Invalid serialized format");

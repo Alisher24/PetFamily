@@ -209,10 +209,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<int>("YearsExperience")
-                        .HasColumnType("integer")
-                        .HasColumnName("years_experience");
-
                     b.ComplexProperty<Dictionary<string, object>>("Description", "Domain.Aggregates.Volunteer.Volunteer.Description#Description", b1 =>
                         {
                             b1.IsRequired();
@@ -244,6 +240,15 @@ namespace Infrastructure.Migrations
                                 .HasMaxLength(19)
                                 .HasColumnType("character varying(19)")
                                 .HasColumnName("phone_number");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("YearsExperience", "Domain.Aggregates.Volunteer.Volunteer.YearsExperience#YearsExperience", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<int>("Value")
+                                .HasColumnType("integer")
+                                .HasColumnName("years_experience");
                         });
 
                     b.HasKey("Id")

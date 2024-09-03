@@ -36,6 +36,8 @@ public class CreateVolunteerService(IVolunteerRepository volunteerRepository)
 
         var description = Description.Create(request.Description);
 
+        var yearsExperience = YearsExperience.Create(request.YearsExperience);
+
         var socialNetworks = new SocialNetworkList(request.SocialNetworks
             .Select(s => new SocialNetwork(Name.Create(s.Name).Value,
                 Link.Create(s.Link).Value)));
@@ -49,7 +51,7 @@ public class CreateVolunteerService(IVolunteerRepository volunteerRepository)
             fullName.Value,
             email.Value,
             description.Value,
-            request.YearsExperience,
+            yearsExperience.Value,
             phoneNumber.Value,
             socialNetworks,
             requisites);
