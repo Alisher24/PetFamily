@@ -29,10 +29,10 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    years_experience = table.Column<int>(type: "integer", nullable: false),
                     description = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
                     email = table.Column<string>(type: "character varying(320)", maxLength: 320, nullable: false),
                     phone_number = table.Column<string>(type: "character varying(19)", maxLength: 19, nullable: false),
+                    years_experience = table.Column<int>(type: "integer", nullable: false),
                     full_name = table.Column<string>(type: "jsonb", nullable: false),
                     requisites = table.Column<string>(type: "jsonb", nullable: true),
                     social_networks = table.Column<string>(type: "jsonb", nullable: true)

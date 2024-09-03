@@ -1,5 +1,4 @@
 ﻿using Domain.CommonFields;
-using Domain.Shared;
 
 namespace Domain.Aggregates.Volunteer.ValueObjects;
 
@@ -9,20 +8,12 @@ public record SocialNetwork
     {
     }
 
-    private SocialNetwork(Name name, string link)
+    public SocialNetwork(Name name, Link link)
     {
         Name = name;
         Link = link;
     }
 
     public Name Name { get; } = default!;
-    public string Link { get; } = default!;
-
-    public static Result<SocialNetwork> Create(Name name, string link)
-    {
-        if (string.IsNullOrWhiteSpace(link) || link.Length > Constants.MAX_HIGH_TEXT_LENTH)
-            return Errors.General.ValueIsInvalid("Link");
-
-        return new SocialNetwork(name, link);
-    }
+    public Link Link { get; } = default!;
 }

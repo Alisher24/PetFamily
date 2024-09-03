@@ -14,15 +14,17 @@ public static class ResponseExtensions
             ErrorType.Validation => StatusCodes.Status400BadRequest,
             ErrorType.NotFound => StatusCodes.Status404NotFound,
             ErrorType.AlreadyExists => StatusCodes.Status409Conflict,
-            
+
             _ => StatusCodes.Status500InternalServerError
         };
 
-        var envelope = Envelope.Error(error);
-        
+        var responseError = new ResponseError(error.Code, error.Message, null);
+
+        var envelope = Envelope.Error([responseError]);
+
         return new ObjectResult(envelope)
         {
-            StatusCode =  statusCode
+            StatusCode = statusCode
         };
     }
 }

@@ -14,12 +14,14 @@ public record PhoneNumber : ValueObject<string>
     public static Result<PhoneNumber> Create(
         string phoneNumber)
     {
-        if (string.IsNullOrWhiteSpace(phoneNumber)
-            || phoneNumber.Length > Constants.MAX_PHONE_LENTH
-            || !Regex.IsMatch(phoneNumber, PhoneNumberRegex))
-        {
+        if (string.IsNullOrWhiteSpace(phoneNumber))
             return Errors.General.ValueIsInvalid("Phone number");
-        }
+
+        if (phoneNumber.Length > Constants.MaxPhoneLenth)
+            return Errors.General.ValueIsInvalid("Phone number");
+
+        if (!Regex.IsMatch(phoneNumber, PhoneNumberRegex))
+            return Errors.General.ValueIsInvalid("Phone number");
 
         return new PhoneNumber(phoneNumber);
     }

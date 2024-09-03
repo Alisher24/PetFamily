@@ -27,14 +27,14 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
 
             vb.Property(f => f.FirstName)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                .HasMaxLength(Constants.MaxLowTextLenth);
 
             vb.Property(f => f.LastName)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                .HasMaxLength(Constants.MaxLowTextLenth);
 
             vb.Property(f => f.Patronymic)
-                .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                .HasMaxLength(Constants.MaxLowTextLenth);
         });
 
         //Email
@@ -42,7 +42,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         {
             vb.Property(e => e.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_EMAIL_LENTH)
+                .HasMaxLength(Constants.MaxEmailLenth)
                 .HasColumnName("email");
         });
         
@@ -51,20 +51,24 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         {
             vb.Property(d => d.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH)
+                .HasMaxLength(Constants.MaxHighTextLenth)
                 .HasColumnName("description");
         });
         
         //YearsExperience
-        builder.Property(v => v.YearsExperience)
-            .IsRequired();
+        builder.ComplexProperty(v => v.YearsExperience, vb =>
+        {
+            vb.Property(y => y.Value)
+                .IsRequired()
+                .HasColumnName("years_experience");
+        });
         
         //PhoneNumber
         builder.ComplexProperty(v => v.PhoneNumber, vb =>
         {
             vb.Property(p => p.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MAX_PHONE_LENTH)
+                .HasMaxLength(Constants.MaxPhoneLenth)
                 .HasColumnName("phone_number");
         });
 
@@ -75,16 +79,19 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
 
             vb.OwnsMany(l => l.SocialNetworks, lb =>
             {
-                lb.OwnsOne(a => a.Name, ab =>
+                lb.OwnsOne(s => s.Name, sb =>
                 {
-                    ab.Property(n => n.Value)
+                    sb.Property(n => n.Value)
                         .IsRequired()
-                        .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                        .HasMaxLength(Constants.MaxLowTextLenth);
                 });
 
-                lb.Property(s => s.Link)
-                    .IsRequired()
-                    .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH);
+                lb.OwnsOne(s => s.Link, sb =>
+                {
+                    sb.Property(l => l.Value)
+                        .IsRequired()
+                        .HasMaxLength(Constants.MaxHighTextLenth);
+                });
             });
         });
         
@@ -99,14 +106,14 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 {
                     ab.Property(n => n.Value)
                         .IsRequired()
-                        .HasMaxLength(Constants.MAX_LOW_TEXT_LENTH);
+                        .HasMaxLength(Constants.MaxLowTextLenth);
                 });
 
                 lb.OwnsOne(a => a.Description, ab =>
                 {
                     ab.Property(d => d.Value)
                         .IsRequired()
-                        .HasMaxLength(Constants.MAX_HIGH_TEXT_LENTH);
+                        .HasMaxLength(Constants.MaxHighTextLenth);
                 });
             });
         });
