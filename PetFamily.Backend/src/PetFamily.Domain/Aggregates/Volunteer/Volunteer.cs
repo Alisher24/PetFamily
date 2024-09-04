@@ -39,7 +39,7 @@ public class Volunteer : Shared.Entity<VolunteerId>
 
     public Description Description { get; private set; } = default!;
 
-    public YearsExperience YearsExperience { get; private set; }
+    public YearsExperience YearsExperience { get; private set; } = default!;
 
     public PhoneNumber PhoneNumber { get; private set; } = default!;
 
