@@ -1,7 +1,7 @@
 ﻿using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
-namespace PetFamily.API;
+namespace PetFamily.API.Extensions;
 
 public static class AppExtensions
 {
