@@ -21,20 +21,14 @@ public class CreateVolunteerService(IVolunteerRepository volunteerRepository, IL
             .GetByEmail(email.Value, cancellationToken);
 
         if (volunteerEmail.IsSuccess)
-        {
-            logger.LogError("Volunteer with email: {volunteerEmail} already exist", request.Email);
             return Errors.Volunteer.ValueIsAlreadyExists("email");
-        }
 
         var volunteerPhoneNumber = await volunteerRepository
             .GetByPhoneNumber(phoneNumber.Value, cancellationToken);
 
         if (volunteerPhoneNumber.IsSuccess)
-        {
-            logger.LogError("Volunteer with phone number: {volunteerPhoneNumber} already exist", request.PhoneNumber);
             return Errors.Volunteer.ValueIsAlreadyExists("phone number");
-        }
-
+        
         var volunteerId = VolunteerId.NewVolunteerId();
 
         var fullName = FullName.Create(request.FullName.FirstName,

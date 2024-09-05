@@ -1,6 +1,6 @@
 using Application;
 using Infrastructure;
-using Microsoft.EntityFrameworkCore;
+using PetFamily.API;
 using PetFamily.API.Validation;
 using Serilog;
 using Serilog.Events;
@@ -38,10 +38,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    await using var scope = app.Services.CreateAsyncScope();
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-    await dbContext.Database.MigrateAsync();
+    await app.ApplyMigration();
 }
 
 app.UseSerilogRequestLogging();
