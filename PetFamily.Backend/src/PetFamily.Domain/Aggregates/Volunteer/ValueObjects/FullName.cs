@@ -19,7 +19,7 @@ public record FullName
     {
         if (string.IsNullOrWhiteSpace(firstName))
             return Errors.General.ValueIsInvalid("First name");
-        if (firstName.Length > Constants.MaxLowTextLenth)
+        if (firstName.Length > Constants.MaxLowTextLenth) 
             return Errors.General.ValueIsInvalid("First name");
 
         if (string.IsNullOrWhiteSpace(lastName))

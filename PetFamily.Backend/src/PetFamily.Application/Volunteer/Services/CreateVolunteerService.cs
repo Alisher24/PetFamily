@@ -3,10 +3,11 @@ using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.Aggregates.Volunteer.ValueObjects.Ids;
 using Domain.CommonFields;
 using Domain.Shared;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Volunteer.Services;
 
-public class CreateVolunteerService(IVolunteerRepository volunteerRepository)
+public class CreateVolunteerService(IVolunteerRepository volunteerRepository, ILogger<CreateVolunteerRequest> logger)
 {
     public async Task<Result<Guid>> ExecuteAsync(
         CreateVolunteerRequest request,
@@ -27,7 +28,7 @@ public class CreateVolunteerService(IVolunteerRepository volunteerRepository)
 
         if (volunteerPhoneNumber.IsSuccess)
             return Errors.Volunteer.ValueIsAlreadyExists("phone number");
-
+        
         var volunteerId = VolunteerId.NewVolunteerId();
 
         var fullName = FullName.Create(request.FullName.FirstName,
@@ -57,6 +58,8 @@ public class CreateVolunteerService(IVolunteerRepository volunteerRepository)
             requisites);
 
         await volunteerRepository.Add(volunteer, cancellationToken);
+
+        logger.LogInformation("Created volunteer with id {volunteerId}", volunteerId.Value);
 
         return volunteer.Id.Value;
     }
