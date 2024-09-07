@@ -11,13 +11,12 @@ public static class Errors
             return Error.Validation("value.is.invalid", 
                 $"{label} is invalid");
         }
-
         public static Error NotFound(string? name = null)
         {
             var label = name ?? "Value";
 
             return Error.Validation("value.not.found",
-                $"{label} bot found");
+                $"{label} not found");
         }
     }
     

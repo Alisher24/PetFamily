@@ -1,4 +1,5 @@
-﻿using Application.Volunteer.Services;
+﻿using Application.Volunteer.Requests;
+using Application.Volunteer.Services;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
 
@@ -9,6 +10,9 @@ public static class Inject
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddScoped<CreateVolunteerService>();
+        services.AddScoped<UpdateMainInfoService>();
+        services.AddScoped<UpdateSocialNetworksService>();
+        services.AddScoped<UpdateRequisitesService>();
 
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
         

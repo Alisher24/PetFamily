@@ -1,32 +1,36 @@
-﻿namespace Domain.Shared;
+﻿using System.Collections;
+
+namespace Domain.Shared;
 
 public class Result
 {
-    protected Result(bool isSuccess, Error error)
+    protected Result(bool isSuccess, ErrorList errorList)
     {
-        if (isSuccess && error != Error.None)
+        if (isSuccess && errorList.Any())
             throw new InvalidOperationException();
 
-        if (!isSuccess && error == Error.None)
+        if (!isSuccess && !errorList.Any())
             throw new InvalidOperationException();
 
-        Error = error;
+        ErrorList = errorList;
         IsSuccess = isSuccess;
     }
 
-    public Error Error { get; }
+    public ErrorList ErrorList { get; }
     public bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;
 
-    public static Result Success() => new(true, Error.None);
+    public static Result Success() => new(true, new ErrorList([]));
 
-    public static implicit operator Result(Error error) => new(false, error);
+    public static implicit operator Result(Error error) => new(false, new ErrorList([error]));
+
+    public static implicit operator Result(ErrorList errorList) => new(false, errorList);
 }
 
 public class Result<TValue> : Result
 {
-    private Result(TValue value, bool isSuccess, Error error)
-        : base(isSuccess, error)
+    private Result(TValue value, bool isSuccess, ErrorList errorList)
+        : base(isSuccess, errorList)
     {
         _value = value;
     }
@@ -37,9 +41,11 @@ public class Result<TValue> : Result
         ? _value
         : throw new InvalidOperationException("The value of a failure result can not be accessed.");
 
-    public static Result<TValue> Success(TValue value) => new(value, true, Error.None);
+    public static Result<TValue> Success(TValue value) => new(value, true, new ErrorList([]));
 
-    public static implicit operator Result<TValue>(TValue value) => new(value, true, Error.None);
+    public static implicit operator Result<TValue>(TValue value) => new(value, true, new ErrorList([]));
 
-    public static implicit operator Result<TValue>(Error error) => new(default!, false, error);
+    public static implicit operator Result<TValue>(Error error) => new(default!, false, new ErrorList([error]));
+
+    public static implicit operator Result<TValue>(ErrorList errorList) => new(default!, false, errorList);
 }

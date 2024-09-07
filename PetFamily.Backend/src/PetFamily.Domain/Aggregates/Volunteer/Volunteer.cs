@@ -59,4 +59,22 @@ public class Volunteer : Shared.Entity<VolunteerId>
         .Count(x => x.HelpStatus == HelpStatuses.NeedsHelp);
 
     public void AddPet(Pet pet) => _pets.Add(pet);
+
+    public void UpdateMainInfo(FullName fullName,
+        Email email,
+        Description description,
+        YearsExperience yearsExperience,
+        PhoneNumber phoneNumber)
+    {
+        Email = email;
+        Description = description;
+        YearsExperience = yearsExperience;
+        PhoneNumber = phoneNumber;
+    }
+
+    public void UpdateSocialNetworks(SocialNetworkList? socialNetworkList) =>
+        SocialNetworks = socialNetworkList;
+
+    public void UpdateRequisites(RequisiteList? requisiteList) =>
+        Requisites = requisiteList;
 }

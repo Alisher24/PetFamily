@@ -1,31 +1,38 @@
-﻿using Application.Volunteer.Requests;
+﻿using Application.Extensions;
+using Application.Volunteer.Requests;
 using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.Aggregates.Volunteer.ValueObjects.Ids;
 using Domain.CommonFields;
 using Domain.Shared;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Volunteer.Services;
 
-public class CreateVolunteerService(IVolunteerRepository volunteerRepository, ILogger<CreateVolunteerRequest> logger)
+public class CreateVolunteerService(
+    IVolunteerRepository volunteerRepository, 
+    IValidator<CreateVolunteerRequest> validator,
+    ILogger<CreateVolunteerRequest> logger)
 {
     public async Task<Result<Guid>> ExecuteAsync(
         CreateVolunteerRequest request,
         CancellationToken cancellationToken = default)
     {
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        if (validationResult.IsValid == false)
+            return validationResult.ToErrorList();
+        
         var email = Email.Create(request.Email);
 
         var phoneNumber = PhoneNumber.Create(request.PhoneNumber);
 
         var volunteerEmail = await volunteerRepository
-            .GetByEmail(email.Value, cancellationToken);
-
+            .GetByEmailAsync(email.Value, cancellationToken);
         if (volunteerEmail.IsSuccess)
             return Errors.Volunteer.ValueIsAlreadyExists("email");
 
         var volunteerPhoneNumber = await volunteerRepository
-            .GetByPhoneNumber(phoneNumber.Value, cancellationToken);
-
+            .GetByPhoneNumberAsync(phoneNumber.Value, cancellationToken);
         if (volunteerPhoneNumber.IsSuccess)
             return Errors.Volunteer.ValueIsAlreadyExists("phone number");
         
@@ -57,7 +64,7 @@ public class CreateVolunteerService(IVolunteerRepository volunteerRepository, IL
             socialNetworks,
             requisites);
 
-        await volunteerRepository.Add(volunteer, cancellationToken);
+        await volunteerRepository.AddAsync(volunteer, cancellationToken);
 
         logger.LogInformation("Created volunteer with id {volunteerId}", volunteerId.Value);
 
