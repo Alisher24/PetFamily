@@ -158,5 +158,10 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             pb.Property(b => b.BreedId)
                 .IsRequired();
         });
+        
+        //IsDeleted
+        builder.Property<bool>("_isDeleted")
+            .UsePropertyAccessMode(PropertyAccessMode.Field)
+            .HasColumnName("is_deleted");
     }
 }

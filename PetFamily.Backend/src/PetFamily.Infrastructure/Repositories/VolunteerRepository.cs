@@ -19,17 +19,25 @@ public class VolunteerRepository(ApplicationDbContext dbContext) : IVolunteerRep
         return volunteer.Id.Value;
     }
 
-    public async Task<Guid> SaveAsync(Volunteer volunteer, 
-        CancellationToken cancellationToken = default)
+    public async Task<Guid> DeleteAsync(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
-        dbContext.Volunteers.Attach(volunteer);
-        
+        dbContext.Volunteers.Remove(volunteer);
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return volunteer.Id.Value;
     }
 
-    public async Task<Result<Volunteer>> GetByIdAsync(VolunteerId volunteerId, 
+    public async Task<Guid> SaveAsync(Volunteer volunteer,
+        CancellationToken cancellationToken = default)
+    {
+        dbContext.Volunteers.Attach(volunteer);
+
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        return volunteer.Id.Value;
+    }
+
+    public async Task<Result<Volunteer>> GetByIdAsync(VolunteerId volunteerId,
         CancellationToken cancellationToken = default)
     {
         var volunteer = await dbContext.Volunteers

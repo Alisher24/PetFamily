@@ -3,12 +3,15 @@ using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.Aggregates.Volunteer.ValueObjects.Ids;
 using Domain.CommonFields;
 using Domain.Enums;
+using Domain.Interfaces;
 
 namespace Domain.Aggregates.Volunteer;
 
-public class Volunteer : Shared.Entity<VolunteerId>
+public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 {
     private readonly List<Pet> _pets = [];
+
+    private bool _isDeleted = false;
 
     // ef core
     private Volunteer(VolunteerId id) : base(id)
@@ -77,4 +80,16 @@ public class Volunteer : Shared.Entity<VolunteerId>
 
     public void UpdateRequisites(RequisiteList? requisiteList) =>
         Requisites = requisiteList;
+
+    public void Delete()
+    {
+        if (!_isDeleted)
+            _isDeleted = true;
+    }
+    
+    public void Restore()
+    {
+        if (_isDeleted)
+            _isDeleted = false;
+    }
 }

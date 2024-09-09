@@ -2,13 +2,16 @@
 using Domain.Aggregates.Volunteer.ValueObjects.Ids;
 using Domain.CommonFields;
 using Domain.Enums;
+using Domain.Interfaces;
 using Domain.Shared;
 using Type = Domain.Aggregates.Species.ValueObjects.Type;
 
 namespace Domain.Aggregates.Volunteer.Entities;
 
-public class Pet : Shared.Entity<PetId>
+public class Pet : Entity<PetId>, ISoftDeletable
 {
+    private bool _isDeleted = false;
+    
     // ef core
     private Pet(PetId id) : base(id)
     {
@@ -76,6 +79,18 @@ public class Pet : Shared.Entity<PetId>
     public RequisiteList Requisites { get; private set; }
 
     public PetPhotoList PetPhotos { get; private set; }
+    
+    public void Delete()
+    {
+        if (!_isDeleted)
+            _isDeleted = true;
+    }
+    
+    public void Restore()
+    {
+        if (_isDeleted)
+            _isDeleted = false;
+    }
 
     public static Result<Pet> Create(PetId id,
         Name name,

@@ -23,7 +23,6 @@ public class UpdateMainInfoService(
 
         var volunteerResult = await volunteerRepository
             .GetByIdAsync(request.VolunteerId, cancellationToken);
-
         if (volunteerResult.IsFailure)
             return Errors.General.NotFound("volunteerId");
 

@@ -1,5 +1,4 @@
-﻿using Application.Volunteer.Requests;
-using Application.Volunteer.Services;
+﻿using Application.Volunteer.Services;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
 
@@ -13,6 +12,7 @@ public static class Inject
         services.AddScoped<UpdateMainInfoService>();
         services.AddScoped<UpdateSocialNetworksService>();
         services.AddScoped<UpdateRequisitesService>();
+        services.AddScoped<DeleteVolunteerService>();
 
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
         

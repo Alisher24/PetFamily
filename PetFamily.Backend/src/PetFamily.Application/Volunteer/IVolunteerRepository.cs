@@ -9,6 +9,9 @@ public interface IVolunteerRepository
     Task<Guid> AddAsync(Domain.Aggregates.Volunteer.Volunteer volunteer,
         CancellationToken cancellationToken = default);
 
+    Task<Guid> DeleteAsync(Domain.Aggregates.Volunteer.Volunteer volunteer,
+        CancellationToken cancellationToken = default);
+
     Task<Guid> SaveAsync(Domain.Aggregates.Volunteer.Volunteer volunteer, 
         CancellationToken cancellationToken = default);
 

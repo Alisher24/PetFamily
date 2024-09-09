@@ -72,4 +72,20 @@ public class VolunteerController : ApplicationController
 
         return Ok(result.Value);
     }
+    
+    [HttpDelete("{id:guid}")]
+    public async Task<ActionResult> Delete(
+        [FromRoute] Guid id,
+        [FromServices] DeleteVolunteerService service,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new DeleteVolunteerRequest(id);
+        
+        var result = await service.ExecuteAsync(request, cancellationToken);
+        
+        if (result.IsFailure)
+            return result.ErrorList.ToResponse();
+ 
+        return Ok(result.Value);
+    }
 }
