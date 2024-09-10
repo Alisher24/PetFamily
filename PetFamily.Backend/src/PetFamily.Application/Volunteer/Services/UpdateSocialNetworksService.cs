@@ -25,7 +25,7 @@ public class UpdateSocialNetworksService(
             .GetByIdAsync(request.VolunteerId, cancellationToken);
 
         if (volunteerResult.IsFailure)
-            return Errors.General.NotFound("volunteerId");
+            return Errors.General.NotFound($"Volunteer with id: {request.VolunteerId}");
 
         var socialNetworks = new SocialNetworkList(request.SocialNetworks
             .Select(s => new SocialNetwork(Name.Create(s.Name).Value,

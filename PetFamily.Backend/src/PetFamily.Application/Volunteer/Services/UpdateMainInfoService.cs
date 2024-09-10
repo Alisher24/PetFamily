@@ -24,7 +24,7 @@ public class UpdateMainInfoService(
         var volunteerResult = await volunteerRepository
             .GetByIdAsync(request.VolunteerId, cancellationToken);
         if (volunteerResult.IsFailure)
-            return Errors.General.NotFound("volunteerId");
+            return Errors.General.NotFound($"Volunteer with id: {request.VolunteerId}");
 
         var email = Email.Create(request.Dto.Email).Value;
 

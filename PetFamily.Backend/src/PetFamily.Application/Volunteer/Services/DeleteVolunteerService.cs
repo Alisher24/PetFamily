@@ -22,7 +22,7 @@ public class DeleteVolunteerService(
         var volunteerResult = await volunteerRepository
             .GetByIdAsync(request.VolunteerId, cancellationToken);
         if (volunteerResult.IsFailure)
-            return Errors.General.NotFound("volunteerId");
+            return Errors.General.NotFound($"Volunteer with id: {request.VolunteerId}");
         
         var result = await volunteerRepository.DeleteAsync(volunteerResult.Value, cancellationToken);
         

@@ -25,7 +25,7 @@ public class UpdateRequisitesService(
             .GetByIdAsync(request.VolunteerId, cancellationToken);
 
         if (volunteerResult.IsFailure)
-            return Errors.General.NotFound("volunteerId");
+            return Errors.General.NotFound($"Volunteer with id: {request.VolunteerId}");
 
         var requisites = new RequisiteList(request.Requisites
             .Select(r => new Requisite(Name.Create(r.Name).Value,
