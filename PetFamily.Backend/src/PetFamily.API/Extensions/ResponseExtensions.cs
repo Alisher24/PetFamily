@@ -7,25 +7,40 @@ namespace PetFamily.API.Extensions;
 
 public static class ResponseExtensions
 {
-    public static ActionResult ToResponse(this Error error)
+    public static ActionResult ToResponse(this ErrorList errorList)
     {
-        var statusCode = error.Type switch
+        if (!errorList.Any())
         {
-            ErrorType.Validation => StatusCodes.Status400BadRequest,
-            ErrorType.NotFound => StatusCodes.Status404NotFound,
-            ErrorType.AlreadyExists => StatusCodes.Status409Conflict,
-            ErrorType.Failure => StatusCodes.Status500InternalServerError,
+            return new ObjectResult(Envelope.Error(errorList))
+            {
+                StatusCode = StatusCodes.Status500InternalServerError
+            };
+        }
 
-            _ => StatusCodes.Status500InternalServerError
-        };
+        var distinctErrorTypes = errorList
+            .Select(x => x.Type)
+            .Distinct()
+            .ToList();
 
-        var responseError = new ResponseError(error.Code, error.Message, null);
+        var statusCode = distinctErrorTypes.Count > 1
+            ? StatusCodes.Status500InternalServerError
+            : GetStatusCode(distinctErrorTypes.First());
 
-        var envelope = Envelope.Error([responseError]);
+        var envelope = Envelope.Error(errorList);
 
         return new ObjectResult(envelope)
         {
             StatusCode = statusCode
         };
     }
+
+    private static int GetStatusCode(ErrorType errorType) => errorType switch
+    {
+        ErrorType.Validation => StatusCodes.Status400BadRequest,
+        ErrorType.NotFound => StatusCodes.Status404NotFound,
+        ErrorType.AlreadyExists => StatusCodes.Status409Conflict,
+        ErrorType.Failure => StatusCodes.Status500InternalServerError,
+
+        _ => StatusCodes.Status500InternalServerError
+    };
 }

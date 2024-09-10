@@ -9,6 +9,10 @@ public static class Inject
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddScoped<CreateVolunteerService>();
+        services.AddScoped<UpdateMainInfoService>();
+        services.AddScoped<UpdateSocialNetworksService>();
+        services.AddScoped<UpdateRequisitesService>();
+        services.AddScoped<DeleteVolunteerService>();
 
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
         

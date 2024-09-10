@@ -121,6 +121,12 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         //Pets
         builder.HasMany(v => v.Pets)
             .WithOne()
-            .HasForeignKey("volunteer_id");
+            .HasForeignKey("volunteer_id")
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        //IsDeleted
+        builder.Property<bool>("_isDeleted")
+            .UsePropertyAccessMode(PropertyAccessMode.Field)
+            .HasColumnName("is_deleted");
     }
 }
