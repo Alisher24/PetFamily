@@ -1,4 +1,5 @@
-﻿using Application.Volunteer.Services;
+﻿using Application.TestMinio.Services;
+using Application.Volunteer.Services;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
 
@@ -13,9 +14,13 @@ public static class Inject
         services.AddScoped<UpdateSocialNetworksService>();
         services.AddScoped<UpdateRequisitesService>();
         services.AddScoped<DeleteVolunteerService>();
+        services.AddScoped<UploadTestService>();
+        services.AddScoped<GetTestService>();
+        services.AddScoped<GetAllTestService>();
+        services.AddScoped<DeleteTestService>();
 
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
-        
+
         return services;
     }
 }
