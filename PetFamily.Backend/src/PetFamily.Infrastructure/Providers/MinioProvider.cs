@@ -11,16 +11,15 @@ namespace Infrastructure.Providers;
 public class MinioProvider(IMinioClient minioClient, ILogger<MinioProvider> logger) : IFileProvider
 {
     public async Task<Result<string>> UploadFileAsync(
-        UploadTestRequest request,
+        UploadRequest request,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            var bucketExistArgs = new BucketExistsArgs()
-                .WithBucket(request.BucketName);
-
-            var bucketExist = await minioClient.BucketExistsAsync(bucketExistArgs, cancellationToken);
-            if (bucketExist == false)
+            var bucketExist = await IsBucketExists(request.BucketName, cancellationToken);
+            if (bucketExist.IsFailure)
+                return bucketExist.ErrorList;
+            if (bucketExist.Value == false)
             {
                 var makeBucketArgs = new MakeBucketArgs()
                     .WithBucket(request.BucketName);
@@ -28,13 +27,11 @@ public class MinioProvider(IMinioClient minioClient, ILogger<MinioProvider> logg
                 await minioClient.MakeBucketAsync(makeBucketArgs, cancellationToken);
             }
 
-            var path = Guid.NewGuid();
-
             var putObjectArgs = new PutObjectArgs()
                 .WithBucket(request.BucketName)
                 .WithStreamData(request.Stream)
                 .WithObjectSize(request.Stream.Length)
-                .WithObject(path.ToString());
+                .WithObject(request.Path);
 
             var result = await minioClient.PutObjectAsync(putObjectArgs, cancellationToken);
 
@@ -50,11 +47,15 @@ public class MinioProvider(IMinioClient minioClient, ILogger<MinioProvider> logg
     }
 
     public async Task<Result<string>> GetFileAsync(
-        GetTestRequest request,
+        GetRequest request,
         CancellationToken cancellationToken = default)
     {
         try
         {
+            var bucketExist = await IsBucketExists(request.BucketName, cancellationToken);
+            if (bucketExist.IsFailure)
+                return bucketExist.ErrorList;
+
             var getObjectArgs = new PresignedGetObjectArgs()
                 .WithBucket(request.BucketName)
                 .WithObject(request.ObjectName)
@@ -90,7 +91,7 @@ public class MinioProvider(IMinioClient minioClient, ILogger<MinioProvider> logg
                 observable.Subscribe(async item =>
                 {
                     var url = await GetFileAsync(
-                        new GetTestRequest(bucket.Name, item.Key, expiry), cancellationToken);
+                        new GetRequest(bucket.Name, item.Key, expiry), cancellationToken);
                     result.Add(url.Value);
                 });
             }
@@ -105,11 +106,15 @@ public class MinioProvider(IMinioClient minioClient, ILogger<MinioProvider> logg
     }
 
     public async Task<Result<string>> DeleteFileAsync(
-        DeleteTestRequest request,
+        DeleteRequest request,
         CancellationToken cancellationToken = default)
     {
         try
         {
+            var bucketExist = await IsBucketExists(request.BucketName, cancellationToken);
+            if (bucketExist.IsFailure)
+                return bucketExist.ErrorList;
+
             var rmArgs = new RemoveObjectArgs()
                 .WithBucket(request.BucketName)
                 .WithObject(request.ObjectName);
@@ -124,6 +129,23 @@ public class MinioProvider(IMinioClient minioClient, ILogger<MinioProvider> logg
         {
             logger.LogError(ex, "Fail to remove file in minio");
             return Error.Failure("remove.file", "Fail to remove file in minio");
+        }
+    }
+
+    private async Task<Result<bool>> IsBucketExists(string bucketName,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var bucketExistArgs = new BucketExistsArgs()
+                .WithBucket(bucketName);
+
+            return await minioClient.BucketExistsAsync(bucketExistArgs, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Fail to check file in minio");
+            return Error.Failure("file.check", "Fail to check file in minio");
         }
     }
 }

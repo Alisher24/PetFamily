@@ -14,10 +14,10 @@ public static class Inject
         services.AddScoped<UpdateSocialNetworksService>();
         services.AddScoped<UpdateRequisitesService>();
         services.AddScoped<DeleteVolunteerService>();
-        services.AddScoped<UploadTestService>();
-        services.AddScoped<GetTestService>();
-        services.AddScoped<GetAllTestService>();
-        services.AddScoped<DeleteTestService>();
+        services.AddScoped<UploadService>();
+        services.AddScoped<GetService>();
+        services.AddScoped<GetAllService>();
+        services.AddScoped<DeleteService>();
 
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
 

@@ -3,7 +3,7 @@ using Domain.Shared;
 
 namespace Application.TestMinio.Services;
 
-public class GetAllTestService(IFileProvider fileProvider)
+public class GetAllService(IFileProvider fileProvider)
 {
     public async Task<Result<List<string>>> ExecuteAsync(int expiry,
         CancellationToken cancellationToken = default)

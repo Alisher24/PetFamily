@@ -4,9 +4,9 @@ using Domain.Shared;
 
 namespace Application.TestMinio.Services;
 
-public class DeleteTestService(IFileProvider fileProvider)
+public class DeleteService(IFileProvider fileProvider)
 {
-    public async Task<Result<string>> ExecuteAsync(DeleteTestRequest request,
+    public async Task<Result<string>> ExecuteAsync(DeleteRequest request,
         CancellationToken cancellationToken = default)
     {
         return await fileProvider.DeleteFileAsync(request, cancellationToken);
