@@ -22,7 +22,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSerilog();
 
-builder.Services.AddInfrastructure()
+builder.Services.AddInfrastructure(builder.Configuration)
     .AddApplication();
 
 var app = builder.Build();
