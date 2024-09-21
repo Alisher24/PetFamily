@@ -25,7 +25,7 @@ public class SpeciesConfiguration : IEntityTypeConfiguration<Species>
         {
             sb.Property(n => n.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxLowTextLenth)
+                .HasMaxLength(Constants.MaxLowTextLength)
                 .HasColumnName("name");
         });
         
@@ -34,7 +34,7 @@ public class SpeciesConfiguration : IEntityTypeConfiguration<Species>
         {
             sb.Property(d => d.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxHighTextLenth)
+                .HasMaxLength(Constants.MaxHighTextLength)
                 .HasColumnName("description");
         });
         

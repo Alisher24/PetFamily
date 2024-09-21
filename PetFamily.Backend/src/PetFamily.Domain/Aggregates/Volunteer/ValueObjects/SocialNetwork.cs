@@ -1,9 +1,10 @@
-﻿using Domain.CommonFields;
+﻿using Domain.CommonValueObjects;
 
 namespace Domain.Aggregates.Volunteer.ValueObjects;
 
 public record SocialNetwork
 {
+    //ef core
     private SocialNetwork()
     {
     }

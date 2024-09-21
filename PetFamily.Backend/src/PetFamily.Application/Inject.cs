@@ -1,5 +1,10 @@
-﻿using Application.TestMinio.Services;
-using Application.Volunteer.Services;
+﻿using Application.VolunteerManagement.Pets.AddPet;
+using Application.VolunteerManagement.Pets.AddPetPhotos;
+using Application.VolunteerManagement.Volunteers.Create;
+using Application.VolunteerManagement.Volunteers.Delete;
+using Application.VolunteerManagement.Volunteers.UpdateMainInfo;
+using Application.VolunteerManagement.Volunteers.UpdateRequisites;
+using Application.VolunteerManagement.Volunteers.UpdateSocialNetworks;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
 
@@ -14,10 +19,8 @@ public static class Inject
         services.AddScoped<UpdateSocialNetworksService>();
         services.AddScoped<UpdateRequisitesService>();
         services.AddScoped<DeleteVolunteerService>();
-        services.AddScoped<UploadService>();
-        services.AddScoped<GetService>();
-        services.AddScoped<GetAllService>();
-        services.AddScoped<DeleteService>();
+        services.AddScoped<AddPetService>();
+        services.AddScoped<AddPetPhotosService>();
 
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
 

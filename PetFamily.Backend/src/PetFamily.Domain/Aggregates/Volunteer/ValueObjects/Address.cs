@@ -5,20 +5,16 @@ namespace Domain.Aggregates.Volunteer.ValueObjects;
 public record Address
 {
     private Address(
-        string county,
         string city,
         string district,
         string street,
         string house)
     {
-        County = county;
         City = city;
         District = district;
         Street = street;
         House = house;
     }
-
-    public string County { get; } = default!;
 
     public string City { get; } = default!;
 
@@ -29,15 +25,11 @@ public record Address
     public string House { get; } = default!;
 
     public static Result<Address> Create(
-        string county,
         string city,
         string district,
         string street,
         string house)
     {
-        if (string.IsNullOrWhiteSpace(county))
-            return Errors.General.ValueIsInvalid("Country");
-
         if (string.IsNullOrWhiteSpace(city))
             return Errors.General.ValueIsInvalid("City");
 
@@ -50,6 +42,6 @@ public record Address
         if (string.IsNullOrWhiteSpace(house))
             return Errors.General.ValueIsInvalid("House");
 
-        return new Address(county, city, district, street, house);
+        return new Address(city, district, street, house);
     }
 }

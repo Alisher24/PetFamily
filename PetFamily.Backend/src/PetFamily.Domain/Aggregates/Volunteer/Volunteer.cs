@@ -1,7 +1,7 @@
 ﻿using Domain.Aggregates.Volunteer.Entities;
 using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.Aggregates.Volunteer.ValueObjects.Ids;
-using Domain.CommonFields;
+using Domain.CommonValueObjects;
 using Domain.Enums;
 using Domain.Interfaces;
 
@@ -24,16 +24,16 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         Description description,
         YearsExperience yearsExperience,
         PhoneNumber phoneNumber,
-        SocialNetworkList? socialNetworkList,
-        RequisiteList? requisiteList) : base(id)
+        ValueObjectList<SocialNetwork> socialNetworks,
+        ValueObjectList<Requisite> requisites) : base(id)
     {
         FullName = fullName;
         Email = email;
         Description = description;
         YearsExperience = yearsExperience;
         PhoneNumber = phoneNumber;
-        SocialNetworks = socialNetworkList;
-        Requisites = requisiteList;
+        SocialNetworks = socialNetworks;
+        Requisites = requisites;
     }
 
     public FullName FullName { get; private set; } = default!;
@@ -46,9 +46,9 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 
     public PhoneNumber PhoneNumber { get; private set; } = default!;
 
-    public SocialNetworkList? SocialNetworks { get; private set; }
+    public ValueObjectList<SocialNetwork> SocialNetworks { get; private set; }
 
-    public RequisiteList? Requisites { get; private set; }
+    public ValueObjectList<Requisite> Requisites { get; private set; }
 
     public IReadOnlyList<Pet> Pets => _pets;
 
@@ -75,11 +75,11 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         PhoneNumber = phoneNumber;
     }
 
-    public void UpdateSocialNetworks(SocialNetworkList? socialNetworkList) =>
-        SocialNetworks = socialNetworkList;
+    public void UpdateSocialNetworks(ValueObjectList<SocialNetwork> socialNetworks) =>
+        SocialNetworks = socialNetworks;
 
-    public void UpdateRequisites(RequisiteList? requisiteList) =>
-        Requisites = requisiteList;
+    public void UpdateRequisites(ValueObjectList<Requisite> requisites) =>
+        Requisites = requisites;
 
     public void Delete()
     {

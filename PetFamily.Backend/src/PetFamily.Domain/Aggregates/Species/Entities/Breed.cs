@@ -1,5 +1,6 @@
 ﻿using Domain.Aggregates.Species.ValueObjects.Ids;
-using Domain.CommonFields;
+using Domain.Aggregates.Volunteer.ValueObjects;
+using Domain.CommonValueObjects;
 
 namespace Domain.Aggregates.Species.Entities;
 

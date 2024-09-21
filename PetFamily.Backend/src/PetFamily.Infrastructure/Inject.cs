@@ -1,5 +1,7 @@
-﻿using Application.Providers;
-using Application.Volunteer;
+﻿using Application.Database;
+using Application.Providers;
+using Application.SpeciesManagement;
+using Application.VolunteerManagement;
 using Infrastructure.Interceptors;
 using Infrastructure.Options;
 using Infrastructure.Providers;
@@ -16,8 +18,9 @@ public static class Inject
         IConfiguration configuration)
     {
         services.AddScoped<ApplicationDbContext>();
-        services.AddSingleton<SoftDeleteInterceptor>();
         services.AddScoped<IVolunteerRepository, VolunteerRepository>();
+        services.AddScoped<ISpeciesRepository, SpeciesRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddMinio(configuration);
 

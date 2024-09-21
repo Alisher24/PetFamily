@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Domain.CommonValueObjects;
 using Domain.Shared;
 
 namespace Domain.Aggregates.Volunteer.ValueObjects;
@@ -16,7 +17,7 @@ public record Email : ValueObject<string>
         if (string.IsNullOrWhiteSpace(email))
             return Errors.General.ValueIsInvalid("Email");
 
-        if (email.Length > Constants.MaxEmailLenth)
+        if (email.Length > Constants.MaxEmailLength)
             return Errors.General.ValueIsInvalid("Email");
 
         if (!Regex.IsMatch(email, EmailRegex, RegexOptions.IgnoreCase))
