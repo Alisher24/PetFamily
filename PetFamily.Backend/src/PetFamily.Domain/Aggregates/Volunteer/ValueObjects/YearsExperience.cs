@@ -1,4 +1,5 @@
-﻿using Domain.Shared;
+﻿using Domain.CommonValueObjects;
+using Domain.Shared;
 
 namespace Domain.Aggregates.Volunteer.ValueObjects;
 

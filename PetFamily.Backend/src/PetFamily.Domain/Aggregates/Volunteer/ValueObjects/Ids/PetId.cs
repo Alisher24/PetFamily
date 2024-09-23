@@ -1,4 +1,6 @@
-﻿namespace Domain.Aggregates.Volunteer.ValueObjects.Ids;
+﻿using Domain.CommonValueObjects;
+
+namespace Domain.Aggregates.Volunteer.ValueObjects.Ids;
 
 public record PetId : ValueObject<Guid>
 {

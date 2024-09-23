@@ -26,107 +26,123 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             pb.Property(n => n.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxLowTextLenth)
+                .HasMaxLength(Constants.MaxLowTextLength)
                 .HasColumnName("name");
         });
-        
+
         //Description
         builder.ComplexProperty(p => p.Description, pb =>
         {
             pb.Property(d => d.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxHighTextLenth)
+                .HasMaxLength(Constants.MaxHighTextLength)
                 .HasColumnName("description");
         });
-        
+
         //Color
-        builder.Property(p => p.Color)
-            .IsRequired()
-            .HasMaxLength(Constants.MaxLowTextLenth);
-        
+        builder.ComplexProperty(p => p.Color, pb =>
+        {
+            pb.Property(c => c.Value)
+                .IsRequired()
+                .HasMaxLength(Constants.MaxLowTextLength)
+                .HasColumnName("color");
+        });
+
         //InformationHealth
-        builder.Property(p => p.InformationHealth)
-            .IsRequired()
-            .HasMaxLength(Constants.MaxHighTextLenth);
-        
+        builder.ComplexProperty(p => p.InformationHealth, pb =>
+        {
+            pb.Property(i => i.Value)
+                .IsRequired()
+                .HasMaxLength(Constants.MaxHighTextLength)
+                .HasColumnName("information_health");
+        });
+
         //Address
         builder.OwnsOne(p => p.Address, pb =>
         {
             pb.ToJson("address");
 
-            pb.Property(a => a.County)
-                .IsRequired()
-                .HasMaxLength(Constants.MaxLowTextLenth);
-            
             pb.Property(a => a.City)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxLowTextLenth);
-            
+                .HasMaxLength(Constants.MaxLowTextLength);
+
             pb.Property(a => a.District)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxLowTextLenth);
-            
+                .HasMaxLength(Constants.MaxLowTextLength);
+
             pb.Property(a => a.Street)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxLowTextLenth);
-            
+                .HasMaxLength(Constants.MaxLowTextLength);
+
             pb.Property(a => a.House)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxLowTextLenth);
+                .HasMaxLength(Constants.MaxLowTextLength);
         });
 
         //Weight
-        builder.Property(p => p.Weight)
-            .IsRequired();
-        
+        builder.ComplexProperty(p => p.Weight, pb =>
+        {
+            pb.Property(w => w.Value)
+                .IsRequired()
+                .HasColumnName("weight");
+        });
+
         //Height
-        builder.Property(p => p.Height)
-            .IsRequired();
-        
+        builder.ComplexProperty(p => p.Height, pb =>
+        {
+            pb.Property(h => h.Value)
+                .IsRequired()
+                .HasColumnName("height");
+        });
+
         //PhoneNumber
         builder.ComplexProperty(p => p.PhoneNumber, pb =>
         {
             pb.Property(pn => pn.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxPhoneLenth)
+                .HasMaxLength(Constants.MaxPhoneLength)
                 .HasColumnName("phone_number");
         });
 
         //IsNeutered
         builder.Property(p => p.IsNeutered)
             .IsRequired();
-        
+
         //DateOfBirth
-        builder.Property(p => p.DateOfBirth)
-            .IsRequired();
+        builder.ComplexProperty(p => p.DateOfBirth, pb =>
+        {
+            pb.Property(d => d.Value)
+                .IsRequired()
+                .HasColumnName("date_of_birth");
+        });
 
         //HelpStatus
         builder.Property(p => p.HelpStatus)
             .IsRequired();
-        
+
         //CreatedAt
         builder.Property(p => p.CreatedAt)
             .IsRequired();
-        
+
         //Requisites
         builder.OwnsOne(p => p.Requisites, pb =>
         {
             pb.ToJson("requisites");
-            
-            pb.OwnsMany(l => l.Requisites, lb =>
+
+            pb.OwnsMany(l => l.Values, lb =>
             {
                 lb.OwnsOne(a => a.Name, ab =>
                 {
                     ab.Property(n => n.Value)
                         .IsRequired()
-                        .HasMaxLength(Constants.MaxLowTextLenth);
+                        .HasMaxLength(Constants.MaxLowTextLength);
                 });
 
                 lb.OwnsOne(a => a.Description, ab =>
                 {
                     ab.Property(d => d.Value)
                         .IsRequired()
-                        .HasMaxLength(Constants.MaxHighTextLenth);
+                        .HasMaxLength(Constants.MaxHighTextLength);
                 });
             });
         });
@@ -136,17 +152,19 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             pb.ToJson("pet_photos");
 
-            pb.OwnsMany(ph => ph.PetPhotos, phb =>
+            pb.OwnsMany(ph => ph.Values, phb =>
             {
-                phb.Property(h => h.Path)
-                    .IsRequired()
-                    .HasMaxLength(Constants.MaxHighTextLenth);
+                phb.OwnsOne(h => h.Path, hb =>
+                {
+                    hb.Property(p => p.Value)
+                        .IsRequired();
+                });
 
                 phb.Property(h => h.IsMain)
                     .IsRequired();
             });
         });
-        
+
         //Type
         builder.ComplexProperty(p => p.Type, pb =>
         {
@@ -158,7 +176,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             pb.Property(b => b.BreedId)
                 .IsRequired();
         });
-        
+
         //IsDeleted
         builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)

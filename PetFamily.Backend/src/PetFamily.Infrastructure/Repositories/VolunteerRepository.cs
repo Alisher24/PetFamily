@@ -1,7 +1,8 @@
-﻿using Application.Volunteer;
+﻿using Application.VolunteerManagement;
 using Domain.Aggregates.Volunteer;
 using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.Aggregates.Volunteer.ValueObjects.Ids;
+using Domain.CommonValueObjects;
 using Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,25 +15,20 @@ public class VolunteerRepository(ApplicationDbContext dbContext) : IVolunteerRep
     {
         await dbContext.Volunteers.AddAsync(volunteer, cancellationToken);
 
-        await dbContext.SaveChangesAsync(cancellationToken);
-
         return volunteer.Id.Value;
     }
 
-    public async Task<Guid> DeleteAsync(Volunteer volunteer, CancellationToken cancellationToken = default)
+    public Guid Delete(Volunteer volunteer, CancellationToken cancellationToken = default)
     {
         dbContext.Volunteers.Remove(volunteer);
-        await dbContext.SaveChangesAsync(cancellationToken);
 
         return volunteer.Id.Value;
     }
 
-    public async Task<Guid> SaveAsync(Volunteer volunteer,
+    public Guid Save(Volunteer volunteer,
         CancellationToken cancellationToken = default)
     {
         dbContext.Volunteers.Attach(volunteer);
-
-        await dbContext.SaveChangesAsync(cancellationToken);
 
         return volunteer.Id.Value;
     }

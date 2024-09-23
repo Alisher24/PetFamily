@@ -1,6 +1,6 @@
 ﻿using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.Aggregates.Volunteer.ValueObjects.Ids;
-using Domain.CommonFields;
+using Domain.CommonValueObjects;
 using Domain.Enums;
 using Domain.Interfaces;
 using Domain.Shared;
@@ -11,26 +11,27 @@ namespace Domain.Aggregates.Volunteer.Entities;
 public class Pet : Entity<PetId>, ISoftDeletable
 {
     private bool _isDeleted = false;
-    
+
     // ef core
     private Pet(PetId id) : base(id)
     {
     }
 
-    private Pet(PetId id,
+    public Pet(PetId id,
         Name name,
         Description description,
         Type type,
-        string color,
-        string informationHealth,
+        Color color,
+        InformationHealth informationHealth,
         Address address,
-        double weight,
-        double height,
+        Weight weight,
+        Height height,
         PhoneNumber phoneNumber,
         bool isNeutered,
-        DateOnly dateOfBirth,
+        DateOfBirth dateOfBirth,
         bool isVaccinated,
-        HelpStatuses helpStatus) : base(id)
+        HelpStatuses helpStatus,
+        ValueObjectList<Requisite> requisites) : base(id)
     {
         Name = name;
         Description = description;
@@ -45,7 +46,9 @@ public class Pet : Entity<PetId>, ISoftDeletable
         DateOfBirth = dateOfBirth;
         IsVaccinated = isVaccinated;
         HelpStatus = helpStatus;
-        CreatedAt = DateTime.Now;
+        CreatedAt = DateTime.UtcNow;
+        Requisites = requisites;
+        PetPhotos = new ValueObjectList<PetPhoto>(new List<PetPhoto>());
     }
 
     public Name Name { get; private set; } = default!;
@@ -54,21 +57,21 @@ public class Pet : Entity<PetId>, ISoftDeletable
 
     public Type Type { get; private set; } = default!;
 
-    public string Color { get; private set; } = default!;
+    public Color Color { get; private set; } = default!;
 
-    public string InformationHealth { get; private set; } = default!;
+    public InformationHealth InformationHealth { get; private set; } = default!;
 
     public Address Address { get; private set; } = default!;
 
-    public double Weight { get; private set; }
+    public Weight Weight { get; private set; }
 
-    public double Height { get; private set; }
+    public Height Height { get; private set; }
 
     public PhoneNumber PhoneNumber { get; private set; } = default!;
 
     public bool IsNeutered { get; private set; }
 
-    public DateOnly DateOfBirth { get; private set; }
+    public DateOfBirth DateOfBirth { get; private set; }
 
     public bool IsVaccinated { get; private set; }
 
@@ -76,57 +79,26 @@ public class Pet : Entity<PetId>, ISoftDeletable
 
     public DateTime CreatedAt { get; private set; }
 
-    public RequisiteList Requisites { get; private set; }
+    public ValueObjectList<Requisite> Requisites { get; private set; }
 
-    public PetPhotoList PetPhotos { get; private set; }
-    
+    public ValueObjectList<PetPhoto> PetPhotos { get; private set; }
+
+    public void AddPhotos(List<PetPhoto> petPhotos)
+    {
+        var photos = PetPhotos.Values.ToList();
+        photos.AddRange(petPhotos);
+        PetPhotos = photos;
+    }
+
     public void Delete()
     {
         if (!_isDeleted)
             _isDeleted = true;
     }
-    
+
     public void Restore()
     {
         if (_isDeleted)
             _isDeleted = false;
-    }
-
-    public static Result<Pet> Create(PetId id,
-        Name name,
-        Description description,
-        Type type,
-        string color,
-        string informationHealth,
-        Address address,
-        double weight,
-        double height,
-        PhoneNumber phoneNumber,
-        bool isNeutered,
-        DateOnly dateOfBirth,
-        bool isVaccinated,
-        HelpStatuses helpStatus)
-    {
-        if (string.IsNullOrWhiteSpace(color))
-            return Errors.General.ValueIsInvalid("Color");
-
-        if (string.IsNullOrWhiteSpace(informationHealth))
-            return Errors.General.ValueIsInvalid("Information health");
-
-        return new Pet(
-            id,
-            name,
-            description,
-            type,
-            color,
-            informationHealth,
-            address,
-            weight,
-            height,
-            phoneNumber,
-            isNeutered,
-            dateOfBirth,
-            isVaccinated,
-            helpStatus);
     }
 }

@@ -27,14 +27,14 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
 
             vb.Property(f => f.FirstName)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxLowTextLenth);
+                .HasMaxLength(Constants.MaxLowTextLength);
 
             vb.Property(f => f.LastName)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxLowTextLenth);
+                .HasMaxLength(Constants.MaxLowTextLength);
 
             vb.Property(f => f.Patronymic)
-                .HasMaxLength(Constants.MaxLowTextLenth);
+                .HasMaxLength(Constants.MaxLowTextLength);
         });
 
         //Email
@@ -42,7 +42,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         {
             vb.Property(e => e.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxEmailLenth)
+                .HasMaxLength(Constants.MaxEmailLength)
                 .HasColumnName("email");
         });
         
@@ -51,7 +51,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         {
             vb.Property(d => d.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxHighTextLenth)
+                .HasMaxLength(Constants.MaxHighTextLength)
                 .HasColumnName("description");
         });
         
@@ -68,7 +68,7 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         {
             vb.Property(p => p.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxPhoneLenth)
+                .HasMaxLength(Constants.MaxPhoneLength)
                 .HasColumnName("phone_number");
         });
 
@@ -77,20 +77,20 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         {
             vb.ToJson("social_networks");
 
-            vb.OwnsMany(l => l.SocialNetworks, lb =>
+            vb.OwnsMany(l => l.Values, lb =>
             {
                 lb.OwnsOne(s => s.Name, sb =>
                 {
                     sb.Property(n => n.Value)
                         .IsRequired()
-                        .HasMaxLength(Constants.MaxLowTextLenth);
+                        .HasMaxLength(Constants.MaxLowTextLength);
                 });
 
                 lb.OwnsOne(s => s.Link, sb =>
                 {
                     sb.Property(l => l.Value)
                         .IsRequired()
-                        .HasMaxLength(Constants.MaxHighTextLenth);
+                        .HasMaxLength(Constants.MaxHighTextLength);
                 });
             });
         });
@@ -100,20 +100,20 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         {
             vb.ToJson("requisites");
 
-            vb.OwnsMany(l => l.Requisites, lb =>
+            vb.OwnsMany(l => l.Values, lb =>
             {
                 lb.OwnsOne(a => a.Name, ab =>
                 {
                     ab.Property(n => n.Value)
                         .IsRequired()
-                        .HasMaxLength(Constants.MaxLowTextLenth);
+                        .HasMaxLength(Constants.MaxLowTextLength);
                 });
 
                 lb.OwnsOne(a => a.Description, ab =>
                 {
                     ab.Property(d => d.Value)
                         .IsRequired()
-                        .HasMaxLength(Constants.MaxHighTextLenth);
+                        .HasMaxLength(Constants.MaxHighTextLength);
                 });
             });
         });
