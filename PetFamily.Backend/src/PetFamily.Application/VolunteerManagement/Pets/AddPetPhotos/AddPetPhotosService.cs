@@ -1,7 +1,6 @@
 ﻿using Application.Database;
 using Application.Extensions;
 using Application.FileProvider;
-using Application.Providers;
 using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.Shared;
 using FluentValidation;
@@ -25,8 +24,6 @@ public class AddPetPhotosService(
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
         if (validationResult.IsValid == false)
             return validationResult.ToErrorList();
-        
-        var transaction = await unitOfWork.BeginTransaction(cancellationToken);
 
         try
         {
@@ -35,10 +32,9 @@ public class AddPetPhotosService(
             if (volunteerResult.IsFailure)
                 return volunteerResult.ErrorList;
 
-            var petResult = volunteerResult.Value.Pets
-                .FirstOrDefault(p => p.Id.Value == command.PetId);
-            if (petResult is null)
-                return Errors.General.NotFound($"Pet with id: {command.PetId}");
+            var petResult = volunteerResult.Value.GetPetById(command.PetId);
+            if (petResult.IsFailure)
+                return petResult.ErrorList;
 
             List<FileData> fileData = [];
             foreach (var photo in command.Photos)
@@ -54,33 +50,30 @@ public class AddPetPhotosService(
                 fileData.Add(fileContent);
             }
 
-            var petPhotos = fileData
-                .Select(f => (PhotoPath)f.FilePath)
-                .Select(f => new PetPhoto(f, false))
-                .ToList();
-
-            petResult.AddPhotos(petPhotos);
-
-            await unitOfWork.SaveChanges(cancellationToken);
-
             var uploadResult = await fileProvider.UploadFileAsync(fileData, cancellationToken);
             if (uploadResult.IsFailure)
                 return uploadResult.ErrorList;
-        
-            transaction.Commit();
+
+            var petPhotos = uploadResult.Value
+                .Select(f => new PetPhoto((PhotoPath)f, false))
+                .ToList();
+
+            petResult.Value.AddPhotos(petPhotos);
+
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+
+            logger.LogInformation("Uploaded photos to pet - {id}", petResult.Value.Id.Value);
 
             return Result.Success();
         }
         catch (Exception ex)
         {
             logger.LogError(ex,
-                "Can not add pet photos to pet - {id} in transaction",
+                "Can not upload photos to pet - {id} in transaction",
                 command.PetId);
-            
-            transaction.Rollback();
 
             return Error.Failure(
-                $"Can not add pet photos to pet - {command.PetId}", 
+                $"Can not upload photos to pet - {command.PetId}",
                 "pet.photo.failure");
         }
     }

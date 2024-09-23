@@ -1,8 +1,7 @@
 ﻿using Application.Database;
-using Application.Providers;
+using Application.FileProvider;
 using Application.SpeciesManagement;
 using Application.VolunteerManagement;
-using Infrastructure.Interceptors;
 using Infrastructure.Options;
 using Infrastructure.Providers;
 using Infrastructure.Repositories;

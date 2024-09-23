@@ -27,7 +27,7 @@ public class DeleteVolunteerService(
         
         volunteerResult.Value.Delete();
 
-        await unitOfWork.SaveChanges(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         
         logger.LogInformation("Deleted volunteer with id {volunteerId}", command.VolunteerId);
 

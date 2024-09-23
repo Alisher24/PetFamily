@@ -1,9 +1,7 @@
-﻿using Application.FileProvider;
-using Application.TestMinio.Requests;
-using Domain.Interfaces;
+﻿using Domain.Interfaces;
 using Domain.Shared;
 
-namespace Application.Providers;
+namespace Application.FileProvider;
 
 public interface IFileProvider
 {

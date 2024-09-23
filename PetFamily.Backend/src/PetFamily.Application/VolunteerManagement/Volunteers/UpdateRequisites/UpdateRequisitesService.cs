@@ -34,7 +34,7 @@ public class UpdateRequisitesService(
 
         volunteerResult.Value.UpdateRequisites(requisites);
 
-        await unitOfWork.SaveChanges(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         
         logger.LogInformation("Updated volunteer requisites with id {volunteerId}", command.VolunteerId);
 

@@ -57,7 +57,7 @@ public class UpdateMainInfoService(
 
         volunteerResult.Value.UpdateMainInfo(fullName, email, description, yearsExperience, phoneNumber);
 
-        await unitOfWork.SaveChanges(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         logger.LogInformation("Updated volunteer with id {volunteerId}", command.VolunteerId);
 

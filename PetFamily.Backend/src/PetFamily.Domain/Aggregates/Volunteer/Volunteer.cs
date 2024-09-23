@@ -4,6 +4,7 @@ using Domain.Aggregates.Volunteer.ValueObjects.Ids;
 using Domain.CommonValueObjects;
 using Domain.Enums;
 using Domain.Interfaces;
+using Domain.Shared;
 
 namespace Domain.Aggregates.Volunteer;
 
@@ -62,6 +63,15 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         .Count(x => x.HelpStatus == HelpStatuses.NeedsHelp);
 
     public void AddPet(Pet pet) => _pets.Add(pet);
+
+    public Result<Pet> GetPetById(PetId petId)
+    {
+        var pet = _pets.FirstOrDefault(p => p.Id == petId);
+        if (pet is null)
+            return Errors.General.NotFound($"Pet with id: {petId.Value}");
+
+        return pet;
+    }
 
     public void UpdateMainInfo(FullName fullName,
         Email email,

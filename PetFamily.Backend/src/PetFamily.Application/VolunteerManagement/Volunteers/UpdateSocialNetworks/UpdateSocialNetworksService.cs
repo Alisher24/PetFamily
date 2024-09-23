@@ -34,7 +34,7 @@ public class UpdateSocialNetworksService(
 
         volunteerResult.Value.UpdateSocialNetworks(socialNetworks);
 
-        await unitOfWork.SaveChanges(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         
         logger.LogInformation("Updated volunteer social networks with id {volunteerId}", command.VolunteerId);
 
