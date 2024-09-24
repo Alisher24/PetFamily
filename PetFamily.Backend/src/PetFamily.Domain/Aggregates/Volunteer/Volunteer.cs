@@ -89,13 +89,21 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 
         if (position > pet.SerialNumber.Value)
         {
-            foreach (var value in _pets.Where(value => value.SerialNumber.Value > pet.SerialNumber.Value))
-                value.SetSerialNumber(SerialNumber.Create(value.SerialNumber.Value - 1).Value);
+            foreach (var value in _pets)
+            {
+                if (value.SerialNumber.Value > pet.SerialNumber.Value 
+                    && position >= value.SerialNumber.Value) 
+                    value.SetSerialNumber(SerialNumber.Create(value.SerialNumber.Value - 1).Value);
+            }
         }
         else
         {
-            foreach (var value in _pets.Where(value => value.SerialNumber.Value < pet.SerialNumber.Value))
-                value.SetSerialNumber(SerialNumber.Create(value.SerialNumber.Value + 1).Value);
+            foreach (var value in _pets)
+            {
+                if (value.SerialNumber.Value < pet.SerialNumber.Value
+                    && position <= value.SerialNumber.Value) 
+                    value.SetSerialNumber(SerialNumber.Create(value.SerialNumber.Value + 1).Value);
+            }
         }
 
         pet.SetSerialNumber(positionResult.Value);
