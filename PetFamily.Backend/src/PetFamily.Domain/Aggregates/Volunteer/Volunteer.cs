@@ -62,7 +62,45 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
     public int PetsUnderTreatment => _pets
         .Count(x => x.HelpStatus == HelpStatuses.NeedsHelp);
 
-    public void AddPet(Pet pet) => _pets.Add(pet);
+    public Result AddPet(Pet pet)
+    {
+        var serialNumber = SerialNumber
+            .Create(_pets.Count + 1);
+        if (serialNumber.IsFailure)
+            return serialNumber.ErrorList;
+
+        pet.SetSerialNumber(serialNumber.Value);
+        _pets.Add(pet);
+
+        return Result.Success();
+    }
+
+    public Result MovePet(Pet pet, int position)
+    {
+        if (position > _pets.Count)
+            return Errors.General.ValueIsInvalid("position");
+
+        if (pet.SerialNumber.Value == position)
+            return Result.Success();
+
+        var positionResult = SerialNumber.Create(position);
+        if (positionResult.IsFailure)
+            return positionResult.ErrorList;
+
+        if (position > pet.SerialNumber.Value)
+        {
+            foreach (var value in _pets.Where(value => value.SerialNumber.Value > pet.SerialNumber.Value))
+                value.SetSerialNumber(SerialNumber.Create(value.SerialNumber.Value - 1).Value);
+        }
+        else
+        {
+            foreach (var value in _pets.Where(value => value.SerialNumber.Value < pet.SerialNumber.Value))
+                value.SetSerialNumber(SerialNumber.Create(value.SerialNumber.Value + 1).Value);
+        }
+
+        pet.SetSerialNumber(positionResult.Value);
+        return Result.Success();
+    }
 
     public Result<Pet> GetPetById(PetId petId)
     {
@@ -96,7 +134,7 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         if (!_isDeleted)
             _isDeleted = true;
     }
-    
+
     public void Restore()
     {
         if (_isDeleted)

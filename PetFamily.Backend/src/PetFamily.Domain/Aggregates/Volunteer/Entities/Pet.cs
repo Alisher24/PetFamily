@@ -48,7 +48,7 @@ public class Pet : Entity<PetId>, ISoftDeletable
         HelpStatus = helpStatus;
         CreatedAt = DateTime.UtcNow;
         Requisites = requisites;
-        PetPhotos = new ValueObjectList<PetPhoto>(new List<PetPhoto>());
+        PetPhotos = new ValueObjectList<PetPhoto>([]);
     }
 
     public Name Name { get; private set; } = default!;
@@ -63,15 +63,15 @@ public class Pet : Entity<PetId>, ISoftDeletable
 
     public Address Address { get; private set; } = default!;
 
-    public Weight Weight { get; private set; }
+    public Weight Weight { get; private set; } = default!;
 
-    public Height Height { get; private set; }
+    public Height Height { get; private set; } = default!;
 
     public PhoneNumber PhoneNumber { get; private set; } = default!;
 
     public bool IsNeutered { get; private set; }
 
-    public DateOfBirth DateOfBirth { get; private set; }
+    public DateOfBirth DateOfBirth { get; private set; } = default!;
 
     public bool IsVaccinated { get; private set; }
 
@@ -79,9 +79,11 @@ public class Pet : Entity<PetId>, ISoftDeletable
 
     public DateTime CreatedAt { get; private set; }
 
-    public ValueObjectList<Requisite> Requisites { get; private set; }
+    public SerialNumber SerialNumber { get; private set; } = default!;
 
-    public ValueObjectList<PetPhoto> PetPhotos { get; private set; }
+    public ValueObjectList<Requisite> Requisites { get; private set; } = default!;
+
+    public ValueObjectList<PetPhoto> PetPhotos { get; private set; } = default!;
 
     public void AddPhotos(List<PetPhoto> petPhotos)
     {
@@ -89,6 +91,9 @@ public class Pet : Entity<PetId>, ISoftDeletable
         photos.AddRange(petPhotos);
         PetPhotos = photos;
     }
+
+    public void SetSerialNumber(SerialNumber serialNumber) =>
+        SerialNumber = serialNumber;
 
     public void Delete()
     {

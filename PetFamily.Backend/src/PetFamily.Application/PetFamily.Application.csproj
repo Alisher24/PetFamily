@@ -17,7 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="VolunteerManagement\Pets\" />
       <Folder Include="VolunteerManagement\Volunteers\" />
     </ItemGroup>
 
