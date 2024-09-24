@@ -1,9 +1,8 @@
-﻿using Application.Dtos;
-using Domain.Aggregates.Volunteer.ValueObjects;
+﻿using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.CommonValueObjects;
 using FluentValidation;
 
-namespace Application.VolunteerManagement.Volunteers.UpdateMainInfo;
+namespace Application.Dtos.Validators;
 
 public class UpdateMainInfoDtoValidator : AbstractValidator<UpdateMainInfoDto>
 {

@@ -29,4 +29,13 @@ public class Species : Entity<SpeciesId>
     public IReadOnlyList<Breed> Breeds => _breeds;
 
     public void AddBread(Breed breed) => _breeds.Add(breed);
+
+    public Result<Breed> GetBreedById(BreedId breedId)
+    {
+        var breed = _breeds.FirstOrDefault(b => b.Id == breedId);
+        if (breed is null)
+            return Errors.General.NotFound($"Breed with id: {breedId.Value}");
+
+        return breed;
+    }
 }

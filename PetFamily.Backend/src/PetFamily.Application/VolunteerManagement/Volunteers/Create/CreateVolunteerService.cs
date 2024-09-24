@@ -1,4 +1,6 @@
-﻿using Application.Extensions;
+﻿using Application.Database;
+using Application.Extensions;
+using Domain.Aggregates.Volunteer;
 using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.Aggregates.Volunteer.ValueObjects.Ids;
 using Domain.CommonValueObjects;
@@ -11,7 +13,8 @@ namespace Application.VolunteerManagement.Volunteers.Create;
 public class CreateVolunteerService(
     IVolunteerRepository volunteerRepository, 
     IValidator<CreateVolunteerCommand> validator,
-    ILogger<CreateVolunteerService> logger)
+    ILogger<CreateVolunteerService> logger,
+    IUnitOfWork unitOfWork)
 {
     public async Task<Result<Guid>> ExecuteAsync(
         CreateVolunteerCommand command,
@@ -53,7 +56,7 @@ public class CreateVolunteerService(
             .Select(r => new Requisite(Name.Create(r.Name).Value,
                 Description.Create(r.Description).Value)));
 
-        var volunteer = new Domain.Aggregates.Volunteer.Volunteer(
+        var volunteer = new Volunteer(
             volunteerId,
             fullName.Value,
             email.Value,
@@ -64,6 +67,7 @@ public class CreateVolunteerService(
             requisites);
 
         await volunteerRepository.AddAsync(volunteer, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         logger.LogInformation("Created volunteer with id {volunteerId}", volunteerId.Value);
 

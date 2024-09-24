@@ -1,6 +1,4 @@
 ﻿using Application.FileProvider;
-using Application.Providers;
-using Application.TestMinio.Requests;
 using Domain.Interfaces;
 using Domain.Shared;
 using Microsoft.Extensions.Logging;

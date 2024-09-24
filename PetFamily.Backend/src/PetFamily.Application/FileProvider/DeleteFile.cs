@@ -1,3 +1,3 @@
-﻿namespace Application.TestMinio.Requests;
+﻿namespace Application.FileProvider;
 
 public record DeleteFile(string BucketName, string ObjectName);

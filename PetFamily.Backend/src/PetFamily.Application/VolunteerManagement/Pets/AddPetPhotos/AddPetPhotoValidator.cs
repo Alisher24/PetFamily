@@ -1,4 +1,6 @@
-﻿using Domain.Shared;
+﻿using Application.Dtos.Validators;
+using Application.FileProvider;
+using Domain.Shared;
 using FluentValidation;
 
 namespace Application.VolunteerManagement.Pets.AddPetPhotos;
@@ -9,6 +11,9 @@ public class AddPetPhotoValidator : AbstractValidator<AddPetPhotosCommand>
     {
         RuleFor(a => a.VolunteerId).NotEmpty().WithError(Errors.General.ValueIsInvalid());
         RuleFor(a => a.PetId).NotEmpty().WithError(Errors.General.ValueIsInvalid());
-        RuleFor(a => a.Photos).NotEmpty().WithError(Errors.General.ValueIsInvalid());
+        RuleForEach(a => a.Photos).SetValidator(new UploadFileDtoValidator()
+        {
+            MaxLength = StreamLengths.MaxPhotoLength
+        });
     }
 }
