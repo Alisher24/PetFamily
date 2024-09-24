@@ -22,7 +22,7 @@ public class FormFileProcessor : IAsyncDisposable
     {
         foreach (var file in _fileDtos)
         {
-            await file.Content.DisposeAsync();
+            await file.Stream.DisposeAsync();
         }
     }
 }

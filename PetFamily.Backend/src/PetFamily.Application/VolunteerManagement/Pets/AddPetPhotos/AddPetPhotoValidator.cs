@@ -1,4 +1,5 @@
 ﻿using Application.Dtos.Validators;
+using Application.FileProvider;
 using Domain.Shared;
 using FluentValidation;
 
@@ -12,7 +13,7 @@ public class AddPetPhotoValidator : AbstractValidator<AddPetPhotosCommand>
         RuleFor(a => a.PetId).NotEmpty().WithError(Errors.General.ValueIsInvalid());
         RuleForEach(a => a.Photos).SetValidator(new UploadFileDtoValidator()
         {
-            MaxLength = 10485760
+            MaxLength = StreamLengths.MaxPhotoLength
         });
     }
 }

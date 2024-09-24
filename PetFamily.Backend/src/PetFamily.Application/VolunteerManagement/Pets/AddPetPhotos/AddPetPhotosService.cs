@@ -1,4 +1,6 @@
 ﻿using Application.Database;
+using Application.Dtos;
+using Application.Dtos.Validators;
 using Application.Extensions;
 using Application.FileProvider;
 using Domain.Aggregates.Volunteer.ValueObjects;
@@ -45,7 +47,7 @@ public class AddPetPhotosService(
                 if (photoPath.IsFailure)
                     return photoPath.ErrorList;
 
-                var fileContent = new FileData(photo.Content, photoPath.Value, BucketName);
+                var fileContent = new FileData(photo.Stream, photoPath.Value, BucketName);
 
                 fileData.Add(fileContent);
             }

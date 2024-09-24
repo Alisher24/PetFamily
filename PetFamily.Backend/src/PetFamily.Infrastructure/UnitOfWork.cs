@@ -6,7 +6,7 @@ namespace Infrastructure;
 
 public class UnitOfWork(ApplicationDbContext dbContext) : IUnitOfWork
 {
-    public async Task<IDbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
+    public async Task<IDbTransaction> BeginTransaction(CancellationToken cancellationToken = default)
     {
         var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
 

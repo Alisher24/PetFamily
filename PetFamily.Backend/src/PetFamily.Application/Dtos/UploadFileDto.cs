@@ -1,3 +1,3 @@
 ﻿namespace Application.Dtos;
 
-public record UploadFileDto(Stream Content, string FileName);
+public record UploadFileDto(Stream Stream, string FileName);

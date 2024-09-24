@@ -9,6 +9,6 @@ public class UploadFileDtoValidator : AbstractValidator<UploadFileDto>
     public UploadFileDtoValidator()
     {
         RuleFor(c => c.FileName).NotEmpty().WithError(Errors.General.ValueIsInvalid());
-        RuleFor(c => c.Content).Must(c => c.Length < MaxLength);
+        RuleFor(c => c.Stream).Must(c => c.Length < MaxLength);
     }
 }
