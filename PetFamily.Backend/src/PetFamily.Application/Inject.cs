@@ -1,5 +1,6 @@
 ﻿using Application.VolunteerManagement.Pets.AddPet;
 using Application.VolunteerManagement.Pets.AddPetPhotos;
+using Application.VolunteerManagement.Pets.MovePet;
 using Application.VolunteerManagement.Volunteers.Create;
 using Application.VolunteerManagement.Volunteers.Delete;
 using Application.VolunteerManagement.Volunteers.UpdateMainInfo;
@@ -21,6 +22,7 @@ public static class Inject
         services.AddScoped<DeleteVolunteerService>();
         services.AddScoped<AddPetService>();
         services.AddScoped<AddPetPhotosService>();
+        services.AddScoped<MovePetService>();
 
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
 

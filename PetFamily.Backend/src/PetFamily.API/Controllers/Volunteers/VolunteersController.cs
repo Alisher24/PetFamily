@@ -1,6 +1,7 @@
 ﻿using Application.Dtos;
 using Application.VolunteerManagement.Pets.AddPet;
 using Application.VolunteerManagement.Pets.AddPetPhotos;
+using Application.VolunteerManagement.Pets.MovePet;
 using Application.VolunteerManagement.Volunteers.Create;
 using Application.VolunteerManagement.Volunteers.Delete;
 using Application.VolunteerManagement.Volunteers.UpdateMainInfo;
@@ -117,6 +118,23 @@ public class VolunteersController : ApplicationController
         var fileDtos = fileProcessor.Process(photos);
 
         var command = new AddPetPhotosCommand(volunteerId, petId, fileDtos);
+
+        var result = await service.ExecuteAsync(command, cancellationToken);
+        if (result.IsFailure)
+            return result.ErrorList.ToResponse();
+
+        return Ok();
+    }
+
+    [HttpPut("{volunteerId:guid}/pets/{petId:guid}/movement")]
+    public async Task<ActionResult> MovePet(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petId,
+        [FromBody] int position,
+        [FromServices] MovePetService service,
+        CancellationToken cancellationToken)
+    {
+        var command = new MovePetCommand(volunteerId, petId, position);
 
         var result = await service.ExecuteAsync(command, cancellationToken);
         if (result.IsFailure)
