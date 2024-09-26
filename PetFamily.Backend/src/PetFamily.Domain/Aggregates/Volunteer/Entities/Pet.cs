@@ -79,7 +79,7 @@ public class Pet : Entity<PetId>, ISoftDeletable
 
     public DateTime CreatedAt { get; private set; }
 
-    public SerialNumber SerialNumber { get; private set; } = default!;
+    public Position Position { get; private set; } = default!;
 
     public ValueObjectList<Requisite> Requisites { get; private set; } = default!;
 
@@ -92,8 +92,8 @@ public class Pet : Entity<PetId>, ISoftDeletable
         PetPhotos = photos;
     }
 
-    public void SetSerialNumber(SerialNumber serialNumber) =>
-        SerialNumber = serialNumber;
+    public void SetPosition(Position position) =>
+        Position = position;
 
     public void Delete()
     {
