@@ -64,49 +64,68 @@ public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 
     public Result AddPet(Pet pet)
     {
-        var serialNumber = SerialNumber
+        var serialNumber = Position
             .Create(_pets.Count + 1);
         if (serialNumber.IsFailure)
             return serialNumber.ErrorList;
 
-        pet.SetSerialNumber(serialNumber.Value);
+        pet.SetPosition(serialNumber.Value);
         _pets.Add(pet);
 
         return Result.Success();
     }
 
-    public Result MovePet(Pet pet, int position)
+    public Result MovePet(Pet pet, int newPosition)
     {
-        if (position > _pets.Count)
+        if (newPosition > _pets.Count)
             return Errors.General.ValueIsInvalid("position");
 
-        if (pet.SerialNumber.Value == position)
+        if (pet.Position.Value == newPosition)
             return Result.Success();
 
-        var positionResult = SerialNumber.Create(position);
+        var positionResult = Position.Create(newPosition);
         if (positionResult.IsFailure)
             return positionResult.ErrorList;
 
-        if (position > pet.SerialNumber.Value)
+        var moveResult = MovePetsBetweenPositions(pet.Position, in newPosition);
+        if (moveResult.IsFailure)
+            return moveResult.ErrorList;
+
+        pet.SetPosition(positionResult.Value);
+        return Result.Success();
+    }
+
+    private Result MovePetsBetweenPositions(Position currentPosition, in int newPosition)
+    {
+        if (newPosition > currentPosition)
         {
             foreach (var value in _pets)
             {
-                if (value.SerialNumber.Value > pet.SerialNumber.Value 
-                    && position >= value.SerialNumber.Value) 
-                    value.SetSerialNumber(SerialNumber.Create(value.SerialNumber.Value - 1).Value);
+                if (value.Position > currentPosition
+                    && newPosition >= value.Position)
+                {
+                    var positionResult = Position.Create(value.Position - 1);
+                    if (positionResult.IsFailure)
+                        return positionResult.ErrorList;
+                    value.SetPosition(positionResult.Value);
+                }
             }
         }
         else
         {
             foreach (var value in _pets)
             {
-                if (value.SerialNumber.Value < pet.SerialNumber.Value
-                    && position <= value.SerialNumber.Value) 
-                    value.SetSerialNumber(SerialNumber.Create(value.SerialNumber.Value + 1).Value);
+                if (value.Position < currentPosition
+                    && newPosition <= value.Position)
+                {
+                    var positionResult = Position.Create(value.Position + 1);
+                    if (positionResult.IsFailure)
+                        return positionResult.ErrorList;
+                    value.SetPosition(positionResult.Value);
+                }
             }
         }
 
-        pet.SetSerialNumber(positionResult.Value);
         return Result.Success();
     }
 

@@ -177,12 +177,12 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .IsRequired();
         });
         
-        //SerialNumber
-        builder.ComplexProperty(p => p.SerialNumber, pb =>
+        //Position
+        builder.ComplexProperty(p => p.Position, pb =>
         {
             pb.Property(s => s.Value)
                 .IsRequired()
-                .HasColumnName("serial_number");
+                .HasColumnName("position");
         });
 
         //IsDeleted

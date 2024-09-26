@@ -10,6 +10,6 @@ public class MovePetValidator : AbstractValidator<MovePetCommand>
     {
         RuleFor(m => m.VolunteerId).NotEmpty().WithError(Errors.General.ValueIsInvalid("VolunteerId"));
         RuleFor(m => m.PetId).NotEmpty().WithError(Errors.General.ValueIsInvalid("PetId"));
-        RuleFor(m => m.Position).MustBeValueObject(SerialNumber.Create);
+        RuleFor(m => m.Position).MustBeValueObject(Position.Create);
     }
 }
