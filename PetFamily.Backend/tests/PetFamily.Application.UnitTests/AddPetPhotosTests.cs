@@ -30,7 +30,7 @@ public class AddPetPhotosTests
     private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
 
     [Fact]
-    public async void AddPetPhotosService_Should_Add_One_Photo_To_Pet()
+    public async void AddPetPhotosService_Should_Add_Photo_To_Pet()
     {
         // arrange
         var cancellationToken = new CancellationTokenSource().Token;
@@ -75,7 +75,7 @@ public class AddPetPhotosTests
     }
 
     [Fact]
-    public async void AddPetPhotosService_Should_Add_Some_Photos_To_Pet()
+    public async void AddPetPhotosService_Should_Add_Photos_To_Pet()
     {
         // arrange
         var cancellationToken = new CancellationTokenSource().Token;
