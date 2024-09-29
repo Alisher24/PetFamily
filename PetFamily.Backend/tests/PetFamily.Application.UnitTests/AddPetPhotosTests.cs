@@ -1,6 +1,7 @@
 ﻿using Application.Database;
 using Application.Dtos;
-using Application.FileProvider;
+using Application.Files;
+using Application.Messaging;
 using Application.VolunteerManagement;
 using Application.VolunteerManagement.Pets.AddPetPhotos;
 using Domain.Aggregates.Species.ValueObjects.Ids;
@@ -17,6 +18,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using Moq;
+using FileInfo = Application.Files.FileInfo;
 using Type = Domain.Aggregates.Species.ValueObjects.Type;
 
 namespace PetFamily.Application.UnitTests;
@@ -27,6 +29,7 @@ public class AddPetPhotosTests
     private readonly Mock<IVolunteerRepository> _volunteerRepositoryMock = new();
     private readonly Mock<IValidator<AddPetPhotosCommand>> _validatorMock = new();
     private readonly Mock<ILogger<AddPetPhotosService>> _loggerMock = new();
+    private readonly Mock<IMessageQueue<IEnumerable<FileInfo>>> _messageQueueMock = new();
     private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
 
     [Fact]
@@ -43,9 +46,9 @@ public class AddPetPhotosTests
 
         var command = new AddPetPhotosCommand(volunteer.Id, pet.Id, [new UploadFileDto(stream, fileName)]);
 
-        var filePath = PhotoPath.Create(Guid.NewGuid(), ".jpg").Value;
+        var filePath = PhotoPath.Create("Test", ".jpg").Value;
 
-        _fileProviderMock.Setup(f => f.UploadFileAsync(It.IsAny<List<FileData>>(), cancellationToken))
+        _fileProviderMock.Setup(f => f.UploadFilesAsync(It.IsAny<List<FileData>>(), cancellationToken))
             .ReturnsAsync(Result<IReadOnlyList<IFilePath>>.Success([filePath]));
 
         _volunteerRepositoryMock.Setup(v => v.GetByIdAsync(volunteer.Id, cancellationToken))
@@ -62,6 +65,7 @@ public class AddPetPhotosTests
             _volunteerRepositoryMock.Object,
             _validatorMock.Object,
             _loggerMock.Object,
+            _messageQueueMock.Object,
             _unitOfWorkMock.Object);
 
         // act
@@ -95,12 +99,12 @@ public class AddPetPhotosTests
 
         PhotoPath[] filePaths =
         [
-            PhotoPath.Create(Guid.NewGuid(), ".jpg").Value,
-            PhotoPath.Create(Guid.NewGuid(), ".jpg").Value,
-            PhotoPath.Create(Guid.NewGuid(), ".jpg").Value
+            PhotoPath.Create("Test", ".jpg").Value,
+            PhotoPath.Create("Test", ".jpg").Value,
+            PhotoPath.Create("Test", ".jpg").Value
         ];
 
-        _fileProviderMock.Setup(f => f.UploadFileAsync(It.IsAny<List<FileData>>(), cancellationToken))
+        _fileProviderMock.Setup(f => f.UploadFilesAsync(It.IsAny<List<FileData>>(), cancellationToken))
             .ReturnsAsync(Result<IReadOnlyList<IFilePath>>.Success(filePaths));
 
         _volunteerRepositoryMock.Setup(v => v.GetByIdAsync(volunteer.Id, cancellationToken))
@@ -117,6 +121,7 @@ public class AddPetPhotosTests
             _volunteerRepositoryMock.Object,
             _validatorMock.Object,
             _loggerMock.Object,
+            _messageQueueMock.Object,
             _unitOfWorkMock.Object);
 
         // act

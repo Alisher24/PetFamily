@@ -1,13 +1,18 @@
 ﻿using Application.Database;
-using Application.FileProvider;
+using Application.Files;
+using Application.Messaging;
 using Application.SpeciesManagement;
 using Application.VolunteerManagement;
+using Infrastructure.BackgroundServices;
+using Infrastructure.Files;
+using Infrastructure.MessageQueues;
 using Infrastructure.Options;
 using Infrastructure.Providers;
 using Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
+using FileInfo = Application.Files.FileInfo;
 
 namespace Infrastructure;
 
@@ -20,6 +25,11 @@ public static class Inject
         services.AddScoped<IVolunteerRepository, VolunteerRepository>();
         services.AddScoped<ISpeciesRepository, SpeciesRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddHostedService<FilesCleanerBackgroundService>();
+
+        services.AddSingleton<IMessageQueue<IEnumerable<FileInfo>>, InMemoryMessageQueue<IEnumerable<FileInfo>>>();
+        services.AddScoped<IFilesCleanerService, FilesCleanerService>();
 
         services.AddMinio(configuration);
 

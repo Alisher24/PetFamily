@@ -1,5 +1,5 @@
 ﻿using Application.Dtos.Validators;
-using Application.FileProvider;
+using Application.Files;
 using Domain.Shared;
 using FluentValidation;
 

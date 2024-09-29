@@ -7,7 +7,7 @@
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
-        <RootNamespace>PetFamily.UnitTests</RootNamespace>
+        <RootNamespace>PetFamily.Domain.UnitTests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

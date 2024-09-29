@@ -1,3 +1,3 @@
-﻿namespace Application.FileProvider;
+﻿namespace Application.Files;
 
 public record GetFile(string BucketName, string ObjectName, int Expiry);

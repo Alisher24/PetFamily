@@ -13,7 +13,7 @@ public record PhotoPath : ValueObject<string>, IFilePath
     {
     }
 
-    public static Result<PhotoPath> Create(Guid path, string extension)
+    public static Result<PhotoPath> Create(string path, string extension)
     {
         if (extension != Png && extension != Jpg)
             return Errors.General.ValueIsInvalid("photo path");

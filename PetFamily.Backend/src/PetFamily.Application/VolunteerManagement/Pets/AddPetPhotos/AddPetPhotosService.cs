@@ -1,10 +1,13 @@
 ﻿using Application.Database;
+using Application.Dtos;
 using Application.Extensions;
-using Application.FileProvider;
+using Application.Files;
+using Application.Messaging;
 using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.Shared;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using FileInfo = Application.Files.FileInfo;
 
 namespace Application.VolunteerManagement.Pets.AddPetPhotos;
 
@@ -13,6 +16,7 @@ public class AddPetPhotosService(
     IVolunteerRepository volunteerRepository,
     IValidator<AddPetPhotosCommand> validator,
     ILogger<AddPetPhotosService> logger,
+    IMessageQueue<IEnumerable<FileInfo>> messageQueue,
     IUnitOfWork unitOfWork)
 {
     private const string BucketName = "photos";
@@ -36,23 +40,18 @@ public class AddPetPhotosService(
             if (petResult.IsFailure)
                 return petResult.ErrorList;
 
-            List<FileData> fileData = [];
-            foreach (var photo in command.Photos)
-            {
-                var extension = Path.GetExtension(photo.FileName);
+            var createFileDataResult = CreateFileData(command.Photos);
+            if (createFileDataResult.IsFailure)
+                return createFileDataResult.ErrorList;
 
-                var photoPath = PhotoPath.Create(Guid.NewGuid(), extension);
-                if (photoPath.IsFailure)
-                    return photoPath.ErrorList;
-
-                var fileContent = new FileData(photo.Stream, photoPath.Value, BucketName);
-
-                fileData.Add(fileContent);
-            }
-
-            var uploadResult = await fileProvider.UploadFileAsync(fileData, cancellationToken);
+            var uploadResult = await fileProvider.UploadFilesAsync(createFileDataResult.Value, cancellationToken);
             if (uploadResult.IsFailure)
+            {
+                await messageQueue.WriteAsync(createFileDataResult.Value
+                    .Select(f => f.Info), cancellationToken);
+
                 return uploadResult.ErrorList;
+            }
 
             var petPhotos = uploadResult.Value
                 .Select(f => new PetPhoto((PhotoPath)f, false))
@@ -72,9 +71,35 @@ public class AddPetPhotosService(
                 "Can not upload photos to pet - {id} in transaction",
                 command.PetId);
 
+            var createFileDataResult = CreateFileData(command.Photos);
+            if (createFileDataResult.IsSuccess)
+            {
+                await messageQueue.WriteAsync(createFileDataResult.Value
+                    .Select(f => f.Info), cancellationToken);
+            }
+
             return Error.Failure(
                 $"Can not upload photos to pet - {command.PetId}",
                 "pet.photo.failure");
         }
+    }
+
+    private Result<List<FileData>> CreateFileData(IEnumerable<UploadFileDto> photos)
+    {
+        List<FileData> fileData = [];
+        foreach (var photo in photos)
+        {
+            var extension = Path.GetExtension(photo.FileName);
+
+            var photoPath = PhotoPath.Create(Path.GetFileName(photo.FileName), extension);
+            if (photoPath.IsFailure)
+                return photoPath.ErrorList;
+
+            var fileContent = new FileData(photo.Stream, new FileInfo(photoPath.Value, BucketName));
+
+            fileData.Add(fileContent);
+        }
+
+        return fileData;
     }
 }
