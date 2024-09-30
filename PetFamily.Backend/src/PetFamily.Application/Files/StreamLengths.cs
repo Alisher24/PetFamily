@@ -1,4 +1,4 @@
-﻿namespace Application.FileProvider;
+﻿namespace Application.Files;
 
 public static class StreamLengths
 {

@@ -87,9 +87,14 @@ public class Pet : Entity<PetId>, ISoftDeletable
 
     public void AddPhotos(List<PetPhoto> petPhotos)
     {
-        var photos = PetPhotos.Values.ToList();
-        photos.AddRange(petPhotos);
-        PetPhotos = photos;
+        foreach (var petPhoto in PetPhotos)
+        {
+            var exception = Path.GetExtension(petPhoto.Path.Value);
+            PhotoPath path = PhotoPath.Create(petPhoto.Path.Value.Replace(exception, ""), exception).Value;
+            var photo = new PetPhoto(path, false);
+            petPhotos.Add(photo);
+        }
+        PetPhotos = petPhotos;
     }
 
     public void SetPosition(Position position) =>

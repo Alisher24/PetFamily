@@ -1,11 +1,11 @@
 ﻿using Domain.Interfaces;
 using Domain.Shared;
 
-namespace Application.FileProvider;
+namespace Application.Files;
 
 public interface IFileProvider
 {
-    Task<Result<IReadOnlyList<IFilePath>>> UploadFileAsync(
+    Task<Result<IReadOnlyList<IFilePath>>> UploadFilesAsync(
         IEnumerable<FileData> fileData,
         CancellationToken cancellationToken = default);
 
@@ -15,6 +15,6 @@ public interface IFileProvider
     Task<Result<List<string>>> GetAllFilesAsync(int expiry,
         CancellationToken cancellationToken = default);
 
-    Task<Result<string>> DeleteFileAsync(DeleteFile file,
+    Task<Result> RemoveFileAsync(FileInfo fileInfo,
         CancellationToken cancellationToken = default);
 }
