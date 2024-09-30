@@ -403,7 +403,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 .idea
-.idea.PetFamily.Backend.dir
 
 ##
 ## Visual studio for Mac
