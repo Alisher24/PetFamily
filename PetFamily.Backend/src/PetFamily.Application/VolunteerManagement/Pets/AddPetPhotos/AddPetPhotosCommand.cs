@@ -1,5 +1,6 @@
-﻿using Application.Dtos;
+﻿using Application.Abstraction;
+using Application.Dtos;
 
 namespace Application.VolunteerManagement.Pets.AddPetPhotos;
 
-public record AddPetPhotosCommand(Guid VolunteerId, Guid PetId, IEnumerable<UploadFileDto> Photos);
+public record AddPetPhotosCommand(Guid VolunteerId, Guid PetId, IEnumerable<UploadFileDto> Photos) : ICommand;

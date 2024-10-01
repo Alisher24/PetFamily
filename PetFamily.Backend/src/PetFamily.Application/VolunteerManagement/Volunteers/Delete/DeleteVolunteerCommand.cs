@@ -1,3 +1,5 @@
-﻿namespace Application.VolunteerManagement.Volunteers.Delete;
+﻿using Application.Abstraction;
 
-public record DeleteVolunteerCommand(Guid VolunteerId);
+namespace Application.VolunteerManagement.Volunteers.Delete;
+
+public record DeleteVolunteerCommand(Guid VolunteerId) : ICommand;

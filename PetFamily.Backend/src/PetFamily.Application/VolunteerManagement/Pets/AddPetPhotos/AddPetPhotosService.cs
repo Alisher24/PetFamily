@@ -1,4 +1,5 @@
-﻿using Application.Database;
+﻿using Application.Abstraction;
+using Application.Database;
 using Application.Dtos;
 using Application.Extensions;
 using Application.Files;
@@ -17,7 +18,7 @@ public class AddPetPhotosService(
     IValidator<AddPetPhotosCommand> validator,
     ILogger<AddPetPhotosService> logger,
     IMessageQueue<IEnumerable<FileInfo>> messageQueue,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork) : ICommandService<AddPetPhotosCommand>
 {
     private const string BucketName = "photos";
 

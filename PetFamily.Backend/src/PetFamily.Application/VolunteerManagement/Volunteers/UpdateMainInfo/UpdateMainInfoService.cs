@@ -1,4 +1,5 @@
-﻿using Application.Database;
+﻿using Application.Abstraction;
+using Application.Database;
 using Application.Extensions;
 using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.CommonValueObjects;
@@ -12,7 +13,7 @@ public class UpdateMainInfoService(
     IVolunteerRepository volunteerRepository,
     IValidator<UpdateMainInfoCommand> validator,
     ILogger<UpdateMainInfoService> logger,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork) : ICommandService<Guid, UpdateMainInfoCommand>
 {
     public async Task<Result<Guid>> ExecuteAsync(
         UpdateMainInfoCommand command,

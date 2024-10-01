@@ -1,4 +1,5 @@
-﻿using Application.Database;
+﻿using Application.Abstraction;
+using Application.Database;
 using Application.Extensions;
 using Application.SpeciesManagement;
 using Domain.Aggregates.Volunteer.Entities;
@@ -17,7 +18,7 @@ public class AddPetService(
     ISpeciesRepository speciesRepository,
     IValidator<AddPetCommand> validator,
     ILogger<AddPetService> logger,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork) : ICommandService<Guid, AddPetCommand>
 {
     public async Task<Result<Guid>> ExecuteAsync(
         AddPetCommand command,

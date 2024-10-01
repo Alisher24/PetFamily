@@ -1,6 +1,7 @@
-﻿using Application.Dtos;
+﻿using Application.Abstraction;
+using Application.Dtos;
 
 namespace Application.VolunteerManagement.Volunteers.UpdateSocialNetworks;
 
 public record UpdateSocialNetworksCommand(Guid VolunteerId,
-    IEnumerable<SocialNetworkDto> SocialNetworks);
+    IEnumerable<SocialNetworkDto> SocialNetworks) : ICommand;
