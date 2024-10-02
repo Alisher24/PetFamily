@@ -1,4 +1,5 @@
-﻿using Application.Database;
+﻿using Application.Abstraction;
+using Application.Database;
 using Application.Extensions;
 using Domain.Shared;
 using FluentValidation;
@@ -10,7 +11,7 @@ public class MovePetService(
     IVolunteerRepository repository,
     IValidator<MovePetCommand> validator,
     ILogger<MovePetService> logger,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork) : ICommandService<MovePetCommand>
 {
     public async Task<Result> ExecuteAsync(
         MovePetCommand command,

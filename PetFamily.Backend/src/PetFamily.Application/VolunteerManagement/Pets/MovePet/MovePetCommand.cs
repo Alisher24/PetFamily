@@ -1,6 +1,8 @@
-﻿namespace Application.VolunteerManagement.Pets.MovePet;
+﻿using Application.Abstraction;
+
+namespace Application.VolunteerManagement.Pets.MovePet;
 
 public record MovePetCommand(
     Guid VolunteerId,
     Guid PetId,
-    int Position);
+    int Position) : ICommand;

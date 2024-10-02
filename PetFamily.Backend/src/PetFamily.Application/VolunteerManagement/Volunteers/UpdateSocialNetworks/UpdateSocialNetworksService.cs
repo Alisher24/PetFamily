@@ -1,4 +1,5 @@
-﻿using Application.Database;
+﻿using Application.Abstraction;
+using Application.Database;
 using Application.Extensions;
 using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.CommonValueObjects;
@@ -12,7 +13,7 @@ public class UpdateSocialNetworksService(
     IVolunteerRepository volunteerRepository,
     IValidator<UpdateSocialNetworksCommand> validator,
     ILogger<UpdateSocialNetworksService> logger,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork) : ICommandService<Guid, UpdateSocialNetworksCommand>
 {
     public async Task<Result<Guid>> ExecuteAsync(
         UpdateSocialNetworksCommand command,

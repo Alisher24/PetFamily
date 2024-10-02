@@ -1,4 +1,5 @@
-﻿using Application.Database;
+﻿using Application.Abstraction;
+using Application.Database;
 using Application.Extensions;
 using Domain.Aggregates.Volunteer;
 using Domain.Aggregates.Volunteer.ValueObjects;
@@ -14,7 +15,7 @@ public class CreateVolunteerService(
     IVolunteerRepository volunteerRepository, 
     IValidator<CreateVolunteerCommand> validator,
     ILogger<CreateVolunteerService> logger,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork) : ICommandService<Guid, CreateVolunteerCommand>
 {
     public async Task<Result<Guid>> ExecuteAsync(
         CreateVolunteerCommand command,

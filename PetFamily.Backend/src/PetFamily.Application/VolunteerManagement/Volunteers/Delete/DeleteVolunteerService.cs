@@ -1,4 +1,5 @@
-﻿using Application.Database;
+﻿using Application.Abstraction;
+using Application.Database;
 using Application.Extensions;
 using Domain.Shared;
 using FluentValidation;
@@ -10,7 +11,7 @@ public class DeleteVolunteerService(
     IVolunteerRepository volunteerRepository,
     IValidator<DeleteVolunteerCommand> validator,
     ILogger<DeleteVolunteerService> logger,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork) : ICommandService<Guid, DeleteVolunteerCommand>
 {
     public async Task<Result<Guid>> ExecuteAsync(
         DeleteVolunteerCommand command,

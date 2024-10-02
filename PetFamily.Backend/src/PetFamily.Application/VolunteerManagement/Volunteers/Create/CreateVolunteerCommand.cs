@@ -1,4 +1,5 @@
-﻿using Application.Dtos;
+﻿using Application.Abstraction;
+using Application.Dtos;
 
 namespace Application.VolunteerManagement.Volunteers.Create;
 
@@ -9,4 +10,4 @@ public record CreateVolunteerCommand(
     int YearsExperience,
     string PhoneNumber,
     IEnumerable<SocialNetworkDto> SocialNetworks,
-    IEnumerable<RequisiteDto> Requisites);
+    IEnumerable<RequisiteDto> Requisites) : ICommand;
