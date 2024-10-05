@@ -4,18 +4,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Infrastructure;
+namespace Infrastructure.DbContexts;
 
-public class ApplicationDbContext(IConfiguration configuration) : DbContext
+public class WriteDbContext(IConfiguration configuration) : DbContext
 {
-    private const string DATABASE = "Database";
-    
     public DbSet<Volunteer> Volunteers => Set<Volunteer>();
     public DbSet<Species> Species => Set<Species>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(configuration.GetConnectionString(DATABASE));
+        optionsBuilder.UseNpgsql(configuration.GetConnectionString(Constants.Database));
         optionsBuilder.UseSnakeCaseNamingConvention();
         optionsBuilder.EnableSensitiveDataLogging();
         optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
@@ -23,12 +21,11 @@ public class ApplicationDbContext(IConfiguration configuration) : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(
+            typeof(WriteDbContext).Assembly,
+            type => type.FullName?.Contains("Configurations.Write") ?? false);
     }
 
     private ILoggerFactory CreateLoggerFactory() =>
-        LoggerFactory.Create(builder =>
-        {
-            builder.AddConsole();
-        });
+        LoggerFactory.Create(builder => { builder.AddConsole(); });
 }

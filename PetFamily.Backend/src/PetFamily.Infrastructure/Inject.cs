@@ -4,6 +4,7 @@ using Application.Messaging;
 using Application.SpeciesManagement;
 using Application.VolunteerManagement;
 using Infrastructure.BackgroundServices;
+using Infrastructure.DbContexts;
 using Infrastructure.Files;
 using Infrastructure.MessageQueues;
 using Infrastructure.Options;
@@ -21,7 +22,7 @@ public static class Inject
     public static IServiceCollection AddInfrastructure(this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddScoped<ApplicationDbContext>();
+        services.AddScoped<WriteDbContext>();
         services.AddScoped<IVolunteerRepository, VolunteerRepository>();
         services.AddScoped<ISpeciesRepository, SpeciesRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();

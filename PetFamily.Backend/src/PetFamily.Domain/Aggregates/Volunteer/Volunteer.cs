@@ -8,7 +8,7 @@ using Domain.Shared;
 
 namespace Domain.Aggregates.Volunteer;
 
-public class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
+public sealed class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 {
     private readonly List<Pet> _pets = [];
 

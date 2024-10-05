@@ -1,11 +1,10 @@
 ﻿using Domain.Aggregates.Species.ValueObjects.Ids;
 using Domain.Aggregates.Volunteer.Entities;
 using Domain.Aggregates.Volunteer.ValueObjects.Ids;
-using Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Configurations;
+namespace Infrastructure.Configurations.Write;
 
 public class PetConfiguration : IEntityTypeConfiguration<Pet>
 {
@@ -26,7 +25,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             pb.Property(n => n.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxLowTextLength)
+                .HasMaxLength(Domain.Shared.Constants.MaxLowTextLength)
                 .HasColumnName("name");
         });
 
@@ -35,7 +34,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             pb.Property(d => d.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxHighTextLength)
+                .HasMaxLength(Domain.Shared.Constants.MaxHighTextLength)
                 .HasColumnName("description");
         });
 
@@ -44,7 +43,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             pb.Property(c => c.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxLowTextLength)
+                .HasMaxLength(Domain.Shared.Constants.MaxLowTextLength)
                 .HasColumnName("color");
         });
 
@@ -53,7 +52,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             pb.Property(i => i.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxHighTextLength)
+                .HasMaxLength(Domain.Shared.Constants.MaxHighTextLength)
                 .HasColumnName("information_health");
         });
 
@@ -64,19 +63,19 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
 
             pb.Property(a => a.City)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxLowTextLength);
+                .HasMaxLength(Domain.Shared.Constants.MaxLowTextLength);
 
             pb.Property(a => a.District)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxLowTextLength);
+                .HasMaxLength(Domain.Shared.Constants.MaxLowTextLength);
 
             pb.Property(a => a.Street)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxLowTextLength);
+                .HasMaxLength(Domain.Shared.Constants.MaxLowTextLength);
 
             pb.Property(a => a.House)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxLowTextLength);
+                .HasMaxLength(Domain.Shared.Constants.MaxLowTextLength);
         });
 
         //Weight
@@ -100,7 +99,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         {
             pb.Property(pn => pn.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxPhoneLength)
+                .HasMaxLength(Domain.Shared.Constants.MaxPhoneLength)
                 .HasColumnName("phone_number");
         });
 
@@ -135,14 +134,14 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 {
                     ab.Property(n => n.Value)
                         .IsRequired()
-                        .HasMaxLength(Constants.MaxLowTextLength);
+                        .HasMaxLength(Domain.Shared.Constants.MaxLowTextLength);
                 });
 
                 lb.OwnsOne(a => a.Description, ab =>
                 {
                     ab.Property(d => d.Value)
                         .IsRequired()
-                        .HasMaxLength(Constants.MaxHighTextLength);
+                        .HasMaxLength(Domain.Shared.Constants.MaxHighTextLength);
                 });
             });
         });

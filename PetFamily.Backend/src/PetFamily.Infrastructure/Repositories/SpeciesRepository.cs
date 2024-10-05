@@ -2,11 +2,12 @@
 using Domain.Aggregates.Species;
 using Domain.Aggregates.Species.ValueObjects.Ids;
 using Domain.Shared;
+using Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class SpeciesRepository(ApplicationDbContext dbContext) : ISpeciesRepository
+public class SpeciesRepository(WriteDbContext dbContext) : ISpeciesRepository
 {
     public async Task<Result<Species>> GetByIdAsync(SpeciesId speciesId,
         CancellationToken cancellationToken = default)

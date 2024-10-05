@@ -1,10 +1,9 @@
 ﻿using Domain.Aggregates.Species;
 using Domain.Aggregates.Species.ValueObjects.Ids;
-using Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Configurations;
+namespace Infrastructure.Configurations.Write;
 
 public class SpeciesConfiguration : IEntityTypeConfiguration<Species>
 {
@@ -25,7 +24,7 @@ public class SpeciesConfiguration : IEntityTypeConfiguration<Species>
         {
             sb.Property(n => n.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxLowTextLength)
+                .HasMaxLength(Domain.Shared.Constants.MaxLowTextLength)
                 .HasColumnName("name");
         });
         
@@ -34,7 +33,7 @@ public class SpeciesConfiguration : IEntityTypeConfiguration<Species>
         {
             sb.Property(d => d.Value)
                 .IsRequired()
-                .HasMaxLength(Constants.MaxHighTextLength)
+                .HasMaxLength(Domain.Shared.Constants.MaxHighTextLength)
                 .HasColumnName("description");
         });
         
