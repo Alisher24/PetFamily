@@ -1,6 +1,10 @@
-﻿using Domain.Aggregates.Species.ValueObjects.Ids;
+﻿using Application.Dtos;
+using Domain.Aggregates.Species.ValueObjects.Ids;
 using Domain.Aggregates.Volunteer.Entities;
+using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.Aggregates.Volunteer.ValueObjects.Ids;
+using Domain.CommonValueObjects;
+using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -124,45 +128,22 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             .IsRequired();
 
         //Requisites
-        builder.OwnsOne(p => p.Requisites, pb =>
-        {
-            pb.ToJson("requisites");
-
-            pb.OwnsMany(l => l.Values, lb =>
-            {
-                lb.OwnsOne(a => a.Name, ab =>
-                {
-                    ab.Property(n => n.Value)
-                        .IsRequired()
-                        .HasMaxLength(Domain.Shared.Constants.MaxLowTextLength);
-                });
-
-                lb.OwnsOne(a => a.Description, ab =>
-                {
-                    ab.Property(d => d.Value)
-                        .IsRequired()
-                        .HasMaxLength(Domain.Shared.Constants.MaxHighTextLength);
-                });
-            });
-        });
+        builder.Property(p => p.Requisites)
+            .ValueObjectsCollectionJsonConversion(
+                r => new RequisiteDto(r.Name.Value, r.Description.Value),
+                dto => new Requisite(Name.Create(dto.Name).Value, Description.Create(dto.Description).Value))
+            .HasColumnName("requisites");
 
         //PetPhotos
-        builder.OwnsOne(p => p.PetPhotos, pb =>
-        {
-            pb.ToJson("pet_photos");
-
-            pb.OwnsMany(ph => ph.Values, phb =>
-            {
-                phb.OwnsOne(h => h.Path, hb =>
-                {
-                    hb.Property(p => p.Value)
-                        .IsRequired();
-                });
-
-                phb.Property(h => h.IsMain)
-                    .IsRequired();
-            });
-        });
+        builder.Property(p => p.PetPhotos)
+            .ValueObjectsCollectionJsonConversion(
+                p => new PetPhotoDto(p.Path.Value, p.IsMain),
+                dto => new PetPhoto(
+                    PhotoPath.Create(
+                        Path.GetFileNameWithoutExtension(dto.Path),
+                        Path.GetExtension(dto.Path)).Value,
+                    dto.IsMain))
+            .HasColumnName("pet_photos");
 
         //Type
         builder.ComplexProperty(p => p.Type, pb =>
@@ -175,7 +156,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
             pb.Property(b => b.BreedId)
                 .IsRequired();
         });
-        
+
         //Position
         builder.ComplexProperty(p => p.Position, pb =>
         {

@@ -1,20 +1,22 @@
-﻿using Application.Dtos;
+﻿using Application.Database;
+using Application.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.DbContexts;
 
-public class ReadDbContext(IConfiguration configuration) : DbContext
+public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbContext
 {
-    public DbSet<VolunteerDto> Volunteers => Set<VolunteerDto>();
-
+    public IQueryable<VolunteerDto> Volunteers => Set<VolunteerDto>();
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(configuration.GetConnectionString(Constants.Database));
         optionsBuilder.UseSnakeCaseNamingConvention();
         optionsBuilder.EnableSensitiveDataLogging();
         optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
+
+        optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

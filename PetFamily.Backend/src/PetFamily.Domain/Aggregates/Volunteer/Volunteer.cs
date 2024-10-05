@@ -25,8 +25,8 @@ public sealed class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         Description description,
         YearsExperience yearsExperience,
         PhoneNumber phoneNumber,
-        ValueObjectList<SocialNetwork> socialNetworks,
-        ValueObjectList<Requisite> requisites) : base(id)
+        IReadOnlyList<SocialNetwork> socialNetworks,
+        IReadOnlyList<Requisite> requisites) : base(id)
     {
         FullName = fullName;
         Email = email;
@@ -47,9 +47,9 @@ public sealed class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
 
     public PhoneNumber PhoneNumber { get; private set; } = default!;
 
-    public ValueObjectList<SocialNetwork> SocialNetworks { get; private set; }
+    public IReadOnlyList<SocialNetwork> SocialNetworks { get; private set; }
 
-    public ValueObjectList<Requisite> Requisites { get; private set; }
+    public IReadOnlyList<Requisite> Requisites { get; private set; }
 
     public IReadOnlyList<Pet> Pets => _pets;
 
@@ -138,22 +138,24 @@ public sealed class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         return pet;
     }
 
-    public void UpdateMainInfo(FullName fullName,
+    public void UpdateMainInfo(
+        FullName fullName,
         Email email,
         Description description,
         YearsExperience yearsExperience,
         PhoneNumber phoneNumber)
     {
+        FullName = fullName;
         Email = email;
         Description = description;
         YearsExperience = yearsExperience;
         PhoneNumber = phoneNumber;
     }
 
-    public void UpdateSocialNetworks(ValueObjectList<SocialNetwork> socialNetworks) =>
+    public void UpdateSocialNetworks(IReadOnlyList<SocialNetwork> socialNetworks) =>
         SocialNetworks = socialNetworks;
 
-    public void UpdateRequisites(ValueObjectList<Requisite> requisites) =>
+    public void UpdateRequisites(IReadOnlyList<Requisite> requisites) =>
         Requisites = requisites;
 
     public void Delete()
