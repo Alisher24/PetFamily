@@ -169,5 +169,8 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
         builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("is_deleted");
+        
+        builder.HasQueryFilter(p =>
+            EF.Property<bool>(p, "_isDeleted") == false);
     }
 }
