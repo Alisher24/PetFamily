@@ -8,7 +8,7 @@ using Domain.Enums;
 using FluentAssertions;
 using Type = Domain.Aggregates.Species.ValueObjects.Type;
 
-namespace PetFamily.UnitTests;
+namespace PetFamily.Domain.UnitTests;
 
 public class VolunteerTests
 {
@@ -216,8 +216,8 @@ public class VolunteerTests
             description,
             yearsExperience,
             phoneNumber,
-            new ValueObjectList<SocialNetwork>([]),
-            new ValueObjectList<Requisite>([]));
+            new List<SocialNetwork>([]),
+            new List<Requisite>([]));
 
         return volunteer;
     }
@@ -250,7 +250,7 @@ public class VolunteerTests
             dateOfBirth,
             false,
             HelpStatuses.NeedsHelp,
-            new ValueObjectList<Requisite>([]));
+            new List<Requisite>([]));
 
         return pet;
     }

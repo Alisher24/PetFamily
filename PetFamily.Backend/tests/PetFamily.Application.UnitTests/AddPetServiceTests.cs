@@ -2,7 +2,7 @@ using Application.Database;
 using Application.Dtos;
 using Application.SpeciesManagement;
 using Application.VolunteerManagement;
-using Application.VolunteerManagement.Pets.AddPet;
+using Application.VolunteerManagement.Pets.Commands.AddPet;
 using Domain.Aggregates.Species;
 using Domain.Aggregates.Species.Entities;
 using Domain.Aggregates.Species.ValueObjects.Ids;
@@ -168,8 +168,8 @@ public class AddPetServiceTests
             description,
             yearsExperience,
             phoneNumber,
-            new ValueObjectList<SocialNetwork>([]),
-            new ValueObjectList<Requisite>([]));
+            new List<SocialNetwork>([]),
+            new List<Requisite>([]));
 
         return volunteer;
     }
