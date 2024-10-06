@@ -7,6 +7,7 @@ using Application.VolunteerManagement.Volunteers.Commands.Delete;
 using Application.VolunteerManagement.Volunteers.Commands.UpdateMainInfo;
 using Application.VolunteerManagement.Volunteers.Commands.UpdateRequisites;
 using Application.VolunteerManagement.Volunteers.Commands.UpdateSocialNetworks;
+using Application.VolunteerManagement.Volunteers.Queries.GetVolunteerById;
 using Application.VolunteerManagement.Volunteers.Queries.GetVolunteersWithPagination;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Controllers.Volunteers.Requests;
@@ -29,9 +30,24 @@ public class VolunteersController : ApplicationController
         if (result.IsFailure)
             return result.ErrorList.ToResponse();
 
-        return Ok(result);
+        return Ok(result.Value);
     }
-    
+
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult> GetVolunteerById(
+        [FromRoute] Guid id,
+        [FromServices] GetVolunteerByIdService service,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetVolunteerByIdQuery(id);
+        
+        var result = await service.ExecuteAsync(query, cancellationToken);
+        if (result.IsFailure)
+            return result.ErrorList.ToResponse();
+
+        return Ok(result.Value);
+    }
+
     [HttpPost]
     public async Task<ActionResult<Guid>> Create(
         [FromServices] CreateVolunteerService service,
