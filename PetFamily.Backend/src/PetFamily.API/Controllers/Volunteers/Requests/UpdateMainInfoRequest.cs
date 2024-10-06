@@ -1,5 +1,5 @@
 ﻿using Application.Dtos;
-using Application.VolunteerManagement.Volunteers.UpdateMainInfo;
+using Application.VolunteerManagement.Volunteers.Commands.UpdateMainInfo;
 
 namespace PetFamily.API.Controllers.Volunteers.Requests;
 

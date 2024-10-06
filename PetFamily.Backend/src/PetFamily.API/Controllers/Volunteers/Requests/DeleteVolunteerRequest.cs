@@ -1,4 +1,4 @@
-﻿using Application.VolunteerManagement.Volunteers.Delete;
+﻿using Application.VolunteerManagement.Volunteers.Commands.Delete;
 
 namespace PetFamily.API.Controllers.Volunteers.Requests;
 

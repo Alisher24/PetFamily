@@ -1,10 +1,11 @@
 ﻿using System.Data;
 using Application.Database;
+using Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Infrastructure;
 
-public class UnitOfWork(ApplicationDbContext dbContext) : IUnitOfWork
+public class UnitOfWork(WriteDbContext dbContext) : IUnitOfWork
 {
     public async Task<IDbTransaction> BeginTransaction(CancellationToken cancellationToken = default)
     {

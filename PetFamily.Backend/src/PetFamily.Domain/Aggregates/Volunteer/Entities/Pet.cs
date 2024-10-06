@@ -10,6 +10,8 @@ namespace Domain.Aggregates.Volunteer.Entities;
 
 public class Pet : Entity<PetId>, ISoftDeletable
 {
+    private readonly List<PetPhoto> _petPhotos = [];
+    
     private bool _isDeleted = false;
 
     // ef core
@@ -31,7 +33,7 @@ public class Pet : Entity<PetId>, ISoftDeletable
         DateOfBirth dateOfBirth,
         bool isVaccinated,
         HelpStatuses helpStatus,
-        ValueObjectList<Requisite> requisites) : base(id)
+        IReadOnlyList<Requisite> requisites) : base(id)
     {
         Name = name;
         Description = description;
@@ -48,7 +50,6 @@ public class Pet : Entity<PetId>, ISoftDeletable
         HelpStatus = helpStatus;
         CreatedAt = DateTime.UtcNow;
         Requisites = requisites;
-        PetPhotos = new ValueObjectList<PetPhoto>([]);
     }
 
     public Name Name { get; private set; } = default!;
@@ -81,21 +82,11 @@ public class Pet : Entity<PetId>, ISoftDeletable
 
     public Position Position { get; private set; } = default!;
 
-    public ValueObjectList<Requisite> Requisites { get; private set; } = default!;
+    public IReadOnlyList<Requisite> Requisites { get; private set; } = default!;
 
-    public ValueObjectList<PetPhoto> PetPhotos { get; private set; } = default!;
+    public IReadOnlyList<PetPhoto> PetPhotos => _petPhotos;
 
-    public void AddPhotos(List<PetPhoto> petPhotos)
-    {
-        foreach (var petPhoto in PetPhotos)
-        {
-            var exception = Path.GetExtension(petPhoto.Path.Value);
-            PhotoPath path = PhotoPath.Create(petPhoto.Path.Value.Replace(exception, ""), exception).Value;
-            var photo = new PetPhoto(path, false);
-            petPhotos.Add(photo);
-        }
-        PetPhotos = petPhotos;
-    }
+    public void AddPhotos(List<PetPhoto> petPhotos) => _petPhotos.AddRange(petPhotos);
 
     public void SetPosition(Position position) =>
         Position = position;

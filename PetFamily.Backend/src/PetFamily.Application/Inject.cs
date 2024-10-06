@@ -1,11 +1,4 @@
-﻿using Application.VolunteerManagement.Pets.AddPet;
-using Application.VolunteerManagement.Pets.AddPetPhotos;
-using Application.VolunteerManagement.Pets.MovePet;
-using Application.VolunteerManagement.Volunteers.Create;
-using Application.VolunteerManagement.Volunteers.Delete;
-using Application.VolunteerManagement.Volunteers.UpdateMainInfo;
-using Application.VolunteerManagement.Volunteers.UpdateRequisites;
-using Application.VolunteerManagement.Volunteers.UpdateSocialNetworks;
+﻿using Application.Abstraction;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
 
@@ -15,16 +8,30 @@ public static class Inject
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddScoped<CreateVolunteerService>();
-        services.AddScoped<UpdateMainInfoService>();
-        services.AddScoped<UpdateSocialNetworksService>();
-        services.AddScoped<UpdateRequisitesService>();
-        services.AddScoped<DeleteVolunteerService>();
-        services.AddScoped<AddPetService>();
-        services.AddScoped<AddPetPhotosService>();
-        services.AddScoped<MovePetService>();
+        services
+            .AddCommands()
+            .AddQueries()
+            .AddValidatorsFromAssembly(typeof(Inject).Assembly);
 
-        services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
+        return services;
+    }
+
+    private static IServiceCollection AddCommands(this IServiceCollection services)
+    {
+        services.Scan(scan => scan.FromAssemblies(typeof(Inject).Assembly)
+            .AddClasses(classes => classes.AssignableToAny(typeof(ICommandService<,>), typeof(ICommandService<>)))
+            .AsSelfWithInterfaces()
+            .WithScopedLifetime());
+
+        return services;
+    }
+
+    private static IServiceCollection AddQueries(this IServiceCollection services)
+    {
+        services.Scan(scan => scan.FromAssemblies(typeof(Inject).Assembly)
+            .AddClasses(classes => classes.AssignableTo(typeof(IQueryService<,>)))
+            .AsSelfWithInterfaces()
+            .WithScopedLifetime());
 
         return services;
     }

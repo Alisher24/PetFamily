@@ -4,11 +4,12 @@ using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.Aggregates.Volunteer.ValueObjects.Ids;
 using Domain.CommonValueObjects;
 using Domain.Shared;
+using Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class VolunteerRepository(ApplicationDbContext dbContext) : IVolunteerRepository
+public class VolunteerRepository(WriteDbContext dbContext) : IVolunteerRepository
 {
     public async Task<Guid> AddAsync(Volunteer volunteer,
         CancellationToken cancellationToken = default)
