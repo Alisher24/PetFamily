@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations.Read;
 
-public class VolunteerConfiguration : IEntityTypeConfiguration<VolunteerDto>
+public class VolunteerDtoConfiguration : IEntityTypeConfiguration<VolunteerDto>
 {
     public void Configure(EntityTypeBuilder<VolunteerDto> builder)
     {

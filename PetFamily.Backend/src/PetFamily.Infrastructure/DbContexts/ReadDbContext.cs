@@ -9,6 +9,8 @@ namespace Infrastructure.DbContexts;
 public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbContext
 {
     public IQueryable<VolunteerDto> Volunteers => Set<VolunteerDto>();
+    public IQueryable<SpeciesDto> Species => Set<SpeciesDto>();
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(configuration.GetConnectionString(Constants.Database));
