@@ -3,7 +3,7 @@ using Application.Dtos;
 using Application.Files;
 using Application.Messaging;
 using Application.VolunteerManagement;
-using Application.VolunteerManagement.Pets.AddPetPhotos;
+using Application.VolunteerManagement.Pets.Commands.AddPetPhotos;
 using Domain.Aggregates.Species.ValueObjects.Ids;
 using Domain.Aggregates.Volunteer;
 using Domain.Aggregates.Volunteer.Entities;
@@ -74,8 +74,8 @@ public class AddPetPhotosTests
         // assert
         result.IsSuccess.Should().BeTrue();
         result.IsFailure.Should().BeFalse();
-        pet.PetPhotos.Values.Count.Should().Be(1);
-        pet.PetPhotos.Values.First().Path.Should().Be(filePath);
+        pet.PetPhotos.Count.Should().Be(1);
+        pet.PetPhotos.First().Path.Should().Be(filePath);
     }
 
     [Fact]
@@ -133,10 +133,10 @@ public class AddPetPhotosTests
         // assert
         result.IsSuccess.Should().BeTrue();
         result.IsFailure.Should().BeFalse();
-        pet.PetPhotos.Values.Count.Should().Be(filePaths.Length);
-        pet.PetPhotos.Values[0].Path.Should().Be(firstPhoto);
-        pet.PetPhotos.Values[1].Path.Should().Be(secondPhoto);
-        pet.PetPhotos.Values[2].Path.Should().Be(thirdPhoto);
+        pet.PetPhotos.Count.Should().Be(filePaths.Length);
+        pet.PetPhotos[0].Path.Should().Be(firstPhoto);
+        pet.PetPhotos[1].Path.Should().Be(secondPhoto);
+        pet.PetPhotos[2].Path.Should().Be(thirdPhoto);
     }
 
     private Volunteer GenerateVolunteer()
@@ -153,8 +153,8 @@ public class AddPetPhotosTests
             description,
             yearsExperience,
             phoneNumber,
-            new ValueObjectList<SocialNetwork>([]),
-            new ValueObjectList<Requisite>([]));
+            new List<SocialNetwork>([]),
+            new List<Requisite>([]));
 
         return volunteer;
     }
@@ -175,7 +175,7 @@ public class AddPetPhotosTests
         var dateOfBirth = DateOfBirth.Create(DateOnly.FromDateTime(DateTime.UtcNow)).Value;
         var isVaccinated = true;
         var helpStatuses = HelpStatuses.FoundHouse;
-        var requisites = new ValueObjectList<Requisite>([]);
+        var requisites = new List<Requisite>([]);
 
         return new Pet(petId,
             name,
