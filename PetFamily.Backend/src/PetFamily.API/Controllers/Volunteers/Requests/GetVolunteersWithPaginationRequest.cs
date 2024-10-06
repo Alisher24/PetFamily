@@ -2,7 +2,10 @@
 
 namespace PetFamily.API.Controllers.Volunteers.Requests;
 
-public record GetVolunteersWithPaginationRequest(int Page, int PageSize)
+public record GetVolunteersWithPaginationRequest(
+    int Page, 
+    int PageSize)
 {
-    public GetVolunteersWithPaginationQuery ToQuery() => new(Page, PageSize);
+    public GetVolunteersWithPaginationQuery ToQuery() => 
+        new(Page, PageSize);
 }

@@ -92,7 +92,7 @@ public class AddPetPhotosService(
         {
             var extension = Path.GetExtension(photo.FileName);
 
-            var photoPath = PhotoPath.Create(Path.GetFileName(photo.FileName), extension);
+            var photoPath = PhotoPath.Create(Path.GetFileNameWithoutExtension(photo.FileName), extension);
             if (photoPath.IsFailure)
                 return photoPath.ErrorList;
 

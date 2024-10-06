@@ -86,17 +86,7 @@ public class Pet : Entity<PetId>, ISoftDeletable
 
     public IReadOnlyList<PetPhoto> PetPhotos => _petPhotos;
 
-    public void AddPhotos(List<PetPhoto> petPhotos)
-    {
-        /*foreach (var petPhoto in PetPhotos)
-        {
-            var exception = Path.GetExtension(petPhoto.Path.Value);
-            PhotoPath path = PhotoPath.Create(petPhoto.Path.Value.Replace(exception, ""), exception).Value;
-            var photo = new PetPhoto(path, false);
-            petPhotos.Add(photo);
-        }*/
-        _petPhotos.AddRange(petPhotos);
-    }
+    public void AddPhotos(List<PetPhoto> petPhotos) => _petPhotos.AddRange(petPhotos);
 
     public void SetPosition(Position position) =>
         Position = position;

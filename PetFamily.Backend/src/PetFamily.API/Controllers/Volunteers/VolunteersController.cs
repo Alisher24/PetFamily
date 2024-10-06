@@ -1,12 +1,13 @@
 ﻿using Application.Dtos;
-using Application.VolunteerManagement.Pets.AddPet;
-using Application.VolunteerManagement.Pets.AddPetPhotos;
-using Application.VolunteerManagement.Pets.MovePet;
-using Application.VolunteerManagement.Volunteers.Create;
-using Application.VolunteerManagement.Volunteers.Delete;
-using Application.VolunteerManagement.Volunteers.UpdateMainInfo;
-using Application.VolunteerManagement.Volunteers.UpdateRequisites;
-using Application.VolunteerManagement.Volunteers.UpdateSocialNetworks;
+using Application.VolunteerManagement.Pets.Commands.AddPet;
+using Application.VolunteerManagement.Pets.Commands.AddPetPhotos;
+using Application.VolunteerManagement.Pets.Commands.MovePet;
+using Application.VolunteerManagement.Volunteers.Commands.Create;
+using Application.VolunteerManagement.Volunteers.Commands.Delete;
+using Application.VolunteerManagement.Volunteers.Commands.UpdateMainInfo;
+using Application.VolunteerManagement.Volunteers.Commands.UpdateRequisites;
+using Application.VolunteerManagement.Volunteers.Commands.UpdateSocialNetworks;
+using Application.VolunteerManagement.Volunteers.Queries.GetVolunteersWithPagination;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Controllers.Volunteers.Requests;
 using PetFamily.API.Extensions;
@@ -16,6 +17,21 @@ namespace PetFamily.API.Controllers.Volunteers;
 
 public class VolunteersController : ApplicationController
 {
+    [HttpGet]
+    public async Task<ActionResult> Get(
+        [FromQuery] GetVolunteersWithPaginationRequest request,
+        [FromServices] GetVolunteersWithPaginationService service,
+        CancellationToken cancellationToken)
+    {
+        var query = request.ToQuery();
+
+        var result = await service.ExecuteAsync(query, cancellationToken);
+        if (result.IsFailure)
+            return result.ErrorList.ToResponse();
+
+        return Ok(result);
+    }
+    
     [HttpPost]
     public async Task<ActionResult<Guid>> Create(
         [FromServices] CreateVolunteerService service,

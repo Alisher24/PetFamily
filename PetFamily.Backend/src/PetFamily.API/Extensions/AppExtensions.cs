@@ -1,5 +1,4 @@
-﻿using Infrastructure;
-using Infrastructure.DbContexts;
+﻿using Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace PetFamily.API.Extensions;

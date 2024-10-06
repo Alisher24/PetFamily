@@ -1,6 +1,8 @@
-﻿namespace Application.Abstraction;
+﻿using Domain.Shared;
+
+namespace Application.Abstraction;
 
 public interface IQueryService<TResponse, in TQuery> where TQuery : IQuery
 {
-    public Task<TResponse> ExecuteAsync(TQuery query, CancellationToken cancellationToken = default);
+    public Task<Result<TResponse>> ExecuteAsync(TQuery query, CancellationToken cancellationToken = default);
 }

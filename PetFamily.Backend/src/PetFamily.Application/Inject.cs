@@ -29,7 +29,7 @@ public static class Inject
     private static IServiceCollection AddQueries(this IServiceCollection services)
     {
         services.Scan(scan => scan.FromAssemblies(typeof(Inject).Assembly)
-            .AddClasses(classes => classes.AssignableTo(typeof(ICommandService<,>)))
+            .AddClasses(classes => classes.AssignableTo(typeof(IQueryService<,>)))
             .AsSelfWithInterfaces()
             .WithScopedLifetime());
 

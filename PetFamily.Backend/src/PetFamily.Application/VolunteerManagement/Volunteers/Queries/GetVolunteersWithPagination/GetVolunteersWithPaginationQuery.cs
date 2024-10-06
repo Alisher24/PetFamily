@@ -2,4 +2,6 @@
 
 namespace Application.VolunteerManagement.Volunteers.Queries.GetVolunteersWithPagination;
 
-public record GetVolunteersWithPaginationQuery(int Page, int PageSize) : IQuery;
+public record GetVolunteersWithPaginationQuery(
+    int Page, 
+    int PageSize) : IQuery;
