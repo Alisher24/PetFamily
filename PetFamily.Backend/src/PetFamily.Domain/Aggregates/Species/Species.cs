@@ -37,4 +37,13 @@ public class Species : Entity<SpeciesId>
 
         return breed;
     }
+
+    public Result<Breed> GetBreedByName(Name name)
+    {
+        var breed = _breeds.FirstOrDefault(b => b.Name == name);
+        if (breed is null)
+            return Errors.General.NotFound($"Breed with name: {name.Value}");
+
+        return breed;
+    }
 }

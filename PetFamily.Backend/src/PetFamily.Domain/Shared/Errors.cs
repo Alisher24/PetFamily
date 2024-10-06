@@ -18,16 +18,13 @@ public static class Errors
             return Error.Validation("value.not.found",
                 $"{label} not found");
         }
-    }
-    
-    public static class Volunteer
-    {
+        
         public static Error ValueIsAlreadyExists(string? name = null)
         {
-            var label = name ?? "Volunteer";
+            var label = name ?? "Value";
             
-            return Error.Validation("volunteer.is.already.exists", 
-                $"Volunteer with a same {label} already exists");
+            return Error.Validation("value.is.already.exists", 
+                $"{label} already exists");
         }
     }
 }

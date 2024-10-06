@@ -32,12 +32,12 @@ public class CreateVolunteerService(
         var volunteerEmail = await volunteerRepository
             .GetByEmailAsync(email.Value, cancellationToken);
         if (volunteerEmail.IsSuccess)
-            return Errors.Volunteer.ValueIsAlreadyExists("email");
+            return Errors.General.ValueIsAlreadyExists("email");
 
         var volunteerPhoneNumber = await volunteerRepository
             .GetByPhoneNumberAsync(phoneNumber.Value, cancellationToken);
         if (volunteerPhoneNumber.IsSuccess)
-            return Errors.Volunteer.ValueIsAlreadyExists("phone number");
+            return Errors.General.ValueIsAlreadyExists("phone number");
         
         var volunteerId = VolunteerId.NewVolunteerId();
 

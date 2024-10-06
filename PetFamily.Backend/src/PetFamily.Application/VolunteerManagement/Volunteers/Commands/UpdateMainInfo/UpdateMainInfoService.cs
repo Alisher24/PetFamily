@@ -37,7 +37,7 @@ public class UpdateMainInfoService(
             var volunteerEmail = await volunteerRepository
                 .GetByEmailAsync(email, cancellationToken);
             if (volunteerEmail.IsSuccess)
-                return Errors.Volunteer.ValueIsAlreadyExists("email");
+                return Errors.General.ValueIsAlreadyExists("email");
         }
 
         if (volunteerResult.Value.PhoneNumber.Value != command.Dto.PhoneNumber)
@@ -45,7 +45,7 @@ public class UpdateMainInfoService(
             var volunteerPhoneNumber = await volunteerRepository
                 .GetByPhoneNumberAsync(phoneNumber, cancellationToken);
             if (volunteerPhoneNumber.IsSuccess)
-                return Errors.Volunteer.ValueIsAlreadyExists("phone number");
+                return Errors.General.ValueIsAlreadyExists("phone number");
         }
 
         var fullName = FullName.Create(command.Dto.FullName.FirstName,
