@@ -324,6 +324,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Aggregates.Species.Species", null)
                         .WithMany("Breeds")
                         .HasForeignKey("species_id")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_breeds_species_species_id");
                 });
 

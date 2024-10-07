@@ -9,6 +9,7 @@ namespace Infrastructure.DbContexts;
 public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbContext
 {
     public IQueryable<VolunteerDto> Volunteers => Set<VolunteerDto>();
+    public IQueryable<PetDto> Pets => Set<PetDto>();
     public IQueryable<SpeciesDto> Species => Set<SpeciesDto>();
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

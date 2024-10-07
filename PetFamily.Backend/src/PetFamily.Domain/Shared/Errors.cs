@@ -26,5 +26,13 @@ public static class Errors
             return Error.Validation("value.is.already.exists", 
                 $"{label} already exists");
         }
+        
+        public static Error ValueIsBeingUsedByAnotherObject(string? name = null)
+        {
+            var label = name ?? "Value";
+            
+            return Error.Validation("value.is.being.used.by.another.object", 
+                $"{name} is being used by another object");
+        }
     }
 }

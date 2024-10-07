@@ -1,6 +1,7 @@
-﻿using Application.SpeciesManagement;
+﻿using Application.Database;
+using Application.Dtos;
+using Application.SpeciesManagement;
 using Domain.Aggregates.Species;
-using Domain.Aggregates.Species.Entities;
 using Domain.Aggregates.Species.ValueObjects.Ids;
 using Domain.CommonValueObjects;
 using Domain.Shared;
@@ -17,6 +18,31 @@ public class SpeciesRepository(WriteDbContext dbContext) : ISpeciesRepository
         await dbContext.Species.AddAsync(species, cancellationToken);
 
         return species.Id.Value;
+    }
+
+    public async Task<Result> Delete(Species species,
+        IReadDbContext readDbContext,
+        CancellationToken cancellationToken = default)
+    {
+        var petResult = await GetPetBySpeciesId(species.Id.Value, readDbContext.Pets, cancellationToken);
+        if (petResult.IsSuccess)
+            return Errors.General.ValueIsBeingUsedByAnotherObject($"Species with id: {species.Id.Value}");
+
+        dbContext.Species.Remove(species);
+
+        return Result.Success();
+    }
+
+    public async Task<Result> GetPetBySpeciesId(Guid id,
+        IQueryable<PetDto> readPetDbContext,
+        CancellationToken cancellationToken = default)
+    {
+        var petResult = await readPetDbContext
+            .FirstOrDefaultAsync(p => p.SpeciesId == id, cancellationToken);
+
+        return petResult is null
+            ? Errors.General.NotFound($"Pet with speciesId {id}")
+            : Result.Success();
     }
 
     public async Task<Result<Species>> GetByIdAsync(SpeciesId speciesId,

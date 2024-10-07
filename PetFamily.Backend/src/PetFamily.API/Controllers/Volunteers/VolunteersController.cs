@@ -40,7 +40,7 @@ public class VolunteersController : ApplicationController
         CancellationToken cancellationToken)
     {
         var query = new GetVolunteerByIdQuery(id);
-        
+
         var result = await service.ExecuteAsync(query, cancellationToken);
         if (result.IsFailure)
             return result.ErrorList.ToResponse();

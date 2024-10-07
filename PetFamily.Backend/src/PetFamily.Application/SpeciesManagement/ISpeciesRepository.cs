@@ -1,4 +1,6 @@
-﻿using Domain.Aggregates.Species.ValueObjects.Ids;
+﻿using Application.Database;
+using Application.Dtos;
+using Domain.Aggregates.Species.ValueObjects.Ids;
 using Domain.CommonValueObjects;
 using Domain.Shared;
 
@@ -14,7 +16,16 @@ public interface ISpeciesRepository
         Name name,
         CancellationToken cancellationToken = default);
 
+    Task<Result> GetPetBySpeciesId(Guid id,
+        IQueryable<PetDto> readPetDbContext,
+        CancellationToken cancellationToken = default);
+
     Task<Guid> AddAsync(
         Domain.Aggregates.Species.Species species, 
+        CancellationToken cancellationToken = default);
+
+    Task<Result> Delete(
+        Domain.Aggregates.Species.Species species,
+        IReadDbContext readDbContext,
         CancellationToken cancellationToken = default);
 }
