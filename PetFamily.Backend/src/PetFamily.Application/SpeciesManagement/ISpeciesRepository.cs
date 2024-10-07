@@ -20,6 +20,10 @@ public interface ISpeciesRepository
         IQueryable<PetDto> readPetDbContext,
         CancellationToken cancellationToken = default);
 
+    Task<Result> GetPetByBreedId(Guid id,
+        IQueryable<PetDto> readPetDbContext,
+        CancellationToken cancellationToken = default);
+
     Task<Guid> AddAsync(
         Domain.Aggregates.Species.Species species, 
         CancellationToken cancellationToken = default);

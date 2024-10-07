@@ -1,4 +1,5 @@
 ﻿using Application.SpeciesManagement.Breeds.Command;
+using Application.SpeciesManagement.Breeds.Delete;
 using Application.SpeciesManagement.Species.Commands.Create;
 using Application.SpeciesManagement.Species.Commands.Delete;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +44,22 @@ public class SpeciesController : ApplicationController
         CancellationToken cancellationToken)
     {
         var request = new DeleteSpeciesCommand(id);
+
+        var result = await service.ExecuteAsync(request, cancellationToken);
+        if (result.IsFailure)
+            return result.ErrorList.ToResponse();
+
+        return Ok();
+    }
+    
+    [HttpDelete("{speciesId:guid}/breeds/{breedId:guid}")]
+    public async Task<ActionResult> DeleteBreed(
+        [FromRoute] Guid speciesId,
+        [FromRoute] Guid breedId,
+        [FromServices] DeleteBreedService service,
+        CancellationToken cancellationToken)
+    {
+        var request = new DeleteBreedCommand(speciesId, breedId);
 
         var result = await service.ExecuteAsync(request, cancellationToken);
         if (result.IsFailure)

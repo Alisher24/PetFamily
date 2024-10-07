@@ -46,4 +46,6 @@ public class Species : Entity<SpeciesId>
 
         return breed;
     }
+
+    public void DeletePet(Breed breed) => _breeds.Remove(breed);
 }

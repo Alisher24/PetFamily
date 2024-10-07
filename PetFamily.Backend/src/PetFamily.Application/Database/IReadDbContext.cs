@@ -9,4 +9,6 @@ public interface IReadDbContext
     IQueryable<PetDto> Pets { get; }
     
     IQueryable<SpeciesDto> Species { get; }
+
+    IQueryable<BreedDto> Breeds { get; }
 }
