@@ -1,7 +1,7 @@
 ﻿using Domain.Shared;
 using FluentValidation;
 
-namespace Application.SpeciesManagement.Species.Queries;
+namespace Application.SpeciesManagement.Species.Queries.GetSpeciesWithPagination;
 
 public class GetSpeciesWithPaginationValidator : AbstractValidator<GetSpeciesWithPaginationQuery>
 {

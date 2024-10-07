@@ -2,7 +2,8 @@
 using Application.SpeciesManagement.Breeds.Command.Delete;
 using Application.SpeciesManagement.Species.Commands.Create;
 using Application.SpeciesManagement.Species.Commands.Delete;
-using Application.SpeciesManagement.Species.Queries;
+using Application.SpeciesManagement.Species.Queries.GetBreedsBySpeciesId;
+using Application.SpeciesManagement.Species.Queries.GetSpeciesWithPagination;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Controllers.Species.Requests;
 using PetFamily.API.Extensions;
@@ -14,13 +15,26 @@ public class SpeciesController : ApplicationController
     [HttpGet]
     public async Task<ActionResult> Get(
         [FromQuery] GetSpeciesWithPaginationRequest request,
-        [FromServices] GetSpeciesWithPaginationService withPaginationService,
+        [FromServices] GetSpeciesWithPaginationService service,
         CancellationToken cancellationToken)
     {
-        var result = await withPaginationService.ExecuteAsync(request.ToQuery(), cancellationToken);
+        var result = await service.ExecuteAsync(request.ToQuery(), cancellationToken);
         if (result.IsFailure)
             return result.ErrorList.ToResponse();
-        
+
+        return Ok(result);
+    }
+
+    [HttpGet("{id:guid}/breeds")]
+    public async Task<ActionResult> GetBreeds(
+        [FromRoute] Guid id,
+        [FromServices] GetBreedsBySpeciesIdService service,
+        CancellationToken cancellationToken)
+    {
+        var result = await service.ExecuteAsync(new GetBreedsBySpeciesIdQuery(id), cancellationToken);
+        if (result.IsFailure)
+            return result.ErrorList.ToResponse();
+
         return Ok(result);
     }
 

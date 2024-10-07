@@ -1,4 +1,5 @@
 ﻿using Application.SpeciesManagement.Species.Queries;
+using Application.SpeciesManagement.Species.Queries.GetSpeciesWithPagination;
 
 namespace PetFamily.API.Controllers.Species.Requests;
 

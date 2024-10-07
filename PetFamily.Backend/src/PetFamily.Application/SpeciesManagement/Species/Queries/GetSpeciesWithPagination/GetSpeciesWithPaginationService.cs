@@ -7,7 +7,7 @@ using Domain.Shared;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.SpeciesManagement.Species.Queries;
+namespace Application.SpeciesManagement.Species.Queries.GetSpeciesWithPagination;
 
 public class GetSpeciesWithPaginationService(
     IReadDbContext readDbContext,
