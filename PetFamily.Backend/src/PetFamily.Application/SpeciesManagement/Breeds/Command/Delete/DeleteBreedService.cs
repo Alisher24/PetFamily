@@ -5,7 +5,7 @@ using Domain.Shared;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 
-namespace Application.SpeciesManagement.Breeds.Delete;
+namespace Application.SpeciesManagement.Breeds.Command.Delete;
 
 public class DeleteBreedService(
     ISpeciesRepository speciesRepository,

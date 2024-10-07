@@ -1,7 +1,7 @@
 ﻿using Domain.Shared;
 using FluentValidation;
 
-namespace Application.SpeciesManagement.Breeds.Delete;
+namespace Application.SpeciesManagement.Breeds.Command.Delete;
 
 public class DeleteBreedValidator : AbstractValidator<DeleteBreedCommand>
 {
