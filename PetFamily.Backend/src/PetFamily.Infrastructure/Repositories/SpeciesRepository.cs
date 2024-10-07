@@ -44,7 +44,7 @@ public class SpeciesRepository(WriteDbContext dbContext) : ISpeciesRepository
             ? Errors.General.NotFound($"Pet with speciesId {id}")
             : Result.Success();
     }
-    
+
     public async Task<Result> GetPetByBreedId(Guid id,
         IQueryable<PetDto> readPetDbContext,
         CancellationToken cancellationToken = default)
@@ -69,6 +69,20 @@ public class SpeciesRepository(WriteDbContext dbContext) : ISpeciesRepository
             return Errors.General.NotFound(speciesId.Value.ToString());
 
         return species;
+    }
+
+    public async Task<Result<SpeciesDto>> GetByIdAsync(
+        IQueryable<SpeciesDto> readSpeciesDbContext,
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        var speciesResult = await readSpeciesDbContext
+            .Include(s => s.Breeds)
+            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+        
+        return speciesResult is null
+            ? Errors.General.NotFound($"Species with speciesId {id}")
+            : speciesResult;
     }
 
     public async Task<Result<Species>> GetByNameAsync(Name name,

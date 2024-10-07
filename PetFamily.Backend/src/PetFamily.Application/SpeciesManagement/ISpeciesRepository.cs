@@ -12,6 +12,11 @@ public interface ISpeciesRepository
         SpeciesId speciesId,
         CancellationToken cancellationToken = default);
     
+    Task<Result<SpeciesDto>> GetByIdAsync(
+        IQueryable<SpeciesDto> readSpeciesDbContext,
+        Guid id,
+        CancellationToken cancellationToken = default);
+    
     Task<Result<Domain.Aggregates.Species.Species>> GetByNameAsync(
         Name name,
         CancellationToken cancellationToken = default);

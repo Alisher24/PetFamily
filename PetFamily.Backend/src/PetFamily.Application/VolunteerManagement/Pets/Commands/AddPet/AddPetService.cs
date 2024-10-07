@@ -14,6 +14,7 @@ using Type = Domain.Aggregates.Species.ValueObjects.Type;
 namespace Application.VolunteerManagement.Pets.Commands.AddPet;
 
 public class AddPetService(
+    IReadDbContext readDbContext,
     IVolunteerRepository volunteerRepository,
     ISpeciesRepository speciesRepository,
     IValidator<AddPetCommand> validator,
@@ -34,15 +35,15 @@ public class AddPetService(
             return volunteerResult.ErrorList;
 
         var speciesResult = await speciesRepository.GetByIdAsync(
-            command.SpeciesId, cancellationToken);
+            readDbContext.Species, command.SpeciesId, cancellationToken);
         if (speciesResult.IsFailure)
             return speciesResult.ErrorList;
 
-        var breedResult = speciesResult.Value.GetBreedById(command.BreedId);
-        if (breedResult.IsFailure)
-            return breedResult.ErrorList;
+        var breedResult = speciesResult.Value.Breeds.FirstOrDefault(b => b.Id == command.BreedId);
+        if (breedResult is null)
+            return Errors.General.NotFound($"Breed with breedId {command.BreedId}");
 
-        var type = new Type(speciesResult.Value.Id, breedResult.Value.Id);
+        var type = new Type(speciesResult.Value.Id, breedResult.Id);
 
         var pet = InitPet(command, type);
 
