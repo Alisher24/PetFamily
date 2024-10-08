@@ -1,8 +1,10 @@
 ﻿using Application.Abstraction;
 using Application.Database;
+using Application.Dtos;
 using Application.Extensions;
 using Domain.Shared;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.SpeciesManagement.Species.Commands.Delete;
@@ -15,7 +17,7 @@ public class DeleteSpeciesService(
     IUnitOfWork unitOfWork) : ICommandService<DeleteSpeciesCommand>
 {
     public async Task<Result> ExecuteAsync(
-        DeleteSpeciesCommand command, 
+        DeleteSpeciesCommand command,
         CancellationToken cancellationToken = default)
     {
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
@@ -27,15 +29,29 @@ public class DeleteSpeciesService(
         if (speciesResult.IsFailure)
             return Errors.General.NotFound($"Species with id: {command.Id}");
 
-        var deleteResult = await speciesRepository
-            .Delete(speciesResult.Value, readDbContext, cancellationToken);
-        if (deleteResult.IsFailure)
-            return deleteResult.ErrorList;
+        var petResult = await CheckPetAvailabilityBySpeciesId(command.Id, readDbContext.Pets, cancellationToken);
+        if (petResult.IsFailure)
+            return petResult.ErrorList;
+
+        speciesRepository.Delete(speciesResult.Value);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         logger.LogInformation("Deleted species with id {speciesId}", command.Id);
 
         return Result.Success();
+    }
+
+    private async Task<Result> CheckPetAvailabilityBySpeciesId(
+        Guid id,
+        IQueryable<PetDto> readPetDbContext,
+        CancellationToken cancellationToken = default)
+    {
+        var petResult = await readPetDbContext
+            .FirstOrDefaultAsync(p => p.SpeciesId == id, cancellationToken);
+
+        return petResult is not null
+            ? Errors.General.ValueIsBeingUsedByAnotherObject($"Pet with speciesId {id}")
+            : Result.Success();
     }
 }
