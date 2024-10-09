@@ -1,6 +1,7 @@
 ﻿using Application.Dtos;
 using Application.VolunteerManagement.Pets.Commands.AddPet;
 using Application.VolunteerManagement.Pets.Commands.AddPetPhotos;
+using Application.VolunteerManagement.Pets.Commands.DeletePetPhotos;
 using Application.VolunteerManagement.Pets.Commands.MovePet;
 using Application.VolunteerManagement.Pets.Commands.UpdatePet;
 using Application.VolunteerManagement.Volunteers.Commands.Create;
@@ -189,5 +190,22 @@ public class VolunteersController : ApplicationController
             return result.ErrorList.ToResponse();
 
         return Ok(result.Value);
+    }
+
+    [HttpDelete("{volunteerId:guid}/pets/{petId:guid}/photos")]
+    public async Task<ActionResult> DeletePetPhotos(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petId,
+        [FromBody] IEnumerable<string> paths,
+        [FromServices] DeletePetPhotosService service,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeletePetPhotosCommand(volunteerId, petId, paths);
+
+        var result = await service.ExecuteAsync(command, cancellationToken);
+        if (result.IsFailure)
+            return result.ErrorList.ToResponse();
+
+        return Ok();
     }
 }

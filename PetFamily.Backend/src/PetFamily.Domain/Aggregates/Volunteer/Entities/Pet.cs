@@ -88,6 +88,11 @@ public class Pet : Entity<PetId>, ISoftDeletable
 
     public void AddPhotos(List<PetPhoto> petPhotos) => _petPhotos.AddRange(petPhotos);
 
+    public void DeletePhotos(List<PetPhoto> petPhotos)
+    {
+        petPhotos.ForEach(p => _petPhotos.Remove(p));
+    }
+
     public void SetPosition(Position position) =>
         Position = position;
 
