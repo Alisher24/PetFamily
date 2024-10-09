@@ -1,11 +1,7 @@
 using Application.Database;
 using Application.Dtos;
-using Application.SpeciesManagement;
 using Application.VolunteerManagement;
 using Application.VolunteerManagement.Pets.Commands.AddPet;
-using Domain.Aggregates.Species;
-using Domain.Aggregates.Species.Entities;
-using Domain.Aggregates.Species.ValueObjects.Ids;
 using Domain.Aggregates.Volunteer;
 using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.Aggregates.Volunteer.ValueObjects.Ids;
@@ -15,14 +11,15 @@ using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
+using MockQueryable;
 using Moq;
 
 namespace PetFamily.Application.UnitTests;
 
 public class AddPetServiceTests
 {
+    private readonly Mock<IReadDbContext> _readDbContextMock = new();
     private readonly Mock<IVolunteerRepository> _volunteerRepositoryMock = new();
-    private readonly Mock<ISpeciesRepository> _speciesRepositoryMock = new();
     private readonly Mock<IValidator<AddPetCommand>> _validatorMock = new();
     private readonly Mock<ILogger<AddPetService>> _loggerMock = new();
     private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
@@ -42,9 +39,10 @@ public class AddPetServiceTests
             .Setup(v => v.GetByIdAsync(command.VolunteerId, cancellationToken))
             .ReturnsAsync(volunteer);
 
-        _speciesRepositoryMock
-            .Setup(s => s.GetByIdAsync(command.SpeciesId, cancellationToken))
-            .ReturnsAsync(species);
+        var speciesQueryable = new List<SpeciesDto>{species}.AsQueryable().BuildMock();
+        _readDbContextMock
+            .Setup(r => r.Species)
+            .Returns(speciesQueryable);
 
         _validatorMock.Setup(v => v.ValidateAsync(command, cancellationToken))
             .ReturnsAsync(new ValidationResult());
@@ -53,8 +51,8 @@ public class AddPetServiceTests
             .Returns(Task.CompletedTask);
 
         var service = new AddPetService(
+            _readDbContextMock.Object,
             _volunteerRepositoryMock.Object,
-            _speciesRepositoryMock.Object,
             _validatorMock.Object,
             _loggerMock.Object,
             _unitOfWorkMock.Object);
@@ -70,7 +68,7 @@ public class AddPetServiceTests
         petResult.IsSuccess.Should().BeTrue();
         petResult.IsFailure.Should().BeFalse();
         petResult.Value.Id.Value.Should().Be(result.Value);
-        petResult.Value.Type.SpeciesId.Should().Be(species.Id);
+        petResult.Value.Type.SpeciesId.Value.Should().Be(species.Id);
         petResult.Value.Type.BreedId.Should().Be(breed.Id);
     }
 
@@ -94,9 +92,10 @@ public class AddPetServiceTests
             .Setup(v => v.GetByIdAsync(command.VolunteerId, cancellationToken))
             .ReturnsAsync(volunteer);
 
-        _speciesRepositoryMock
-            .Setup(s => s.GetByIdAsync(command.SpeciesId, cancellationToken))
-            .ReturnsAsync(species);
+        var speciesQueryable = new List<SpeciesDto>{species}.AsQueryable().BuildMock();
+        _readDbContextMock
+            .Setup(r => r.Species)
+            .Returns(speciesQueryable);
 
         _validatorMock.Setup(v => v.ValidateAsync(command, cancellationToken))
             .ReturnsAsync(validationResult);
@@ -105,8 +104,8 @@ public class AddPetServiceTests
             .Returns(Task.CompletedTask);
 
         var service = new AddPetService(
+            _readDbContextMock.Object,
             _volunteerRepositoryMock.Object,
-            _speciesRepositoryMock.Object,
             _validatorMock.Object,
             _loggerMock.Object,
             _unitOfWorkMock.Object);
@@ -174,23 +173,35 @@ public class AddPetServiceTests
         return volunteer;
     }
 
-    private Species GenerateSpecies()
+    private SpeciesDto GenerateSpecies()
     {
-        var id = SpeciesId.NewSpeciesId();
-        var name = Name.Create("Test").Value;
-        var description = Description.Create("test").Value;
+        var id = Guid.NewGuid();
+        var name = "Test";
+        var description = "Test";
 
-        return new Species(id, name, description);
+        return new SpeciesDto
+        {
+            Id = id,
+            Name = name,
+            Description = description,
+            Breeds = []
+        };
     }
 
-    private Breed GenerateBreed(Species species)
+    private BreedDto GenerateBreed(SpeciesDto species)
     {
-        var id = BreedId.NewBreedId();
-        var name = Name.Create("Test").Value;
-        var description = Description.Create("test").Value;
-        var breed = new Breed(id, name, description);
+        var id = Guid.NewGuid();
+        var name = "Test";
+        var description = "Test";
+        var breed = new BreedDto
+        {
+            Id = id,
+            SpeciesId = species.Id,
+            Name = name,
+            Description = description
+        };
 
-        species.AddBread(breed);
+        species.Breeds.Add(breed);
 
         return breed;
     }
