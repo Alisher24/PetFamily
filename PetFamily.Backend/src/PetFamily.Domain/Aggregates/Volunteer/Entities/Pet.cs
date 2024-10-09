@@ -11,7 +11,7 @@ namespace Domain.Aggregates.Volunteer.Entities;
 public class Pet : Entity<PetId>, ISoftDeletable
 {
     private readonly List<PetPhoto> _petPhotos = [];
-    
+
     private bool _isDeleted = false;
 
     // ef core
@@ -90,6 +90,38 @@ public class Pet : Entity<PetId>, ISoftDeletable
 
     public void SetPosition(Position position) =>
         Position = position;
+
+    public void UpdatePet(
+        Name name,
+        Description description,
+        Type type,
+        Color color,
+        InformationHealth informationHealth,
+        Address address,
+        Weight weight,
+        Height height,
+        PhoneNumber phoneNumber,
+        bool isNeutered,
+        DateOfBirth dateOfBirth,
+        bool isVaccinated,
+        HelpStatuses helpStatus,
+        IReadOnlyList<Requisite> requisites)
+    {
+        Name = name;
+        Description = description;
+        Type = type;
+        Color = color;
+        InformationHealth = informationHealth;
+        Address = address;
+        Weight = weight;
+        Height = height;
+        PhoneNumber = phoneNumber;
+        IsNeutered = isNeutered;
+        DateOfBirth = dateOfBirth;
+        IsVaccinated = isVaccinated;
+        HelpStatus = helpStatus;
+        Requisites = requisites;
+    }
 
     public void Delete()
     {

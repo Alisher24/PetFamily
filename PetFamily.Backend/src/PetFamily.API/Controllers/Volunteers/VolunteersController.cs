@@ -2,6 +2,7 @@
 using Application.VolunteerManagement.Pets.Commands.AddPet;
 using Application.VolunteerManagement.Pets.Commands.AddPetPhotos;
 using Application.VolunteerManagement.Pets.Commands.MovePet;
+using Application.VolunteerManagement.Pets.Commands.UpdatePet;
 using Application.VolunteerManagement.Volunteers.Commands.Create;
 using Application.VolunteerManagement.Volunteers.Commands.Delete;
 using Application.VolunteerManagement.Volunteers.Commands.UpdateMainInfo;
@@ -173,5 +174,20 @@ public class VolunteersController : ApplicationController
             return result.ErrorList.ToResponse();
 
         return Ok();
+    }
+
+    [HttpPut("{volunteerId:guid}/pets/{petId:guid}")]
+    public async Task<ActionResult> UpdatePet(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petId,
+        [FromBody] UpdatePetRequest request,
+        [FromServices] UpdatePetService service,
+        CancellationToken cancellationToken)
+    {
+        var result = await service.ExecuteAsync(request.ToCommand(volunteerId, petId), cancellationToken);
+        if (result.IsFailure)
+            return result.ErrorList.ToResponse();
+
+        return Ok(result.Value);
     }
 }
