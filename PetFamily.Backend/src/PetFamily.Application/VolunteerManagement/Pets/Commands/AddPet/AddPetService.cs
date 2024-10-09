@@ -1,21 +1,22 @@
 ﻿using Application.Abstraction;
 using Application.Database;
+using Application.Dtos;
 using Application.Extensions;
-using Application.SpeciesManagement;
 using Domain.Aggregates.Volunteer.Entities;
 using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.Aggregates.Volunteer.ValueObjects.Ids;
 using Domain.CommonValueObjects;
 using Domain.Shared;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Type = Domain.Aggregates.Species.ValueObjects.Type;
 
 namespace Application.VolunteerManagement.Pets.Commands.AddPet;
 
 public class AddPetService(
+    IReadDbContext readDbContext,
     IVolunteerRepository volunteerRepository,
-    ISpeciesRepository speciesRepository,
     IValidator<AddPetCommand> validator,
     ILogger<AddPetService> logger,
     IUnitOfWork unitOfWork) : ICommandService<Guid, AddPetCommand>
@@ -33,16 +34,15 @@ public class AddPetService(
         if (volunteerResult.IsFailure)
             return volunteerResult.ErrorList;
 
-        var speciesResult = await speciesRepository.GetByIdAsync(
-            command.SpeciesId, cancellationToken);
+        var speciesResult = await GetSpeciesByIdAsync(readDbContext.Species, command.SpeciesId, cancellationToken);
         if (speciesResult.IsFailure)
             return speciesResult.ErrorList;
 
-        var breedResult = speciesResult.Value.GetBreedById(command.BreedId);
-        if (breedResult.IsFailure)
-            return breedResult.ErrorList;
+        var breedResult = speciesResult.Value.Breeds.FirstOrDefault(b => b.Id == command.BreedId);
+        if (breedResult is null)
+            return Errors.General.NotFound($"Breed with breedId {command.BreedId}");
 
-        var type = new Type(speciesResult.Value.Id, breedResult.Value.Id);
+        var type = new Type(speciesResult.Value.Id, breedResult.Id);
 
         var pet = InitPet(command, type);
 
@@ -94,5 +94,19 @@ public class AddPetService(
             requisites);
 
         return pet;
+    }
+
+    private async Task<Result<SpeciesDto>> GetSpeciesByIdAsync(
+        IQueryable<SpeciesDto> readSpeciesDbContext,
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        var speciesResult = await readSpeciesDbContext
+            .Include(s => s.Breeds)
+            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+
+        return speciesResult is null
+            ? Errors.General.NotFound($"Species with speciesId {id}")
+            : speciesResult;
     }
 }

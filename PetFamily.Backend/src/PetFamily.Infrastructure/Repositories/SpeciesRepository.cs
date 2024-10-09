@@ -1,6 +1,5 @@
 ﻿using Application.SpeciesManagement;
 using Domain.Aggregates.Species;
-using Domain.Aggregates.Species.Entities;
 using Domain.Aggregates.Species.ValueObjects.Ids;
 using Domain.CommonValueObjects;
 using Domain.Shared;
@@ -18,6 +17,8 @@ public class SpeciesRepository(WriteDbContext dbContext) : ISpeciesRepository
 
         return species.Id.Value;
     }
+
+    public void Delete(Species species) => dbContext.Species.Remove(species);
 
     public async Task<Result<Species>> GetByIdAsync(SpeciesId speciesId,
         CancellationToken cancellationToken = default)

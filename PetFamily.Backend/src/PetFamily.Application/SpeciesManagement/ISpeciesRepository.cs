@@ -17,4 +17,6 @@ public interface ISpeciesRepository
     Task<Guid> AddAsync(
         Domain.Aggregates.Species.Species species, 
         CancellationToken cancellationToken = default);
+
+    void Delete(Domain.Aggregates.Species.Species species);
 }

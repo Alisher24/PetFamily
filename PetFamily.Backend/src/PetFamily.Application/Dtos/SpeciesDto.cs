@@ -8,5 +8,5 @@ public class SpeciesDto
 
     public string Description { get; init; } = string.Empty;
 
-    public IEnumerable<BreedDto> Breeds { get; init; } = default!;
+    public List<BreedDto> Breeds { get; init; } = default!;
 }
