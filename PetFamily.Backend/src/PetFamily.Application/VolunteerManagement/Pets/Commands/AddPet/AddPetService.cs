@@ -6,6 +6,7 @@ using Domain.Aggregates.Volunteer.Entities;
 using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.Aggregates.Volunteer.ValueObjects.Ids;
 using Domain.CommonValueObjects;
+using Domain.Enums;
 using Domain.Shared;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -71,6 +72,7 @@ public class AddPetService(
         var height = Height.Create(command.Height);
         var phoneNumber = PhoneNumber.Create(command.PhoneNumber);
         var dateOfBirth = DateOfBirth.Create(command.DateOfBirth);
+        var helpStatus = Enum.Parse<HelpStatuses>(command.HelpStatus);
         var requisites = new List<Requisite>(command.Requisites
             .Select(r => new Requisite(
                 Name.Create(r.Name).Value,
@@ -90,7 +92,7 @@ public class AddPetService(
             command.IsNeutered,
             dateOfBirth.Value,
             command.IsVaccinated,
-            command.HelpStatuses,
+            helpStatus,
             requisites);
 
         return pet;

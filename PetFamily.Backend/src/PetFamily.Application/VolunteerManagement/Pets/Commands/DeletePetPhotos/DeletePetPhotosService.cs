@@ -2,7 +2,6 @@
 using Application.Database;
 using Application.Extensions;
 using Application.Messaging;
-using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.Shared;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -18,7 +17,7 @@ public class DeletePetPhotosService(
     IUnitOfWork unitOfWork) : ICommandService<DeletePetPhotosCommand>
 {
     private const string BucketName = "photos";
-    
+
     public async Task<Result> ExecuteAsync(
         DeletePetPhotosCommand command,
         CancellationToken cancellationToken = default)
@@ -33,31 +32,19 @@ public class DeletePetPhotosService(
                 .GetByIdAsync(command.VolunteerId, cancellationToken);
             if (volunteerResult.IsFailure)
                 return volunteerResult.ErrorList;
-            
-            var petResult = volunteerResult.Value.GetPetById(command.PetId);
-            if (petResult.IsFailure)
-                return petResult.ErrorList;
 
-            var petPhotos = new List<PetPhoto>();
-            var filesInfo = new List<FileInfo>();
-            foreach (var photoPath in command.PhotoPaths)
-            {
-                var petPhoto = petResult.Value.PetPhotos
-                    .FirstOrDefault(p => p.Path.Value == photoPath);
-                if (petPhoto is null)
-                    return Errors.General
-                        .NotFound($"Photo with path: {photoPath} of the pet with id: {command.PetId}");
-                
-                petPhotos.Add(petPhoto);
-                filesInfo.Add(new FileInfo(petPhoto.Path, BucketName));
-            }
+            var deletePetPhotosResult = volunteerResult.Value
+                .DeletePetPhotos(command.PetId, command.PhotoPaths.ToList());
+            if (deletePetPhotosResult.IsFailure)
+                return deletePetPhotosResult.ErrorList;
 
-            petResult.Value.DeletePhotos(petPhotos);
+            var filesInfo = deletePetPhotosResult.Value
+                .Select(p => new FileInfo(p, BucketName));
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
             await messageQueue.WriteAsync(filesInfo, cancellationToken);
-            
+
             logger.LogInformation("Deleted photos from pet: {id}", command.PetId);
 
             return Result.Success();

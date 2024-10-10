@@ -1,6 +1,5 @@
 ﻿using Application.Abstraction;
 using Application.Dtos;
-using Domain.Enums;
 
 namespace Application.VolunteerManagement.Pets.Commands.UpdatePet;
 
@@ -20,5 +19,5 @@ public record UpdatePetCommand(
     bool IsNeutered,
     DateOnly DateOfBirth,
     bool IsVaccinated,
-    HelpStatuses HelpStatus,
+    string HelpStatus,
     IEnumerable<RequisiteDto> Requisites) : ICommand;

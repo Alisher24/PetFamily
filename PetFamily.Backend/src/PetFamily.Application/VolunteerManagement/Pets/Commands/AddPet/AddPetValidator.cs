@@ -1,5 +1,6 @@
 ﻿using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.CommonValueObjects;
+using Domain.Enums;
 using Domain.Shared;
 using FluentValidation;
 
@@ -24,6 +25,8 @@ public class AddPetValidator : AbstractValidator<AddPetCommand>
         RuleFor(a => a.IsNeutered).NotEmpty().WithError(Errors.General.ValueIsInvalid());
         RuleFor(a => a.DateOfBirth).MustBeValueObject(DateOfBirth.Create);
         RuleFor(a => a.IsVaccinated).NotEmpty().WithError(Errors.General.ValueIsInvalid());
-        RuleFor(a => a.HelpStatuses).NotEmpty().WithError(Errors.General.ValueIsInvalid());
+        RuleFor(a => a.HelpStatus).NotEmpty()
+            .Must(h => Enum.TryParse<HelpStatuses>(h, out _))
+            .WithError(Errors.General.ValueIsAlreadyExists("HelpStatus"));
     }
 }

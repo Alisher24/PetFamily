@@ -4,6 +4,7 @@ using Application.Extensions;
 using Domain.Aggregates.Species.ValueObjects.Ids;
 using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.CommonValueObjects;
+using Domain.Enums;
 using Domain.Shared;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -31,10 +32,6 @@ public class UpdatePetService(
         if (volunteerResult.IsFailure)
             return Errors.General.NotFound($"Volunteer with id: {command.VolunteerId}");
 
-        var petResult = volunteerResult.Value.Pets.FirstOrDefault(p => p.Id.Value == command.PetId);
-        if (petResult is null)
-            return Errors.General.NotFound($"Pet with id: {command.VolunteerId}");
-
         var species = await readDbContext.Species
             .Include(s => s.Breeds)
             .FirstOrDefaultAsync(s => s.Id == command.SpeciesId, cancellationToken);
@@ -58,12 +55,14 @@ public class UpdatePetService(
         var height = Height.Create(command.Height).Value;
         var phoneNumber = PhoneNumber.Create(command.PhoneNumber).Value;
         var dateOfBirth = DateOfBirth.Create(command.DateOfBirth).Value;
+        var helpStatus = Enum.Parse<HelpStatuses>(command.HelpStatus);
         var requisites = new List<Requisite>(command.Requisites
             .Select(r => new Requisite(
                 Name.Create(r.Name).Value,
                 Description.Create(r.Description).Value)));
 
-        petResult.UpdatePet(
+        var updatePetResult = volunteerResult.Value.UpdatePet(
+            command.PetId,
             name,
             description,
             type,
@@ -76,8 +75,10 @@ public class UpdatePetService(
             command.IsNeutered,
             dateOfBirth,
             command.IsVaccinated,
-            command.HelpStatus,
+            helpStatus,
             requisites);
+        if (updatePetResult.IsFailure)
+            return updatePetResult.ErrorList;
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
