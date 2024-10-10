@@ -4,6 +4,7 @@ using Application.VolunteerManagement.Pets.Commands.AddPetPhotos;
 using Application.VolunteerManagement.Pets.Commands.DeletePetPhotos;
 using Application.VolunteerManagement.Pets.Commands.MovePet;
 using Application.VolunteerManagement.Pets.Commands.UpdatePet;
+using Application.VolunteerManagement.Pets.Commands.UpdatePetStatus;
 using Application.VolunteerManagement.Volunteers.Commands.Create;
 using Application.VolunteerManagement.Volunteers.Commands.Delete;
 using Application.VolunteerManagement.Volunteers.Commands.UpdateMainInfo;
@@ -11,6 +12,7 @@ using Application.VolunteerManagement.Volunteers.Commands.UpdateRequisites;
 using Application.VolunteerManagement.Volunteers.Commands.UpdateSocialNetworks;
 using Application.VolunteerManagement.Volunteers.Queries.GetVolunteerById;
 using Application.VolunteerManagement.Volunteers.Queries.GetVolunteersWithPagination;
+using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Controllers.Volunteers.Requests;
 using PetFamily.API.Extensions;
@@ -190,6 +192,23 @@ public class VolunteersController : ApplicationController
             return result.ErrorList.ToResponse();
 
         return Ok(result.Value);
+    }
+    
+    [HttpPut("{volunteerId:guid}/pets/{petId:guid}/help-status")]
+    public async Task<ActionResult> UpdatePetStatus(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petId,
+        [FromBody] string helpStatuses,
+        [FromServices] UpdatePetStatusService service,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdatePetStatusCommand(volunteerId, petId, helpStatuses);
+        
+        var result = await service.ExecuteAsync(command, cancellationToken);
+        if (result.IsFailure)
+            return result.ErrorList.ToResponse();
+
+        return Ok();
     }
 
     [HttpDelete("{volunteerId:guid}/pets/{petId:guid}/photos")]

@@ -128,6 +128,8 @@ public class Pet : Entity<PetId>, ISoftDeletable
         Requisites = requisites;
     }
 
+    public void UpdatePetStatus(HelpStatuses helpStatuses) => HelpStatus = helpStatuses;
+
     public void Delete()
     {
         if (!_isDeleted)
