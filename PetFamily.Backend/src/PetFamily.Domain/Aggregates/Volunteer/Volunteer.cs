@@ -129,6 +129,17 @@ public sealed class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         return Result.Success();
     }
 
+    public Result UpdatePetStatus(Guid petId, HelpStatuses helpStatuses)
+    {
+        var petResult = _pets.FirstOrDefault(p => p.Id.Value == petId);
+        if (petResult is null)
+            return Errors.General.NotFound($"Pet with id: {petId}");
+        
+        petResult.UpdateStatus(helpStatuses);
+        
+        return Result.Success();
+    }
+
     public Result<Pet> GetPetById(PetId petId)
     {
         var pet = _pets.FirstOrDefault(p => p.Id == petId);
