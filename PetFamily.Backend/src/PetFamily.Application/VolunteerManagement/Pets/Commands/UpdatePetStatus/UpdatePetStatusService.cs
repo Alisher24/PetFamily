@@ -27,11 +27,11 @@ public class UpdatePetStatusService(
         if (volunteerResult.IsFailure)
             return Errors.General.NotFound($"Volunteer with id: {command.VolunteerId}");
 
-        var petResult = volunteerResult.Value.Pets.FirstOrDefault(p => p.Id.Value == command.PetId);
-        if (petResult is null)
-            return Errors.General.NotFound($"Pet with id: {command.VolunteerId}");
-
-        petResult.UpdatePetStatus(Enum.Parse<HelpStatuses>(command.HelpStatuses));
+        var helpStatus = Enum.Parse<HelpStatuses>(command.HelpStatuses);
+        
+        var updateResult = volunteerResult.Value.UpdatePetStatus(command.PetId, helpStatus);
+        if (updateResult.IsFailure)
+            return updateResult.ErrorList;
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
         
