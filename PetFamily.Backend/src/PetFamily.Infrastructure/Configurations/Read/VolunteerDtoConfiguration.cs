@@ -24,13 +24,18 @@ public class VolunteerDtoConfiguration : IEntityTypeConfiguration<VolunteerDto>
         builder.Property(v => v.SocialNetworks)
             .HasConversion(
                 s => JsonSerializer.Serialize(string.Empty, JsonSerializerOptions.Default),
-                json => JsonSerializer.Deserialize<SocialNetworkDto[]>(json, JsonSerializerOptions.Default)!);
+                json => JsonSerializer.Deserialize<List<SocialNetworkDto>>(json, JsonSerializerOptions.Default)!);
 
         //Requisite
         builder.Property(v => v.Requisites)
             .HasConversion(
                 r => JsonSerializer.Serialize(string.Empty, JsonSerializerOptions.Default),
-                json => JsonSerializer.Deserialize<RequisiteDto[]>(json, JsonSerializerOptions.Default)!);
+                json => JsonSerializer.Deserialize<List<RequisiteDto>>(json, JsonSerializerOptions.Default)!);
+        
+        //Pets
+        builder.HasMany(v => v.Pets)
+            .WithOne()
+            .HasForeignKey(p => p.VolunteerId);
         
         //IsDeleted
         builder.Property(v => v.IsDeleted)

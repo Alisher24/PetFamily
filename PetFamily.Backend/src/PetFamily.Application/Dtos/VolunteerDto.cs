@@ -14,9 +14,11 @@ public class VolunteerDto
 
     public string PhoneNumber { get; init; } = string.Empty;
 
-    public SocialNetworkDto[] SocialNetworks { get; init; } = null!;
+    public List<SocialNetworkDto> SocialNetworks { get; init; } = null!;
 
-    public RequisiteDto[] Requisites { get; init; } = null!;
+    public List<RequisiteDto> Requisites { get; init; } = null!;
+
+    public List<PetDto> Pets { get; init; } = null!;
     
     public bool IsDeleted { get; init; }
 }
