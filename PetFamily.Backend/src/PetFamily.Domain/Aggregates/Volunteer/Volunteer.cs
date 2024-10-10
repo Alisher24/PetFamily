@@ -5,10 +5,11 @@ using Domain.CommonValueObjects;
 using Domain.Enums;
 using Domain.Interfaces;
 using Domain.Shared;
+using Type = Domain.Aggregates.Species.ValueObjects.Type;
 
 namespace Domain.Aggregates.Volunteer;
 
-public sealed class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
+public sealed class Volunteer : Entity<VolunteerId>, ISoftDeletable
 {
     private readonly List<Pet> _pets = [];
 
@@ -75,6 +76,42 @@ public sealed class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         return Result.Success();
     }
 
+    public Result AddPetPhotos(Guid petId, List<PetPhoto> petPhotos)
+    {
+        var petResult = GetPetById(petId);
+        if (petResult.IsFailure)
+            return petResult.ErrorList;
+
+        petResult.Value.AddPhotos(petPhotos);
+
+        return Result.Success();
+    }
+
+    public Result<List<PhotoPath>> DeletePetPhotos(Guid petId, List<string> photoPaths)
+    {
+        var petResult = GetPetById(petId);
+        if (petResult.IsFailure)
+            return petResult.ErrorList;
+
+        var petPhotos = new List<PetPhoto>();
+        var paths = new List<PhotoPath>();
+        foreach (var photoPath in photoPaths)
+        {
+            var petPhoto = petResult.Value.PetPhotos
+                .FirstOrDefault(p => p.Path.Value == photoPath);
+            if (petPhoto is null)
+                return Errors.General
+                    .NotFound($"Photo with path: {photoPath} of the pet with id: {petId}");
+
+            petPhotos.Add(petPhoto);
+            paths.Add(petPhoto.Path);
+        }
+
+        petResult.Value.DeletePhotos(petPhotos);
+
+        return paths;
+    }
+
     public Result MovePet(Pet pet, int newPosition)
     {
         if (newPosition > _pets.Count)
@@ -129,22 +166,62 @@ public sealed class Volunteer : Shared.Entity<VolunteerId>, ISoftDeletable
         return Result.Success();
     }
 
-    public Result UpdatePetStatus(Guid petId, HelpStatuses helpStatuses)
+    public Result UpdatePet(
+        Guid petId,
+        Name name,
+        Description description,
+        Type type,
+        Color color,
+        InformationHealth informationHealth,
+        Address address,
+        Weight weight,
+        Height height,
+        PhoneNumber phoneNumber,
+        bool isNeutered,
+        DateOfBirth dateOfBirth,
+        bool isVaccinated,
+        HelpStatuses helpStatus,
+        IReadOnlyList<Requisite> requisites)
     {
-        var petResult = _pets.FirstOrDefault(p => p.Id.Value == petId);
-        if (petResult is null)
-            return Errors.General.NotFound($"Pet with id: {petId}");
-        
-        petResult.UpdateStatus(helpStatuses);
-        
+        var petResult = GetPetById(petId);
+        if (petResult.IsFailure)
+            return petResult.ErrorList;
+
+        petResult.Value.Update(
+            name,
+            description,
+            type,
+            color,
+            informationHealth,
+            address,
+            weight,
+            height,
+            phoneNumber,
+            isNeutered,
+            dateOfBirth,
+            isVaccinated,
+            helpStatus,
+            requisites);
+
         return Result.Success();
     }
 
-    public Result<Pet> GetPetById(PetId petId)
+    public Result UpdatePetStatus(Guid petId, HelpStatuses helpStatuses)
     {
-        var pet = _pets.FirstOrDefault(p => p.Id == petId);
+        var petResult = GetPetById(petId);
+        if (petResult.IsFailure)
+            return petResult.ErrorList;
+
+        petResult.Value.UpdateStatus(helpStatuses);
+
+        return Result.Success();
+    }
+
+    public Result<Pet> GetPetById(Guid petId)
+    {
+        var pet = _pets.FirstOrDefault(p => p.Id.Value == petId);
         if (pet is null)
-            return Errors.General.NotFound($"Pet with id: {petId.Value}");
+            return Errors.General.NotFound($"Pet with id: {petId}");
 
         return pet;
     }

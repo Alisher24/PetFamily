@@ -18,7 +18,7 @@ public record UpdatePetRequest(
     bool IsNeutered,
     DateOnly DateOfBirth,
     bool IsVaccinated,
-    HelpStatuses HelpStatus,
+    string HelpStatus,
     IEnumerable<RequisiteDto> Requisites)
 {
     public UpdatePetCommand ToCommand(Guid volunteerId, Guid petId) =>

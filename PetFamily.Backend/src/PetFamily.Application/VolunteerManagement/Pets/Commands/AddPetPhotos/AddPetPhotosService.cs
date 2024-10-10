@@ -37,10 +37,6 @@ public class AddPetPhotosService(
             if (volunteerResult.IsFailure)
                 return volunteerResult.ErrorList;
 
-            var petResult = volunteerResult.Value.GetPetById(command.PetId);
-            if (petResult.IsFailure)
-                return petResult.ErrorList;
-
             var createFileDataResult = CreateFileData(command.Photos);
             if (createFileDataResult.IsFailure)
                 return createFileDataResult.ErrorList;
@@ -58,11 +54,18 @@ public class AddPetPhotosService(
                 .Select(f => new PetPhoto((PhotoPath)f, false))
                 .ToList();
 
-            petResult.Value.AddPhotos(petPhotos);
+            var addPetPhotosResult = volunteerResult.Value.AddPetPhotos(command.PetId, petPhotos);
+            if (addPetPhotosResult.IsFailure)
+            {
+                await messageQueue.WriteAsync(createFileDataResult.Value
+                    .Select(f => f.Info), cancellationToken);
+
+                return uploadResult.ErrorList;
+            }
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
-            logger.LogInformation("Uploaded photos to pet - {id}", petResult.Value.Id.Value);
+            logger.LogInformation("Uploaded photos to pet - {id}", command.PetId);
 
             return Result.Success();
         }

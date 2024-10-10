@@ -1,6 +1,7 @@
 ﻿using Application.Dtos.Validators;
 using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.CommonValueObjects;
+using Domain.Enums;
 using Domain.Shared;
 using FluentValidation;
 
@@ -25,7 +26,9 @@ public class UpdatePetValidator : AbstractValidator<UpdatePetCommand>
         RuleFor(u => u.IsNeutered).NotEmpty().WithError(Errors.General.ValueIsAlreadyExists("IsNeutered"));
         RuleFor(u => u.DateOfBirth).MustBeValueObject(DateOfBirth.Create);
         RuleFor(u => u.IsVaccinated).NotEmpty().WithError(Errors.General.ValueIsAlreadyExists("IsVaccinated"));
-        RuleFor(u => u.HelpStatus).NotEmpty().WithError(Errors.General.ValueIsAlreadyExists("HelpStatus"));
+        RuleFor(u => u.HelpStatus).NotEmpty()
+            .Must(h => Enum.TryParse<HelpStatuses>(h, out _))
+            .WithError(Errors.General.ValueIsAlreadyExists("HelpStatus"));
         RuleForEach(u => u.Requisites).SetValidator(new RequisiteDtoValidator());
     }
 }

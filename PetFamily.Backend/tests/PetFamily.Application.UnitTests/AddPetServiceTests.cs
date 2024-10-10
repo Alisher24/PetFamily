@@ -132,7 +132,7 @@ public class AddPetServiceTests
         var isNeutered = false;
         var dateOfBirth = DateOnly.FromDateTime(DateTime.UtcNow);
         var isVaccinated = true;
-        var helpStatuses = HelpStatuses.FoundHouse;
+        var helpStatuses = HelpStatuses.FoundHouse.ToString();
         IEnumerable<RequisiteDto> requisites = [];
 
         return new(volunteerId,
