@@ -26,7 +26,7 @@ public class DeleteVolunteerService(
         if (volunteerResult.IsFailure)
             return Errors.General.NotFound($"Volunteer with id: {command.VolunteerId}");
         
-        volunteerResult.Value.Delete();
+        volunteerResult.Value.Deactivate();
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
         

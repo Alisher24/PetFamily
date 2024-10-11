@@ -30,7 +30,7 @@ public class DeactivatePetService(
         if (petResult.IsFailure)
             return petResult.ErrorList;
 
-        petResult.Value.Delete();
+        petResult.Value.Deactivate();
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

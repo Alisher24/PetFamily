@@ -1,4 +1,5 @@
 ﻿using Application.Abstraction;
+using Application.Constants;
 using Application.Database;
 using Application.Extensions;
 using Application.Messaging;
@@ -16,8 +17,6 @@ public class DeletePetPhotosService(
     IMessageQueue<IEnumerable<FileInfo>> messageQueue,
     IUnitOfWork unitOfWork) : ICommandService<DeletePetPhotosCommand>
 {
-    private const string BucketName = "photos";
-
     public async Task<Result> ExecuteAsync(
         DeletePetPhotosCommand command,
         CancellationToken cancellationToken = default)
@@ -39,7 +38,7 @@ public class DeletePetPhotosService(
                 return deletePetPhotosResult.ErrorList;
 
             var filesInfo = deletePetPhotosResult.Value
-                .Select(p => new FileInfo(p, BucketName));
+                .Select(p => new FileInfo(p, MinIoConstants.PhotoBucketName));
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
 

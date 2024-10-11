@@ -22,7 +22,7 @@ public class SoftDeleteInterceptor : SaveChangesInterceptor
             entry.State = EntityState.Modified;
             if (entry.Entity is ISoftDeletable entity)
             {
-                entity.Delete();
+                entity.Deactivate();
             }
         }
         

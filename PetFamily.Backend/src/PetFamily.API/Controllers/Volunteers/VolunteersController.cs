@@ -2,6 +2,7 @@
 using Application.VolunteerManagement.Pets.Commands.AddPet;
 using Application.VolunteerManagement.Pets.Commands.AddPetPhotos;
 using Application.VolunteerManagement.Pets.Commands.Deactivate;
+using Application.VolunteerManagement.Pets.Commands.Delete;
 using Application.VolunteerManagement.Pets.Commands.DeletePetPhotos;
 using Application.VolunteerManagement.Pets.Commands.MovePet;
 using Application.VolunteerManagement.Pets.Commands.UpdatePet;
@@ -219,6 +220,22 @@ public class VolunteersController : ApplicationController
         CancellationToken cancellationToken)
     {
         var command = new DeactivatePetCommand(volunteerId, petId);
+
+        var result = await service.ExecuteAsync(command, cancellationToken);
+        if (result.IsFailure)
+            return result.ErrorList.ToResponse();
+
+        return Ok();
+    }
+    
+    [HttpDelete("{volunteerId:guid}/pets/{petId:guid}")]
+    public async Task<ActionResult> DeletePet(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petId,
+        [FromServices] DeletePetService service,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeletePetCommand(volunteerId, petId);
 
         var result = await service.ExecuteAsync(command, cancellationToken);
         if (result.IsFailure)
