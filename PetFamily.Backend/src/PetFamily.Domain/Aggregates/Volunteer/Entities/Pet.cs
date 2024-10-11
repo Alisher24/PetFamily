@@ -130,7 +130,7 @@ public class Pet : Entity<PetId>, ISoftDeletable
 
     internal void UpdateStatus(HelpStatuses helpStatuses) => HelpStatus = helpStatuses;
 
-    public void Delete()
+    public void Deactivate()
     {
         if (!_isDeleted)
             _isDeleted = true;

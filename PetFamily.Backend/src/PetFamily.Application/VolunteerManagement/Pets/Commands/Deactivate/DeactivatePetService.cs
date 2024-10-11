@@ -5,33 +5,37 @@ using Domain.Shared;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 
-namespace Application.VolunteerManagement.Volunteers.Commands.Delete;
+namespace Application.VolunteerManagement.Pets.Commands.Deactivate;
 
-public class DeleteVolunteerService(
+public class DeactivatePetService(
     IVolunteerRepository volunteerRepository,
-    IValidator<DeleteVolunteerCommand> validator,
-    ILogger<DeleteVolunteerService> logger,
-    IUnitOfWork unitOfWork) : ICommandService<Guid, DeleteVolunteerCommand>
+    IValidator<DeactivatePetCommand> validator,
+    ILogger<DeactivatePetService> logger,
+    IUnitOfWork unitOfWork) : ICommandService<DeactivatePetCommand>
 {
-    public async Task<Result<Guid>> ExecuteAsync(
-        DeleteVolunteerCommand command,
+    public async Task<Result> ExecuteAsync(
+        DeactivatePetCommand command,
         CancellationToken cancellationToken = default)
     {
         var validationResult = await validator.ValidateAsync(command, cancellationToken);
         if (validationResult.IsValid == false)
             return validationResult.ToErrorList();
-        
+
         var volunteerResult = await volunteerRepository
             .GetByIdAsync(command.VolunteerId, cancellationToken);
         if (volunteerResult.IsFailure)
             return Errors.General.NotFound($"Volunteer with id: {command.VolunteerId}");
-        
-        volunteerResult.Value.Deactivate();
+
+        var petResult = volunteerResult.Value.GetPetById(command.PetId);
+        if (petResult.IsFailure)
+            return petResult.ErrorList;
+
+        petResult.Value.Deactivate();
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        
-        logger.LogInformation("Deleted volunteer with id {volunteerId}", command.VolunteerId);
 
-        return volunteerResult.Value.Id.Value;
+        logger.LogInformation("Deactivated pet with id {petId}", command.PetId);
+
+        return Result.Success();
     }
 }

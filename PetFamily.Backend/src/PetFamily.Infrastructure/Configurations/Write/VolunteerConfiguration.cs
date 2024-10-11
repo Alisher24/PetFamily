@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Application.Dtos;
+﻿using Application.Dtos;
 using Domain.Aggregates.Volunteer;
 using Domain.Aggregates.Volunteer.ValueObjects;
 using Domain.Aggregates.Volunteer.ValueObjects.Ids;
@@ -94,7 +93,8 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
         builder.HasMany(v => v.Pets)
             .WithOne()
             .HasForeignKey("volunteer_id")
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
 
         //IsDeleted
         builder.Property<bool>("_isDeleted")

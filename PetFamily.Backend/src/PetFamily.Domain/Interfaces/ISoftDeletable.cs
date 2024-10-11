@@ -2,7 +2,7 @@
 
 public interface ISoftDeletable
 {
-    void Delete();
+    void Deactivate();
 
     void Restore();
 }

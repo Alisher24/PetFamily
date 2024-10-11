@@ -1,6 +1,8 @@
 ﻿using Application.Dtos;
 using Application.VolunteerManagement.Pets.Commands.AddPet;
 using Application.VolunteerManagement.Pets.Commands.AddPetPhotos;
+using Application.VolunteerManagement.Pets.Commands.Deactivate;
+using Application.VolunteerManagement.Pets.Commands.Delete;
 using Application.VolunteerManagement.Pets.Commands.DeletePetPhotos;
 using Application.VolunteerManagement.Pets.Commands.MovePet;
 using Application.VolunteerManagement.Pets.Commands.UpdatePet;
@@ -12,7 +14,6 @@ using Application.VolunteerManagement.Volunteers.Commands.UpdateRequisites;
 using Application.VolunteerManagement.Volunteers.Commands.UpdateSocialNetworks;
 using Application.VolunteerManagement.Volunteers.Queries.GetVolunteerById;
 using Application.VolunteerManagement.Volunteers.Queries.GetVolunteersWithPagination;
-using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using PetFamily.API.Controllers.Volunteers.Requests;
 using PetFamily.API.Extensions;
@@ -204,6 +205,38 @@ public class VolunteersController : ApplicationController
     {
         var command = new UpdatePetStatusCommand(volunteerId, petId, helpStatuses);
         
+        var result = await service.ExecuteAsync(command, cancellationToken);
+        if (result.IsFailure)
+            return result.ErrorList.ToResponse();
+
+        return Ok();
+    }
+    
+    [HttpDelete("{volunteerId:guid}/pets/{petId:guid}/deactivate")]
+    public async Task<ActionResult> DeactivatePet(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petId,
+        [FromServices] DeactivatePetService service,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeactivatePetCommand(volunteerId, petId);
+
+        var result = await service.ExecuteAsync(command, cancellationToken);
+        if (result.IsFailure)
+            return result.ErrorList.ToResponse();
+
+        return Ok();
+    }
+    
+    [HttpDelete("{volunteerId:guid}/pets/{petId:guid}")]
+    public async Task<ActionResult> DeletePet(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petId,
+        [FromServices] DeletePetService service,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeletePetCommand(volunteerId, petId);
+
         var result = await service.ExecuteAsync(command, cancellationToken);
         if (result.IsFailure)
             return result.ErrorList.ToResponse();

@@ -27,6 +27,6 @@ public class AddPetValidator : AbstractValidator<AddPetCommand>
         RuleFor(a => a.IsVaccinated).NotEmpty().WithError(Errors.General.ValueIsInvalid());
         RuleFor(a => a.HelpStatus).NotEmpty()
             .Must(h => Enum.TryParse<HelpStatuses>(h, out _))
-            .WithError(Errors.General.ValueIsAlreadyExists("HelpStatus"));
+            .WithError(Errors.General.ValueIsInvalid("HelpStatus"));
     }
 }

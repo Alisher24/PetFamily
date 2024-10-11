@@ -217,6 +217,17 @@ public sealed class Volunteer : Entity<VolunteerId>, ISoftDeletable
         return Result.Success();
     }
 
+    public Result<Pet> DeletePet(Guid petId)
+    {
+        var petResult = GetPetById(petId);
+        if (petResult.IsFailure)
+            return petResult.ErrorList;
+
+        _pets.Remove(petResult.Value);
+        
+        return petResult;
+    }
+
     public Result<Pet> GetPetById(Guid petId)
     {
         var pet = _pets.FirstOrDefault(p => p.Id.Value == petId);
@@ -246,7 +257,7 @@ public sealed class Volunteer : Entity<VolunteerId>, ISoftDeletable
     public void UpdateRequisites(IReadOnlyList<Requisite> requisites) =>
         Requisites = requisites;
 
-    public void Delete()
+    public void Deactivate()
     {
         if (!_isDeleted)
             _isDeleted = true;
