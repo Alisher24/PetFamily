@@ -22,9 +22,9 @@ public class AddPetValidator : AbstractValidator<AddPetCommand>
         RuleFor(a => a.Weight).MustBeValueObject(Weight.Create);
         RuleFor(a => a.Height).MustBeValueObject(Height.Create);
         RuleFor(a => a.PhoneNumber).MustBeValueObject(PhoneNumber.Create);
-        RuleFor(a => a.IsNeutered).NotEmpty().WithError(Errors.General.ValueIsInvalid());
+        RuleFor(a => a.IsNeutered).NotNull().WithError(Errors.General.ValueIsInvalid());
         RuleFor(a => a.DateOfBirth).MustBeValueObject(DateOfBirth.Create);
-        RuleFor(a => a.IsVaccinated).NotEmpty().WithError(Errors.General.ValueIsInvalid());
+        RuleFor(a => a.IsVaccinated).NotNull().WithError(Errors.General.ValueIsInvalid());
         RuleFor(a => a.HelpStatus).NotEmpty()
             .Must(h => Enum.TryParse<HelpStatuses>(h, out _))
             .WithError(Errors.General.ValueIsInvalid("HelpStatus"));

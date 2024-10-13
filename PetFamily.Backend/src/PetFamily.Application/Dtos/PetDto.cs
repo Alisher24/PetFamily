@@ -28,7 +28,7 @@ public class PetDto
 
     public bool IsNeutered { get; init; }
 
-    public DateTime DateOfBirth { get; init; }
+    public DateOnly DateOfBirth { get; init; }
 
     public bool IsVaccinated { get; init; }
 
