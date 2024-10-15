@@ -217,6 +217,19 @@ public sealed class Volunteer : Entity<VolunteerId>, ISoftDeletable
         return Result.Success();
     }
 
+    public Result AssignMainPetPhoto(Guid petId, PhotoPath photoPath)
+    {
+        var petResult = GetPetById(petId);
+        if (petResult.IsFailure)
+            return petResult.ErrorList;
+
+        var assignMainPetPhotoResult = petResult.Value.AssignMainPhoto(photoPath);
+        if (assignMainPetPhotoResult.IsFailure)
+            return assignMainPetPhotoResult.ErrorList;
+
+        return Result.Success();
+    }
+
     public Result<Pet> DeletePet(Guid petId)
     {
         var petResult = GetPetById(petId);

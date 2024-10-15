@@ -130,6 +130,39 @@ public class Pet : Entity<PetId>, ISoftDeletable
 
     internal void UpdateStatus(HelpStatuses helpStatuses) => HelpStatus = helpStatuses;
 
+    internal Result AssignMainPhoto(PhotoPath photoPath)
+    {
+        var check = false;
+        var photoIndex = 0;
+        for (var i = 0; i < _petPhotos.Count; i++)
+        {
+            if (_petPhotos[i].Path == photoPath)
+            {
+                photoIndex = i;
+                check = true;
+                break;
+            }
+        }
+
+        if (check == false)
+            return Errors.General.NotFound(
+                $"Photo with path: {photoPath.Value} for animal with id: {Id.Value}");
+
+        if (_petPhotos[photoIndex].IsMain)
+            return Result.Success();
+
+        if (_petPhotos.Count == 1)
+        {
+            _petPhotos[0] = new PetPhoto(_petPhotos.First().Path, true);
+            return Result.Success();
+        }
+
+        _petPhotos[photoIndex] = new PetPhoto(_petPhotos.First().Path, false);
+        _petPhotos[0] = new PetPhoto(photoPath, true);
+
+        return Result.Success();
+    }
+
     public void Deactivate()
     {
         if (!_isDeleted)
