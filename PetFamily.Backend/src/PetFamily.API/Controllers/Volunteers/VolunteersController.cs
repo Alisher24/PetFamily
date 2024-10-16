@@ -1,6 +1,7 @@
 ﻿using Application.Dtos;
 using Application.VolunteerManagement.Pets.Commands.AddPet;
 using Application.VolunteerManagement.Pets.Commands.AddPetPhotos;
+using Application.VolunteerManagement.Pets.Commands.AssignMainPetPhoto;
 using Application.VolunteerManagement.Pets.Commands.Deactivate;
 using Application.VolunteerManagement.Pets.Commands.Delete;
 using Application.VolunteerManagement.Pets.Commands.DeletePetPhotos;
@@ -204,6 +205,23 @@ public class VolunteersController : ApplicationController
         CancellationToken cancellationToken)
     {
         var command = new UpdatePetStatusCommand(volunteerId, petId, helpStatuses);
+        
+        var result = await service.ExecuteAsync(command, cancellationToken);
+        if (result.IsFailure)
+            return result.ErrorList.ToResponse();
+
+        return Ok();
+    }
+
+    [HttpPut("{volunteerId:guid}/pets/{petId:guid}/main-photo")]
+    public async Task<ActionResult> AssignMainPetPhoto(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petId,
+        [FromBody] string photoPath,
+        [FromServices] AssignMainPetPhotoService service,
+        CancellationToken cancellationToken)
+    {
+        var command = new AssignMainPetPhotoCommand(volunteerId, petId, photoPath);
         
         var result = await service.ExecuteAsync(command, cancellationToken);
         if (result.IsFailure)
