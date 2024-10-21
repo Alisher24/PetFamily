@@ -1,4 +1,6 @@
-﻿using Application.Database;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Drawing;
+using Application.Database;
 using Application.Dtos;
 using Application.Files;
 using Application.Messaging;
@@ -16,9 +18,10 @@ using Domain.Shared;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Moq;
-using FileInfo = Application.Files.FileInfo;
+using FileInfo = System.Net.Mime.MediaTypeNames.Application.Files.FileInfo;
 using Type = Domain.Aggregates.Species.ValueObjects.Type;
 
 namespace PetFamily.Application.UnitTests;

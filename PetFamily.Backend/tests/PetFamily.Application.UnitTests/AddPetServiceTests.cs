@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Application.Database;
 using Application.Dtos;
 using Application.VolunteerManagement;
