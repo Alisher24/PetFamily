@@ -7,9 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Requests\" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\..\Shared\PetFamily.Core\PetFamily.Core.csproj" />
-      <ProjectReference Include="..\..\Volunteers\PetFamily.Volunteers.Contracts\PetFamily.Volunteers.Contracts.csproj" />
-      <ProjectReference Include="..\PetFamily.Species.Domain\PetFamily.Species.Domain.csproj" />
+      <ProjectReference Include="..\..\Shared\PetFamily.SharedKernel\PetFamily.SharedKernel.csproj" />
     </ItemGroup>
 
 </Project>

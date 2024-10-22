@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstraction;
-using PetFamily.Core.Dtos;
 using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel.Shared;
 using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.SharedKernel.ValueObjects.Ids;
+using PetFamily.Species.Contracts;
 using PetFamily.Volunteers.Domain;
 using PetFamily.Volunteers.Domain.Entities;
 using PetFamily.Volunteers.Domain.ValueObjects;
@@ -15,11 +14,11 @@ using Type = PetFamily.Volunteers.Domain.ValueObjects.Type;
 namespace PetFamily.Volunteers.Application.Pets.Commands.AddPet;
 
 public class AddPetService(
-    IReadDbContext readDbContext,
     IVolunteerRepository volunteerRepository,
     IValidator<AddPetCommand> validator,
     ILogger<AddPetService> logger,
-    IUnitOfWork unitOfWork) : ICommandService<Guid, AddPetCommand>
+    IUnitOfWork unitOfWork,
+    ISpeciesContracts speciesContracts) : ICommandService<Guid, AddPetCommand>
 {
     public async Task<Result<Guid>> ExecuteAsync(
         AddPetCommand command,
@@ -33,8 +32,8 @@ public class AddPetService(
             command.VolunteerId, cancellationToken);
         if (volunteerResult.IsFailure)
             return volunteerResult.ErrorList;
-
-        var speciesResult = await GetSpeciesByIdAsync(readDbContext.Species, command.SpeciesId, cancellationToken);
+        
+        var speciesResult = await speciesContracts.GetSpeciesById(command.SpeciesId, cancellationToken);
         if (speciesResult.IsFailure)
             return speciesResult.ErrorList;
 
@@ -95,19 +94,5 @@ public class AddPetService(
             requisites);
 
         return pet;
-    }
-
-    private async Task<Result<SpeciesDto>> GetSpeciesByIdAsync(
-        IQueryable<SpeciesDto> readSpeciesDbContext,
-        Guid id,
-        CancellationToken cancellationToken = default)
-    {
-        var speciesResult = await readSpeciesDbContext
-            .Include(s => s.Breeds)
-            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
-
-        return speciesResult is null
-            ? Errors.General.NotFound($"Species with speciesId {id}")
-            : speciesResult;
     }
 }

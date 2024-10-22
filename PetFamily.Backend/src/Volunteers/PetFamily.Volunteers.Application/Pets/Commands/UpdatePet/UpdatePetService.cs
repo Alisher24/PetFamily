@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PetFamily.Core.Abstraction;
 using PetFamily.Core.Extensions;
 using PetFamily.SharedKernel.Shared;
 using PetFamily.SharedKernel.ValueObjects;
 using PetFamily.SharedKernel.ValueObjects.Ids;
+using PetFamily.Species.Contracts;
 using PetFamily.Volunteers.Domain;
 using PetFamily.Volunteers.Domain.ValueObjects;
 using Type = PetFamily.Volunteers.Domain.ValueObjects.Type;
@@ -14,10 +14,10 @@ namespace PetFamily.Volunteers.Application.Pets.Commands.UpdatePet;
 
 public class UpdatePetService(
     IVolunteerRepository volunteerRepository,
-    IReadDbContext readDbContext,
     IValidator<UpdatePetCommand> validator,
     ILogger<UpdatePetService> logger,
-    IUnitOfWork unitOfWork) : ICommandService<Guid, UpdatePetCommand>
+    IUnitOfWork unitOfWork,
+    ISpeciesContracts speciesContracts) : ICommandService<Guid, UpdatePetCommand>
 {
     public async Task<Result<Guid>> ExecuteAsync(UpdatePetCommand command,
         CancellationToken cancellationToken = default)
@@ -31,12 +31,11 @@ public class UpdatePetService(
         if (volunteerResult.IsFailure)
             return Errors.General.NotFound($"Volunteer with id: {command.VolunteerId}");
 
-        var species = await readDbContext.Species
-            .Include(s => s.Breeds)
-            .FirstOrDefaultAsync(s => s.Id == command.SpeciesId, cancellationToken);
-        if (species is null)
-            return Errors.General.NotFound($"Species with id: {command.SpeciesId}");
-        var breed = species.Breeds.FirstOrDefault(b => b.Id == command.BreedId);
+        var speciesResult = await speciesContracts.GetSpeciesById(command.SpeciesId, cancellationToken);
+        if (speciesResult.IsFailure)
+            return speciesResult.ErrorList;
+        
+        var breed = speciesResult.Value.Breeds.FirstOrDefault(b => b.Id == command.BreedId);
         if (breed is null)
             return Errors.General.NotFound($"Breed with id: {command.SpeciesId}");
 

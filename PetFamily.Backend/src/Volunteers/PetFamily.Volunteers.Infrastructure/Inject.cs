@@ -10,7 +10,7 @@ using PetFamily.Volunteers.Application;
 using PetFamily.Volunteers.Infrastructure.DbContexts;
 using PetFamily.Volunteers.Infrastructure.Files;
 using PetFamily.Volunteers.Infrastructure.Providers;
-using FileInfo = System.IO.FileInfo;
+using FileInfo = PetFamily.Core.Files.FileInfo;
 
 namespace PetFamily.Volunteers.Infrastructure;
 
@@ -21,12 +21,12 @@ public static class Inject
     {
         services
             .AddDbContexts()
+            .AddMinioService(configuration)
             .AddRepositories()
             .AddDatabase()
-            .AddMinioService(configuration)
-            .AddHostedServices()
             .AddMessageQueues()
-            .AddServices();
+            .AddServices()
+            .AddHostedServices();
 
         return services;
     }
@@ -34,7 +34,7 @@ public static class Inject
     private static IServiceCollection AddMinioService(this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.Configure<MinioOptions>(options => configuration.GetSection(MinioOptions.Minio));
+        services.Configure<MinioOptions>(configuration.GetSection(MinioOptions.Minio));
 
         services.AddMinio(options =>
         {

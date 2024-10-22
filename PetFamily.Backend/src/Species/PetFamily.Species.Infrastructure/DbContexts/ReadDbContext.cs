@@ -11,7 +11,6 @@ public class ReadDbContext(IConfiguration configuration) : DbContext, IReadDbCon
 {
     private readonly ILoggerFactory _loggerFactory = new LoggerFactory();
     
-    public IQueryable<PetDto> Pets => Set<PetDto>();
     public IQueryable<SpeciesDto> Species => Set<SpeciesDto>();
     public IQueryable<BreedDto> Breeds => Set<BreedDto>();
 

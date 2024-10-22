@@ -7,6 +7,4 @@ public interface IReadDbContext
     IQueryable<VolunteerDto> Volunteers { get; }
     
     IQueryable<PetDto> Pets { get; }
-
-    IQueryable<SpeciesDto> Species { get; }
 }
