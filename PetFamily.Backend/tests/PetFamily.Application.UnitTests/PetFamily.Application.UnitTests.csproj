@@ -24,8 +24,4 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\src\PetFamily.Application\PetFamily.Application.csproj" />
-    </ItemGroup>
-
 </Project>
